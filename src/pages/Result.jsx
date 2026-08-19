@@ -61,7 +61,7 @@ export default function Result() {
   }
 
   const radarData = Object.values(readiness.dims).map(d => ({
-    name: d.name.replace('Kesiapan ', ''),
+    name: d.name.replace('Kesiapan ', '').replace('Menerima Satu Sama Lain', 'Menerima'),
     percent: d.percent,
     fullMark: 100
   }))
@@ -87,8 +87,8 @@ export default function Result() {
           <h3 className="h-title" style={{ fontSize: 18, marginBottom: 4 }}>📊 Breakdown per Dimensi</h3>
           <p className="muted" style={{ fontSize: 13, marginBottom: 12 }}>Skor kesiapan kamu di tiap aspek.</p>
           <div className="card" style={{ padding: 12 }}>
-            <ResponsiveContainer width="100%" height={300}>
-              <RadarChart data={radarData}>
+            <ResponsiveContainer width="100%" height={340}>
+              <RadarChart data={radarData} margin={{ top: 20, right: 30, bottom: 20, left: 30 }}>
                 <PolarGrid stroke="var(--line)" />
                 <PolarAngleAxis dataKey="name" tick={{ fill: 'var(--ink-soft)', fontSize: 10 }} />
                 <PolarRadiusAxis domain={[0, 100]} tick={{ fill: 'var(--muted)', fontSize: 9 }} />
