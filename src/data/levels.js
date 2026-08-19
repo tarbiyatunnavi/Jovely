@@ -160,7 +160,7 @@ export const MODULES = [
         ]
       },
       {
-        id: 'B8', order: 20, name: 'Kesiapan Menerima Satu Sama Lain', icon: 'acceptance',
+        id: 'B8', order: 20, name: 'Kesiapan Menerima', icon: 'acceptance',
         items: [
           { id: 'B8.1', polarity: 'F', text: 'Siap mengutamakan kebutuhan pasangan di atas kebutuhan pribadi.' },
           { id: 'B8.2', polarity: 'F', text: 'Akan tetap menghargai pekerjaan pasangan meskipun penghasilannya kecil.' }
@@ -403,7 +403,7 @@ export const GAME_MECHANICS = {
   },
   B8: {
     type: 'likert-emoji', emoji: '🤝', accent: '#c8a8d4',
-    tagline: 'Menerima Satu Sama Lain', greeting: 'Pilih emoji yang cocok',
+    tagline: 'Menerima', greeting: 'Pilih emoji yang cocok',
     hint: 'Tap emoji yang ngewakiliin perasaan kamu.'
   }
 }
