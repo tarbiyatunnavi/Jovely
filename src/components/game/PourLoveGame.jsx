@@ -1,18 +1,17 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
 import { ParticleBurst } from '../Particles'
 
-// === Tuang Cat Cinta (Level 1: Consummate Love) ===
+// === Tuang Cat Cinta (Level 1: Consummate Love) — versi 2 zona ===
 // Murni ekspresi diri — BUKAN game menang/kalah.
-// Pemain drag teko cat ke gelas, tahan untuk tuang (makin lama = makin banyak).
-// 3 gelas tersembunyi komponennya: Intimasi (biru), Passion (pink), Komitmen (ungu).
-// Cat bercampur di mangkok = profil cinta pemain.
+// Pemain drag teko cat ke kiri ("Bukan Aku") atau kanan ("Aku Banget").
+// Tahan untuk tuang (makin lama = makin yakin), lepas = berhenti → langsung lanjut.
+// Skip (tidak tuang) = netral. Tidak ada timer, pemain kontrol pace sendiri.
 
-const GLASSES = [
-  { id: 'intimasi', color: '#4A90D9', angle: -90 },  // atas
-  { id: 'passion', color: '#D95A8A', angle: 150 },    // kiri bawah
-  { id: 'komitmen', color: '#9E7BB5', angle: 30 }     // kanan bawah
+const COMPONENTS = [
+  { id: 'intimasi', color: '#4A90D9', label: 'Intimasi', colorName: 'biru' },
+  { id: 'passion', color: '#D95A8A', label: 'Passion', colorName: 'pink' },
+  { id: 'komitmen', color: '#9E7BB5', label: 'Komitmen', colorName: 'ungu' }
 ]
-const GLASS_LABEL = { intimasi: 'biru', passion: 'pink', komitmen: 'ungu' }
 
 const MOMENTS = [
   { comp: 'intimasi', text: 'Dia tahu kamu sedih sebelum kamu bilang.' },
@@ -23,12 +22,26 @@ const MOMENTS = [
   { comp: 'komitmen', text: 'Kamu udah gak bayang orang lain.' }
 ]
 
-const MAX_VOLUME = 100 // volume maks per gelas (0-100)
-const POUR_RATE = 1.8   // volume per frame saat tuang
-const ROUND_DURATION = 20000 // 20s per ronde
-const TUTORIAL_DURATION = 15000 // 15s
+const MAX_VOLUME = 100
+const POUR_RATE = 2.2
+const TUTORIAL_DURATION = 15000
 
 function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)) }
+
+// skor 1-5 berdasarkan arah + magnitude volume
+function volumeToScore(direction, volume) {
+  // direction: -1 (kiri/Bukan Aku), 0 (netral/skip), 1 (kanan/Aku Banget)
+  if (direction === 0 || volume === 0) return 3 // netral
+  // magnitude 0..1
+  const mag = clamp(volume / MAX_VOLUME, 0, 1)
+  if (direction < 0) {
+    // kiri: penuh=1, sedang=2
+    return mag > 0.6 ? 1 : 2
+  } else {
+    // kanan: sedang=4, penuh=5
+    return mag > 0.6 ? 5 : 4
+  }
+}
 
 export default function PourLoveGame({ level, flavor, onFinal }) {
   const canvasRef = useRef(null)
@@ -36,31 +49,36 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
   const stateRef = useRef({
     phase: 'intro',
     roundIdx: 0,
-    volumes: [0, 0, 0],        // volume kumulatif per gelas (untuk hasil akhir)
-    roundVolumes: [0, 0, 0],   // volume per ronde (reset tiap ronde)
+    // per ronde: direction (-1/0/1), volume (0-100)
+    roundDirection: 0,
+    roundVolume: 0,
+    roundDone: false,
+    // kumulatif skor per komponen (0-5, 2 ronde per komponen)
+    compScores: { intimasi: [], passion: [], komitmen: [] },
     pouring: false,
-    activeGlass: -1,
+    activeZone: null, // 'left' | 'right' | null
     potX: 0, potY: 0,
     potDragging: false,
     potDragOffset: { x: 0, y: 0 },
-    glasses: [],
+    potReleased: false, // flag: teko baru saja dilepas → trigger advance
+    zones: { left: { x: 0, y: 0, w: 0, h: 0, glow: 0 }, right: { x: 0, y: 0, w: 0, h: 0, glow: 0 } },
+    leftFill: 0,  // tinggi cairan di zona kiri (visual)
+    rightFill: 0, // tinggi cairan di zona kanan (visual)
+    activeColor: '#c8a8d4', // warna cat aktif (per komponen ronde)
     bowl: { x: 0, y: 0, r: 0, fill: 0, mixColor: '#ffffff' },
     center: { x: 0, y: 0 },
-    introTapped: [false, false, false],
-    roundStart: 0,
-    showMoment: false,
-    momentText: '',
+    introTapped: { left: false, right: false },
     done: false
   })
   const rafRef = useRef(null)
-  const [, forceTick] = useState(0)
-
   const [phaseUI, setPhaseUI] = useState('intro')
   const [roundUI, setRoundUI] = useState(0)
-  const [momentUI, setMomentUI] = useState('')
-  const [showMomentUI, setShowMomentUI] = useState(false)
   const [result, setResult] = useState(null)
   const [burst, setBurst] = useState(0)
+  const [, forceTick] = useState(0)
+
+  // warna cat per ronde (sesuai komponen momen)
+  const roundColor = COMPONENTS.find(c => c.id === MOMENTS[roundUI]?.comp)?.color || '#c8a8d4'
 
   // === Setup canvas ===
   const setupCanvas = useCallback(() => {
@@ -78,29 +96,24 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
 
     const cx = rect.width / 2
     const cy = rect.height / 2
-    const radius = Math.min(rect.width, rect.height) * 0.34
     const st = stateRef.current
     st.center = { x: cx, y: cy }
-    // 3 gelas di posisi melingkar
-    st.glasses = GLASSES.map(g => {
-      const rad = (g.angle * Math.PI) / 180
-      return {
-        ...g,
-        x: cx + Math.cos(rad) * radius,
-        y: cy + Math.sin(rad) * radius,
-        w: 64, h: 90,
-        glow: 0
-      }
-    })
+    st.canvasH = rect.height
+    // 2 zona: kiri & kanan, masing-masing panel besar
+    const zoneW = rect.width * 0.36
+    const zoneH = rect.height * 0.42
+    const zoneY = cy - zoneH / 2 + 10
+    st.zones.left = { x: cx - zoneW - 12, y: zoneY, w: zoneW, h: zoneH, glow: 0 }
+    st.zones.right = { x: cx + 12, y: zoneY, w: zoneW, h: zoneH, glow: 0 }
     // teko di bawah tengah
     if (st.potX === 0 && st.potY === 0) {
       st.potX = cx
-      st.potY = rect.height - 60
+      st.potY = rect.height - 50
     }
-    // mangkok (fase hasil) di tengah
+    // mangkok (fase hasil)
     st.bowl.x = cx
     st.bowl.y = cy
-    st.bowl.r = radius * 0.85
+    st.bowl.r = Math.min(rect.width, rect.height) * 0.32
   }, [])
 
   useEffect(() => {
@@ -119,74 +132,83 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
     const rect = canvas.getBoundingClientRect()
     ctx.clearRect(0, 0, rect.width, rect.height)
 
-    const { glasses, potX, potY, phase } = st
+    const { potX, potY, phase } = st
 
-    // === Fase intro/play: gambar gelas + teko ===
     if (phase === 'intro' || phase === 'play') {
-      // latar arena lembut
       ctx.fillStyle = '#fbf8fd'
       ctx.fillRect(0, 0, rect.width, rect.height)
 
-      // gelas
-      glasses.forEach((g, i) => {
-        const vol = phase === 'play' ? st.roundVolumes[i] : (st.introTapped[i] ? 30 : 0)
-        const fillH = (vol / MAX_VOLUME) * (g.h - 10)
-        const glassTop = g.y - g.h / 2
-        const glassBottom = g.y + g.h / 2
+      // 2 zona
+      const zones = [
+        { ...st.zones.left, label: 'Bukan\nAku', side: 'left', fill: st.leftFill, tapped: st.introTapped.left },
+        { ...st.zones.right, label: 'Aku\nBanget', side: 'right', fill: st.rightFill, tapped: st.introTapped.right }
+      ]
 
-        // glow kalau intro tapped atau kalau gelas aktif saat pouring
-        const isGlowing = (phase === 'intro' && st.introTapped[i]) || (st.activeGlass === i && st.pouring)
+      zones.forEach((z, i) => {
+        const isActive = st.activeZone === z.side && st.pouring
+        const isGlowing = (phase === 'intro' && z.tapped) || isActive
+
+        // glow
         if (isGlowing) {
-          ctx.shadowColor = g.color
-          ctx.shadowBlur = 16
+          ctx.shadowColor = z.side === 'left' ? '#d95a8a' : '#4A90D9'
+          ctx.shadowBlur = 20
         }
 
-        // badan gelas (outline)
-        ctx.strokeStyle = '#d8cee8'
-        ctx.lineWidth = 2
+        // badan zona (rounded rect)
         ctx.beginPath()
-        ctx.roundRect(g.x - g.w / 2, glassTop, g.w, g.h, 8)
-        ctx.stroke()
+        ctx.roundRect(z.x, z.y, z.w, z.h, 16)
+        ctx.fillStyle = isGlowing ? 'rgba(255,255,255,1)' : 'rgba(255,255,255,0.6)'
+        ctx.fill()
         ctx.shadowBlur = 0
+        ctx.strokeStyle = isGlowing ? (z.side === 'left' ? '#d95a8a' : '#4A90D9') : '#d8cee8'
+        ctx.lineWidth = isGlowing ? 2.5 : 1.5
+        ctx.stroke()
 
-        // cairan
-        if (fillH > 0) {
-          const liquidTop = glassBottom - fillH
+        // label zona (di atas)
+        ctx.fillStyle = z.side === 'left' ? '#d95a8a' : '#4A90D9'
+        ctx.font = '700 14px -apple-system, sans-serif'
+        ctx.textAlign = 'center'
+        const labelText = z.side === 'left' ? 'Bukan Aku' : 'Aku Banget'
+        ctx.fillText(labelText, z.x + z.w / 2, z.y - 10)
+
+        // cairan di zona (jika ada)
+        if (z.fill > 0 && phase === 'play') {
+          const fillH = (z.fill / MAX_VOLUME) * (z.h - 16)
+          const liquidTop = z.y + z.h - fillH - 8
           ctx.save()
           ctx.beginPath()
-          ctx.roundRect(g.x - g.w / 2 + 2, liquidTop, g.w - 4, fillH, [4, 4, 6, 6])
+          ctx.roundRect(z.x + 4, liquidTop, z.w - 8, fillH, [6, 6, 12, 12])
           ctx.clip()
-          ctx.fillStyle = g.color
-          ctx.globalAlpha = 0.82
-          ctx.fillRect(g.x - g.w / 2, liquidTop, g.w, fillH)
-          // permukaan cairan (ripple halus)
+          ctx.fillStyle = st.activeColor
+          ctx.globalAlpha = 0.75
+          ctx.fillRect(z.x, liquidTop, z.w, fillH)
+          // ripple
           ctx.globalAlpha = 0.3
           ctx.fillStyle = '#fff'
           const ripple = Math.sin(Date.now() / 300 + i) * 2
-          ctx.fillRect(g.x - g.w / 2, liquidTop + ripple, g.w, 2)
+          ctx.fillRect(z.x, liquidTop + ripple, z.w, 2)
           ctx.restore()
-        }
-
-        // teko di atas gelas kalau pouring di gelas ini
-        if (st.activeGlass === i && st.pouring) {
-          // aliran cat dari teko ke gelas
-          ctx.strokeStyle = g.color
-          ctx.lineWidth = 4
-          ctx.lineCap = 'round'
-          ctx.globalAlpha = 0.8
-          ctx.beginPath()
-          ctx.moveTo(potX, potY)
-          // bezier ke atas gelas
-          const tx = g.x
-          const ty = glassTop
-          ctx.quadraticCurveTo((potX + tx) / 2, (potY + ty) / 2 - 20, tx, ty)
-          ctx.stroke()
-          ctx.globalAlpha = 1
         }
       })
 
-      // teko (pitcher)
-      drawPot(ctx, potX, potY, phase === 'play' ? '#c8a8d4' : '#b8a4d9')
+      // teko
+      drawPot(ctx, potX, potY, phase === 'play' ? st.activeColor : '#b8a4d9')
+
+      // aliran cat dari teko ke zona aktif
+      if (st.pouring && st.activeZone) {
+        const z = st.activeZone === 'left' ? st.zones.left : st.zones.right
+        ctx.strokeStyle = st.activeColor
+        ctx.lineWidth = 5
+        ctx.lineCap = 'round'
+        ctx.globalAlpha = 0.85
+        ctx.beginPath()
+        ctx.moveTo(potX, potY - 18)
+        const targetX = z.x + z.w / 2
+        const targetY = z.y + z.h * 0.3
+        ctx.quadraticCurveTo((potX + targetX) / 2, (potY + targetY) / 2 - 30, targetX, targetY)
+        ctx.stroke()
+        ctx.globalAlpha = 1
+      }
     }
 
     // === Fase hasil: mangkok + campuran warna ===
@@ -195,7 +217,7 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
       ctx.fillStyle = '#fbf8fd'
       ctx.fillRect(0, 0, rect.width, rect.height)
 
-      // mangkok (lingkaran besar)
+      // mangkok
       ctx.beginPath()
       ctx.arc(bowl.x, bowl.y, bowl.r, 0, Math.PI * 2)
       ctx.fillStyle = '#fff'
@@ -204,7 +226,7 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
       ctx.lineWidth = 3
       ctx.stroke()
 
-      // cairan campuran (naik bertahap)
+      // cairan campuran
       if (bowl.fill > 0) {
         ctx.save()
         ctx.beginPath()
@@ -215,7 +237,6 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
         ctx.fillStyle = bowl.mixColor
         ctx.globalAlpha = 0.85
         ctx.fillRect(bowl.x - bowl.r, liquidTop, bowl.r * 2, fillH)
-        // ripple
         ctx.globalAlpha = 0.25
         ctx.fillStyle = '#fff'
         const ripple = Math.sin(Date.now() / 400) * 3
@@ -223,22 +244,18 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
         ctx.restore()
       }
 
-      // 3 gelas kecil di sisi (menunjukkan asal)
-      glasses.forEach((g, i) => {
-        const smallX = bowl.x + (i - 1) * 50
-        const smallY = bowl.y - bowl.r - 30
-        const vol = st.volumes[i]
-        const fillH = (vol / MAX_VOLUME) * 24
-        // glass mini
-        ctx.strokeStyle = '#d8cee8'
-        ctx.lineWidth = 1.5
-        ctx.strokeRect(smallX - 12, smallY - 14, 24, 28)
-        if (fillH > 0) {
-          ctx.fillStyle = g.color
-          ctx.globalAlpha = 0.8
-          ctx.fillRect(smallX - 11, smallY + 13 - fillH, 22, fillH)
-          ctx.globalAlpha = 1
-        }
+      // 3 label komponen di sisi
+      COMPONENTS.forEach((c, i) => {
+        const sx = bowl.x + (i - 1) * 60
+        const sy = bowl.y - bowl.r - 28
+        ctx.fillStyle = c.color
+        ctx.beginPath()
+        ctx.arc(sx, sy, 8, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.fillStyle = '#8b8599'
+        ctx.font = '600 10px -apple-system, sans-serif'
+        ctx.textAlign = 'center'
+        ctx.fillText(c.colorName, sx, sy + 22)
       })
     }
 
@@ -263,21 +280,22 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
     const st = stateRef.current
 
     if (st.phase === 'intro') {
-      // tap gelas untuk lihat warna menyala
-      st.glasses.forEach((g, i) => {
-        if (Math.abs(p.x - g.x) < g.w / 2 + 8 && Math.abs(p.y - g.y) < g.h / 2 + 8) {
-          st.introTapped[i] = true
-          forceTick(t => t + 1)
-        }
-      })
+      // tap zona untuk lihat menyala
+      const zl = st.zones.left, zr = st.zones.right
+      if (p.x >= zl.x && p.x <= zl.x + zl.w && p.y >= zl.y && p.y <= zl.y + zl.h) {
+        st.introTapped.left = true; forceTick(t => t + 1)
+      } else if (p.x >= zr.x && p.x <= zr.x + zr.w && p.y >= zr.y && p.y <= zr.y + zr.h) {
+        st.introTapped.right = true; forceTick(t => t + 1)
+      }
       return
     }
 
     if (st.phase === 'play') {
       // cek apakah megang teko
       const d = Math.hypot(p.x - st.potX, p.y - st.potY)
-      if (d < 32) {
+      if (d < 36) {
         st.potDragging = true
+        st.potReleased = false
         st.potDragOffset = { x: p.x - st.potX, y: p.y - st.potY }
       }
     }
@@ -292,72 +310,131 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
     st.potX = clamp(p.x - st.potDragOffset.x, 30, rect.width - 30)
     st.potY = clamp(p.y - st.potDragOffset.y, 30, rect.height - 30)
 
-    // cek apakah teko di atas gelas → mulai tuang
-    let overGlass = -1
-    st.glasses.forEach((g, i) => {
-      const dx = Math.abs(st.potX - g.x)
-      const dy = Math.abs(st.potY - g.y)
-      if (dx < g.w / 2 + 14 && dy < g.h / 2 + 44) {
-        overGlass = i
-      }
-    })
-    st.activeGlass = overGlass
-    st.pouring = overGlass >= 0
-    if (st.pouring) {
+    // cek zona aktif
+    const zl = st.zones.left, zr = st.zones.right
+    let active = null
+    if (st.potX >= zl.x && st.potX <= zl.x + zl.w && st.potY >= zl.y && st.potY <= zl.y + zl.h) {
+      active = 'left'
+    } else if (st.potX >= zr.x && st.potX <= zr.x + zr.w && st.potY >= zr.y && st.potY <= zr.y + zr.h) {
+      active = 'right'
     }
+    st.activeZone = active
+    st.pouring = active !== null
   }
 
   const onPointerUp = () => {
     const st = stateRef.current
-    st.potDragging = false
-    st.pouring = false
-    st.activeGlass = -1
+    if (st.phase !== 'play') return
+    if (st.potDragging) {
+      st.potDragging = false
+      st.pouring = false
+      st.activeZone = null
+      st.potReleased = true
+    }
   }
 
   // === Pouring logic (per frame) ===
   useEffect(() => {
     const interval = setInterval(() => {
       const st = stateRef.current
-      if (st.phase === 'play' && st.pouring && st.activeGlass >= 0) {
-        const i = st.activeGlass
-        if (st.roundVolumes[i] < MAX_VOLUME) {
-          st.roundVolumes[i] = Math.min(MAX_VOLUME, st.roundVolumes[i] + POUR_RATE)
+      if (st.phase === 'play' && st.pouring && st.activeZone) {
+        const dir = st.activeZone === 'left' ? -1 : 1
+        st.roundDirection = dir
+        if (st.roundVolume < MAX_VOLUME) {
+          st.roundVolume = Math.min(MAX_VOLUME, st.roundVolume + POUR_RATE)
         }
+        // visual fill
+        if (dir < 0) st.leftFill = st.roundVolume
+        else st.rightFill = st.roundVolume
       }
     }, 16)
     return () => clearInterval(interval)
   }, [])
 
-  // === Fase 1: Intro (auto-advance 15s) ===
+  // === Auto-advance: saat teko dilepas (atau skip), lanjut ronde ===
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const st = stateRef.current
+      if (st.phase === 'play' && st.potReleased && !st.roundDone) {
+        st.roundDone = true
+        st.potReleased = false
+        // hitung skor ronde ini
+        const score = volumeToScore(st.roundDirection, st.roundVolume)
+        const comp = MOMENTS[st.roundIdx].comp
+        st.compScores[comp].push(score)
+        // tunggu sebentar lalu lanjut
+        setTimeout(() => advanceRound(), 600)
+      }
+    }, 50)
+    return () => clearInterval(interval)
+  }, [])
+
+  // === Fase 1: Intro ===
   useEffect(() => {
     const t = setTimeout(() => startRounds(), TUTORIAL_DURATION)
     return () => clearTimeout(t)
   }, [])
 
-  // === Fase 3: Hasil (mangkok + campuran warna) — declare FIRST supaya endRound bisa refer ===
+  const startRounds = useCallback(() => {
+    const st = stateRef.current
+    if (st.phase !== 'intro') return
+    st.phase = 'play'
+    setPhaseUI('play')
+    startRound(0)
+  }, [])
+
+  const startRound = useCallback((idx) => {
+    const st = stateRef.current
+    st.roundIdx = idx
+    st.roundDirection = 0
+    st.roundVolume = 0
+    st.roundDone = false
+    st.leftFill = 0
+    st.rightFill = 0
+    st.activeColor = COMPONENTS.find(c => c.id === MOMENTS[idx].comp)?.color || '#c8a4d9'
+    st.potReleased = false
+    st.potDragging = false
+    st.pouring = false
+    st.activeZone = null
+    // reset posisi teko ke bawah tengah
+    st.potX = st.center.x
+    st.potY = (st.canvasH || st.center.y * 2) - 50
+    setRoundUI(idx)
+  }, [])
+
+  const advanceRound = useCallback(() => {
+    const st = stateRef.current
+    const idx = st.roundIdx
+    if (idx + 1 < MOMENTS.length) {
+      startRound(idx + 1)
+    } else {
+      finishGame()
+    }
+  }, [startRound])
+
+  // === Fase 3: Hasil ===
   const finishGame = useCallback(() => {
     const st = stateRef.current
     st.phase = 'result'
     st.done = true
     setPhaseUI('result')
 
-    // hitung skor per komponen (0-5) dari volume kumulatif
-    const scores = st.volumes.map(v => clamp((v / (MAX_VOLUME * 2)) * 5, 0, 5)) // 2 ronde per komponen, max volume = 2*MAX
-    const dimScores = {
-      intimasi: Math.round(scores[0] * 10) / 10,
-      passion: Math.round(scores[1] * 10) / 10,
-      komitmen: Math.round(scores[2] * 10) / 10
-    }
+    // skor per komponen (mean 2 ronde)
+    const dimScores = {}
+    COMPONENTS.forEach(c => {
+      const arr = st.compScores[c.id]
+      dimScores[c.id] = arr.length ? Math.round((arr.reduce((s, v) => s + v, 0) / arr.length) * 10) / 10 : 3
+    })
     const total = Math.round(((dimScores.intimasi + dimScores.passion + dimScores.komitmen) / 3) * 10) / 10
 
-    // campuran warna (weighted average RGB)
-    const weights = st.volumes.map(v => v)
+    // campuran warna: weighted RGB berdasarkan skor komponen (skor tinggi = warna kuat)
+    const weights = COMPONENTS.map(c => dimScores[c.id])
     const totalW = weights.reduce((s, w) => s + w, 0)
     let mixColor = '#ffffff'
     if (totalW > 0) {
       let r = 0, g = 0, b = 0
-      GLASSES.forEach((gl, i) => {
-        const hex = gl.color
+      COMPONENTS.forEach((c, i) => {
+        const hex = c.color
         const cr = parseInt(hex.slice(1, 3), 16)
         const cg = parseInt(hex.slice(3, 5), 16)
         const cb = parseInt(hex.slice(5, 7), 16)
@@ -374,7 +451,7 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
     st.bowl.mixColor = mixColor
 
     // animasi mangkok terisi
-    const fillTarget = totalW > 0 ? 0.85 : 0.1
+    const fillTarget = 0.85
     let fill = 0
     const fillAnim = setInterval(() => {
       fill += 0.02
@@ -382,110 +459,42 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
       st.bowl.fill = fill
     }, 16)
 
-    // insight berdasarkan distribusi
-    const sorted = st.volumes.map((v, i) => ({ v, i })).sort((a, b) => b.v - a.v)
-    const max = sorted[0].v
-    const min = sorted[2].v
-    const diff = max - min
-    const dominant = sorted[0]
-    const empty = sorted.find(s => s.v === 0)
+    // insight berdasarkan distribusi skor komponen
+    const entries = COMPONENTS.map(c => ({ ...c, score: dimScores[c.id] }))
+    const sorted = [...entries].sort((a, b) => b.score - a.score)
+    const max = sorted[0]
+    const min = sorted[2]
+    const diff = max.score - min.score
 
     let insight
-    if (totalW === 0) {
-      insight = {
-        title: 'Cat Kosong 🤍',
-        text: 'Kamu nggak menuang cat ke gelas mana pun — itu juga jawaban. Nanti di level berikutnya kita bedah apa jadinya tanpa komponen apapun.'
-      }
-    } else if (diff <= MAX_VOLUME * 0.3 && min > MAX_VOLUME * 0.2) {
+    if (diff <= 1 && min.score >= 4) {
       insight = {
         title: 'Consummate Love! 💞',
         text: 'Tiga warna jadi putih cerah. Cinta yang lengkap menurutmu — intimasi, passion, dan komitmen sama kuat.'
       }
-    } else if (empty && empty.v === 0) {
-      const compName = ['Intimasi', 'Passion', 'Komitmen'][empty.i]
-      const compColor = GLASS_LABEL[GLASSES[empty.i].id]
+    } else if (min.score <= 2) {
       insight = {
-        title: `Gelas ${compColor} Kosong 🤍`,
-        text: `${compName} belum muncul di pengalamanmu. Itu oke — di level berikutnya kita bedah apa jadinya tanpa ${compName.toLowerCase()}.`
+        title: `Warna ${min.colorName} Hampir Hilang 🤍`,
+        text: `${min.label} belum muncul di pengalamanmu. Itu oke — di level berikutnya kita bedah apa jadinya tanpa ${min.label.toLowerCase()}.`
       }
     } else {
-      const compName = ['Intimasi', 'Passion', 'Komitmen'][dominant.i]
-      const compColor = GLASS_LABEL[GLASSES[dominant.i].id]
       insight = {
-        title: `Warna ${compColor} Paling Pekat ✨`,
-        text: `${compName} paling kuat buatmu. Consummate love butuh ketiganya — di level berikutnya kita bedah.`
+        title: `Warna ${max.colorName} Paling Pekat ✨`,
+        text: `${max.label} paling kuat buatmu. Consummate love butuh ketiganya — di level berikutnya kita bedah.`
       }
     }
 
     setResult({ dimScores, total, insight, mixColor })
     setBurst(b => b + 1)
-    forceTick(t => t + 1) // paksa re-render
-    // re-trigger render setelah 100ms untuk memastikan
-    setTimeout(() => { setPhaseUI('result'); forceTick(t => t + 1) }, 100)
+    forceTick(t => t + 1)
 
-    // skor consummate → map ke agree/disagree (kompatibilitas sistem skoring Modul A)
+    // skor consummate → map ke agree/disagree
     const consummateAnswer = total >= 3 ? 'agree' : 'disagree'
     const finalAnswers = { 'A1.1': consummateAnswer }
 
-    // auto-advance via onFinal (LevelPlay handle celebration + auto-advance)
-    // tampilkan hasil ~13s sebelum onFinal (Fase 3 spec: ~15 detik)
+    // tampilkan hasil ~13s sebelum onFinal
     setTimeout(() => onFinal(finalAnswers), 13000)
   }, [onFinal])
-
-  const endRound = useCallback((idx) => {
-    const st = stateRef.current
-    // simpan volume ronde ini ke kumulatif + catat skor (0-5)
-    st.volumes = st.volumes.map((v, i) => v + st.roundVolumes[i])
-    st.pouring = false
-    st.activeGlass = -1
-    st.potDragging = false
-
-    if (idx + 1 < MOMENTS.length) {
-      setTimeout(() => startRoundRef.current(idx + 1), 400)
-    } else {
-      setTimeout(() => finishGame(), 400)
-    }
-  }, [finishGame])
-
-  // ref to startRound (avoid TDZ — startRound refs endRound)
-  const startRoundRef = useRef(null)
-
-  const startRound = useCallback((idx) => {
-    const st = stateRef.current
-    st.roundIdx = idx
-    st.roundVolumes = [0, 0, 0]
-    st.roundStart = Date.now()
-    st.momentText = MOMENTS[idx].text
-    st.showMoment = true
-    setRoundUI(idx)
-    setMomentUI(MOMENTS[idx].text)
-    setShowMomentUI(true)
-
-    // sembunyikan momen setelah 3s, ronde lanjut
-    setTimeout(() => {
-      st.showMoment = false
-      setShowMomentUI(false)
-    }, 3000)
-
-    // ronde berakhir setelah ROUND_DURATION
-    setTimeout(() => endRoundRef.current(idx), ROUND_DURATION)
-  }, [])
-
-  // refs to break circular deps
-  const endRoundRef = useRef(null)
-  startRoundRef.current = startRound
-  endRoundRef.current = endRound
-
-  // === Fase 2: 6 ronde ===
-  const startRounds = useCallback(() => {
-    const st = stateRef.current
-    if (st.phase === 'play') return // cegah panggilan ganda
-    st.phase = 'play'
-    st.roundIdx = 0
-    st.roundVolumes = [0, 0, 0]
-    setPhaseUI('play')
-    startRound(0)
-  }, [startRound])
 
   // === Render UI ===
   return (
@@ -509,10 +518,11 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
             <div className="pl-hud-emoji">🫖</div>
             <div className="pl-hud-title">Tuang Cat Cinta</div>
             <p className="pl-hud-text">
-              Tiga gelas cinta. Nanti kamu tuang cat ke gelas yang rasanya pas.
+              Tuang ke <strong style={{color:'#4A90D9'}}>kanan</strong> kalau setuju.
+              Tuang ke <strong style={{color:'#d95a8a'}}>kiri</strong> kalau nggak.
             </p>
             <p className="pl-hud-text muted" style={{ marginTop: 6, fontSize: 13 }}>
-              Tap tiap gelas buat lihat warnanya. 🤍
+              Banyak cat = makin yakin. Tap kedua area buat lihat warna menyala. 🤍
             </p>
             <button className="btn pl-skip" onClick={startRounds}>Lanjut →</button>
           </div>
@@ -522,11 +532,8 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
         {phaseUI === 'play' && (
           <div className="pl-hud pl-play">
             <div className="pl-round-pill">Momen {roundUI + 1} / 6</div>
-            {showMomentUI ? (
-              <div className="pl-moment fade-in">{momentUI}</div>
-            ) : (
-              <p className="pl-hint">Drag teko ke gelas, tahan buat tuang. Bebas ke gelas mana aja — atau skip.</p>
-            )}
+            <div className="pl-statement fade-in" key={roundUI}>{MOMENTS[roundUI].text}</div>
+            <p className="pl-hint">Drag teko, tahan di kiri/kanan buat tuang. Lepas = lanjut.</p>
           </div>
         )}
 
@@ -548,7 +555,6 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
 
 // === Draw teko (pitcher) ===
 function drawPot(ctx, x, y, color) {
-  // badan teko
   ctx.save()
   ctx.translate(x, y)
   // body (trapesium)
