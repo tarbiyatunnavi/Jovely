@@ -288,26 +288,123 @@ export const LIKERT_OPTIONS = [
   { value: 5, label: 'Sangat Setuju', emoji: '😍' }
 ]
 
-// daftar mekanik game per level (dipilih sesuai jumlah item & nuansa dimensi)
+// Mekanik game unik per level + flavor (emoji, tagline, greeting, accent)
+// Tidak ada 2 level berurutan dengan mekanik identik.
+// Modul A pakai: tap2, swipe, quicktap, dragdrop, story
+// Modul B pakai 3 varian likert: slider, emoji, dial
 export const GAME_MECHANICS = {
-  A1: { type: 'tap-card', label: 'Tap Kartu' },
-  A2: { type: 'swipe', label: 'Swipe' },
-  A3: { type: 'quick-tap', label: 'Tap Cepat' },
-  A4: { type: 'swipe', label: 'Swipe' },
-  A5: { type: 'tap-card', label: 'Tap Kartu' },
-  A6: { type: 'quick-tap', label: 'Tap Cepat' },
-  A7: { type: 'swipe', label: 'Swipe' },
-  A8: { type: 'tap-card', label: 'Tap Kartu' },
-  A9: { type: 'tap-card', label: 'Tap Kartu' },
-  A10: { type: 'tap-card', label: 'Tap Kartu' },
-  A11: { type: 'tap-card', label: 'Tap Kartu' },
-  A12: { type: 'tap-card', label: 'Tap Kartu' },
-  B1: { type: 'likert', label: 'Likert' },
-  B2: { type: 'likert', label: 'Likert' },
-  B3: { type: 'likert', label: 'Likert' },
-  B4: { type: 'likert', label: 'Likert' },
-  B5: { type: 'likert', label: 'Likert' },
-  B6: { type: 'likert', label: 'Likert' },
-  B7: { type: 'likert', label: 'Likert' },
-  B8: { type: 'likert', label: 'Likert' }
+  // === Modul A: Cinta Romantis ===
+  A1: {
+    type: 'tap2', emoji: '💞', accent: '#b8a4d9',
+    tagline: 'Cinta Sempurna', greeting: 'Apa cinta versi kamu?',
+    leftLabel: 'Setuju', rightLabel: 'Nggak',
+    hint: 'Pilih kartu yang paling ngewakiliin perasaan kamu.'
+  },
+  A2: {
+    type: 'swipe', emoji: '🏠', accent: '#c8a8d4',
+    tagline: 'Rasa Nyaman', greeting: 'Geser kartunya ya',
+    leftLabel: 'Nggak Setuju', rightLabel: 'Setuju',
+    hint: 'Swipe kiri = nggak, kanan = setuju.'
+  },
+  A3: {
+    type: 'quicktap', emoji: '✨', accent: '#d0b9e7',
+    tagline: 'Kekuatan Cinta', greeting: 'Cepat jawab!',
+    leftLabel: 'Salah', rightLabel: 'Benar',
+    hint: 'Tap Benar kalau setuju, Salah kalau nggak. Jangan overthinking.'
+  },
+  A4: {
+    type: 'dragdrop', emoji: '🧲', accent: '#b8a4d9',
+    tagline: 'Pikiran Terus ke Sana', greeting: 'Masukkan ke zona yang cocok',
+    leftLabel: 'Bukan Aku', rightLabel: 'Aku Banget',
+    hint: 'Drag kartu ke kiri (bukan aku) atau kanan (aku banget).'
+  },
+  A5: {
+    type: 'story', emoji: '⚡', accent: '#c8a8d4',
+    tagline: 'Jatuh Cinta Tiba-tiba', greeting: 'Bayangin skenarionya…',
+    options: ['Setuju', 'Nggak Setuju'],
+    hint: 'Pilih respons yang paling mirip sama kamu.'
+  },
+  A6: {
+    type: 'swipe', emoji: '🌱', accent: '#d0b9e7',
+    tagline: 'Cinta yang Tumbuh', greeting: 'Geser ya',
+    leftLabel: 'Nggak Setuju', rightLabel: 'Setuju',
+    hint: 'Swipe kiri = nggak, kanan = setuju.'
+  },
+  A7: {
+    type: 'tap2', emoji: '🧩', accent: '#b8a4d9',
+    tagline: 'Tarik Menarik', greeting: 'Pilih yang ngewakiliin kamu',
+    leftLabel: 'Setuju', rightLabel: 'Nggak',
+    hint: 'Tap kartu yang sesuai perasaan kamu.'
+  },
+  A8: {
+    type: 'dragdrop', emoji: '🤍', accent: '#c8a8d4',
+    tagline: 'Cinta Tanpa Syarat', greeting: 'Masukkan ke zona yang cocok',
+    leftLabel: 'Bukan Aku', rightLabel: 'Aku Banget',
+    hint: 'Drag kartu ke kiri atau kanan.'
+  },
+  A9: {
+    type: 'story', emoji: '🤝', accent: '#d0b9e7',
+    tagline: 'Membangun Bersama', greeting: 'Bayangin skenarionya…',
+    options: ['Setuju', 'Nggak Setuju'],
+    hint: 'Pilih respons yang paling mirip sama kamu.'
+  },
+  A10: {
+    type: 'tap2', emoji: '🙈', accent: '#b8a4d9',
+    tagline: 'Cinta yang Buta', greeting: 'Apa cinta versi kamu?',
+    leftLabel: 'Setuju', rightLabel: 'Nggak',
+    hint: 'Tap kartu yang sesuai perasaan kamu.'
+  },
+  A11: {
+    type: 'story', emoji: '🚩', accent: '#c8a8d4',
+    tagline: 'Rela Berkorban', greeting: 'Bayangin skenarionya…',
+    options: ['Setuju', 'Nggak Setuju'],
+    hint: 'Pilih respons yang paling mirip sama kamu.'
+  },
+  A12: {
+    type: 'quicktap', emoji: '🔥', accent: '#d0b9e7',
+    tagline: 'Cinta Segalanya', greeting: 'Cepat jawab!',
+    leftLabel: 'Salah', rightLabel: 'Benar',
+    hint: 'Tap Benar kalau setuju, Salah kalau nggak.'
+  },
+  // === Modul B: Kesiapan Menikah (Likert 5 poin, 3 varian interaksi) ===
+  B1: {
+    type: 'likert-slider', emoji: '💧', accent: '#b8a4d9',
+    tagline: 'Kesiapan Emosi', greeting: 'Geser slider-nya',
+    hint: 'Geser dari Sangat Tidak Setuju sampai Sangat Setuju.'
+  },
+  B2: {
+    type: 'likert-emoji', emoji: '👥', accent: '#c8a8d4',
+    tagline: 'Kesiapan Sosial', greeting: 'Pilih emoji yang cocok',
+    hint: 'Tap emoji yang ngewakiliin perasaan kamu.'
+  },
+  B3: {
+    type: 'likert-dial', emoji: '⚖️', accent: '#d0b9e7',
+    tagline: 'Kesiapan Peran', greeting: 'Puter dial-nya',
+    hint: 'Puter dial ke tingkat setuju yang kamu mau.'
+  },
+  B4: {
+    type: 'likert-slider', emoji: '💰', accent: '#b8a4d9',
+    tagline: 'Kesiapan Finansial', greeting: 'Geser slider-nya',
+    hint: 'Geser dari Sangat Tidak Setuju sampai Sangat Setuju.'
+  },
+  B5: {
+    type: 'likert-emoji', emoji: '🕌', accent: '#c8a8d4',
+    tagline: 'Kesiapan Agama', greeting: 'Pilih emoji yang cocok',
+    hint: 'Tap emoji yang ngewakiliin perasaan kamu.'
+  },
+  B6: {
+    type: 'likert-dial', emoji: '🌐', accent: '#d0b9e7',
+    tagline: 'Kesiapan Norma Masyarakat', greeting: 'Puter dial-nya',
+    hint: 'Puter dial ke tingkat setuju yang kamu mau.'
+  },
+  B7: {
+    type: 'likert-slider', emoji: '🧠', accent: '#b8a4d9',
+    tagline: 'Kesiapan Mental', greeting: 'Geser slider-nya',
+    hint: 'Geser dari Sangat Tidak Setuju sampai Sangat Setuju.'
+  },
+  B8: {
+    type: 'likert-emoji', emoji: '🤝', accent: '#c8a8d4',
+    tagline: 'Menerima Satu Sama Lain', greeting: 'Pilih emoji yang cocok',
+    hint: 'Tap emoji yang ngewakiliin perasaan kamu.'
+  }
 }
