@@ -7,14 +7,14 @@ import StoryGame from './game/StoryGame'
 import LikertSlider from './game/LikertSlider'
 import LikertEmoji from './game/LikertEmoji'
 import LikertDial from './game/LikertDial'
-import TugOfLoveGame from './game/TugOfLoveGame'
+import PourLoveGame from './game/PourLoveGame'
 
 export default function GameEngine({ level, flavor, initialAnswers = {}, onComplete }) {
   const total = level.items.length
   const props = { level, flavor, total, onFinal: onComplete, initialAnswers }
 
   switch (flavor?.type) {
-    case 'tug-of-love': return <TugOfLoveGame {...props} />
+    case 'pour-love': return <PourLoveGame {...props} />
     case 'swipe': return <SwipeGame {...props} />
     case 'tap2': return <Tap2Game {...props} />
     case 'quicktap': return <QuickTapGame {...props} />
