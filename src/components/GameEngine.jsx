@@ -7,14 +7,14 @@ import StoryGame from './game/StoryGame'
 import LikertSlider from './game/LikertSlider'
 import LikertEmoji from './game/LikertEmoji'
 import LikertDial from './game/LikertDial'
+import TugOfLoveGame from './game/TugOfLoveGame'
 
 export default function GameEngine({ level, flavor, initialAnswers = {}, onComplete }) {
   const total = level.items.length
-  // State jawaban & index item di-handle per komponen game masing-masing,
-  // jadi tiap mekanik punya flow jawab sendiri & mengirim jawaban final via onComplete.
   const props = { level, flavor, total, onFinal: onComplete, initialAnswers }
 
   switch (flavor?.type) {
+    case 'tug-of-love': return <TugOfLoveGame {...props} />
     case 'swipe': return <SwipeGame {...props} />
     case 'tap2': return <Tap2Game {...props} />
     case 'quicktap': return <QuickTapGame {...props} />
