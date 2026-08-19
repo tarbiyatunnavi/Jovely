@@ -16,7 +16,7 @@ const COMPONENTS = [
 const MOMENTS = [
   { comp: 'intimasi', text: 'Dia tahu kamu sedih sebelum kamu bilang.' },
   { comp: 'intimasi', text: 'Chat jam 3 pagi hal random.' },
-  { comp: 'passion', text: 'Jantungmu bedet tiap dia senyum.' },
+  { comp: 'passion', text: 'Jantungmu berdebar tiap dia senyum.' },
   { comp: 'passion', text: 'Ada yang beda dari cara dia lihat kamu.' },
   { comp: 'komitmen', text: 'Dia bilang bicara masa depan.' },
   { comp: 'komitmen', text: 'Kamu udah gak bayang orang lain.' }
@@ -99,10 +99,10 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
     const st = stateRef.current
     st.center = { x: cx, y: cy }
     st.canvasH = rect.height
-    // 2 zona: kiri & kanan, masing-masing panel besar
+    // 2 zona: kiri & kanan, masing-masing panel besar — geser ke bawah supaya tidak ketimpa HUD atas
     const zoneW = rect.width * 0.36
-    const zoneH = rect.height * 0.42
-    const zoneY = cy - zoneH / 2 + 10
+    const zoneH = rect.height * 0.34
+    const zoneY = cy - zoneH / 2 + 24
     st.zones.left = { x: cx - zoneW - 12, y: zoneY, w: zoneW, h: zoneH, glow: 0 }
     st.zones.right = { x: cx + 12, y: zoneY, w: zoneW, h: zoneH, glow: 0 }
     // teko di bawah tengah
@@ -524,6 +524,9 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
             <p className="pl-hud-text muted" style={{ marginTop: 6, fontSize: 13 }}>
               Banyak cat = makin yakin. Tap kedua area buat lihat warna menyala. 🤍
             </p>
+            <p className="pl-hud-text muted" style={{ marginTop: 4, fontSize: 12, fontStyle: 'italic' }}>
+              Bingung? Angkat teko tanpa tuang, lanjut aja.
+            </p>
             <button className="btn pl-skip" onClick={startRounds}>Lanjut →</button>
           </div>
         )}
@@ -533,7 +536,7 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
           <div className="pl-hud pl-play">
             <div className="pl-round-pill">Momen {roundUI + 1} / 6</div>
             <div className="pl-statement fade-in" key={roundUI}>{MOMENTS[roundUI].text}</div>
-            <p className="pl-hint">Drag teko, tahan di kiri/kanan buat tuang. Lepas = lanjut.</p>
+            <p className="pl-hint">Drag teko, tahan di kiri/kanan buat tuang. Lepas = lanjut. <span style={{ fontStyle: 'italic' }}>Bingung? Angkat teko tanpa tuang, lanjut aja.</span></p>
           </div>
         )}
 
