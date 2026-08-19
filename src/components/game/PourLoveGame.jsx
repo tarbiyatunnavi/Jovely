@@ -211,54 +211,6 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
       }
     }
 
-    // === Fase hasil: mangkok + campuran warna ===
-    if (phase === 'result') {
-      const { bowl } = st
-      ctx.fillStyle = '#fbf8fd'
-      ctx.fillRect(0, 0, rect.width, rect.height)
-
-      // mangkok
-      ctx.beginPath()
-      ctx.arc(bowl.x, bowl.y, bowl.r, 0, Math.PI * 2)
-      ctx.fillStyle = '#fff'
-      ctx.fill()
-      ctx.strokeStyle = '#d8cee8'
-      ctx.lineWidth = 3
-      ctx.stroke()
-
-      // cairan campuran
-      if (bowl.fill > 0) {
-        ctx.save()
-        ctx.beginPath()
-        ctx.arc(bowl.x, bowl.y, bowl.r - 6, 0, Math.PI * 2)
-        ctx.clip()
-        const fillH = bowl.fill * (bowl.r * 2)
-        const liquidTop = bowl.y + bowl.r - fillH
-        ctx.fillStyle = bowl.mixColor
-        ctx.globalAlpha = 0.85
-        ctx.fillRect(bowl.x - bowl.r, liquidTop, bowl.r * 2, fillH)
-        ctx.globalAlpha = 0.25
-        ctx.fillStyle = '#fff'
-        const ripple = Math.sin(Date.now() / 400) * 3
-        ctx.fillRect(bowl.x - bowl.r, liquidTop + ripple, bowl.r * 2, 2)
-        ctx.restore()
-      }
-
-      // 3 label komponen di sisi
-      COMPONENTS.forEach((c, i) => {
-        const sx = bowl.x + (i - 1) * 60
-        const sy = bowl.y - bowl.r - 28
-        ctx.fillStyle = c.color
-        ctx.beginPath()
-        ctx.arc(sx, sy, 8, 0, Math.PI * 2)
-        ctx.fill()
-        ctx.fillStyle = '#8b8599'
-        ctx.font = '600 10px -apple-system, sans-serif'
-        ctx.textAlign = 'center'
-        ctx.fillText(c.colorName, sx, sy + 22)
-      })
-    }
-
     rafRef.current = requestAnimationFrame(render)
   }, [])
 
@@ -421,73 +373,12 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
     })
     const total = Math.round(((dimScores.intimasi + dimScores.passion + dimScores.komitmen) / 3) * 10) / 10
 
-    // campuran warna: weighted RGB berdasarkan skor komponen (skor tinggi = warna kuat)
-    const weights = COMPONENTS.map(c => dimScores[c.id])
-    const totalW = weights.reduce((s, w) => s + w, 0)
-    let mixColor = '#ffffff'
-    if (totalW > 0) {
-      let r = 0, g = 0, b = 0
-      COMPONENTS.forEach((c, i) => {
-        const hex = c.color
-        const cr = parseInt(hex.slice(1, 3), 16)
-        const cg = parseInt(hex.slice(3, 5), 16)
-        const cb = parseInt(hex.slice(5, 7), 16)
-        const w = weights[i]
-        r += cr * w
-        g += cg * w
-        b += cb * w
-      })
-      r = Math.round(r / totalW)
-      g = Math.round(g / totalW)
-      b = Math.round(b / totalW)
-      mixColor = `rgb(${r},${g},${b})`
-    }
-    st.bowl.mixColor = mixColor
-
-    // animasi mangkok terisi
-    const fillTarget = 0.85
-    let fill = 0
-    const fillAnim = setInterval(() => {
-      fill += 0.02
-      if (fill >= fillTarget) { fill = fillTarget; clearInterval(fillAnim) }
-      st.bowl.fill = fill
-    }, 16)
-
-    // insight berdasarkan distribusi skor komponen
-    const entries = COMPONENTS.map(c => ({ ...c, score: dimScores[c.id] }))
-    const sorted = [...entries].sort((a, b) => b.score - a.score)
-    const max = sorted[0]
-    const min = sorted[2]
-    const diff = max.score - min.score
-
-    let insight
-    if (diff <= 1 && min.score >= 4) {
-      insight = {
-        title: 'Consummate Love! 💞',
-        text: 'Tiga warna jadi putih cerah. Cinta yang lengkap menurutmu — intimasi, passion, dan komitmen sama kuat.'
-      }
-    } else if (min.score <= 2) {
-      insight = {
-        title: `Warna ${min.colorName} Hampir Hilang 🤍`,
-        text: `${min.label} belum muncul di pengalamanmu. Itu oke — di level berikutnya kita bedah apa jadinya tanpa ${min.label.toLowerCase()}.`
-      }
-    } else {
-      insight = {
-        title: 'Selesai! 🎨',
-        text: 'Cat sudah tercampur — itu cerminan cintamu. Di level berikutnya kita bedah lebih dalam.'
-      }
-    }
-
-    setResult({ dimScores, total, insight, mixColor })
-    setBurst(b => b + 1)
-    forceTick(t => t + 1)
-
     // skor consummate → map ke agree/disagree
     const consummateAnswer = total >= 3 ? 'agree' : 'disagree'
     const finalAnswers = { 'A1.1': consummateAnswer }
 
-    // tampilkan hasil ~13s sebelum onFinal
-    setTimeout(() => onFinal(finalAnswers), 13000)
+    // langsung panggil onFinal → LevelPlay tampilkan "Level Selesai"
+    setTimeout(() => onFinal(finalAnswers), 400)
   }, [onFinal])
 
   // === Render UI ===
@@ -512,17 +403,6 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
             <div className="pl-round-pill">Momen {roundUI + 1} / 6</div>
             <div className="pl-statement fade-in" key={roundUI}>{MOMENTS[roundUI].text}</div>
             <p className="pl-hint">Drag teko, tahan di kiri/kanan buat tuang. Lepas = lanjut. <span style={{ fontStyle: 'italic' }}>Bingung? Angkat teko tanpa tuang, lanjut aja.</span></p>
-          </div>
-        )}
-
-        {/* HUD fase hasil */}
-        {phaseUI === 'result' && result && (
-          <div className="pl-hud pl-result fade-in">
-            <div className="pl-hud-emoji">🎨</div>
-            <div className="pl-hud-title">{result.insight.title}</div>
-            <p className="pl-hud-text" style={{ marginTop: 6 }}>{result.insight.text}</p>
-            <p className="pl-hook">Tapi nggak semua cinta tiga warna. Kadang cuma dua. Kadang satu. Di level berikutnya, kita bedah.</p>
-            <p className="muted" style={{ marginTop: 8, fontSize: 12 }}>+25 XP</p>
           </div>
         )}
       </div>
