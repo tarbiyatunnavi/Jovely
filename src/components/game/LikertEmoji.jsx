@@ -42,11 +42,6 @@ export default function LikertEmoji({ level, flavor, total, initialAnswers, onFi
           “{item.text}”
         </div>
       </div>
-      {item.polarity && (
-        <div className="muted" style={{ textAlign: 'center', marginBottom: 14, fontSize: 12 }}>
-          {item.polarity === 'UF' ? '↔ Item unfavorable (reverse-scored)' : '↔ Item favorable'}
-        </div>
-      )}
       <p className="muted" style={{ textAlign: 'center', marginBottom: 10, fontSize: 13 }}>Tap emoji yang paling ngewakiliin perasaan kamu</p>
       <div className="lk-emoji-grid">
         {OPTS.map(o => (

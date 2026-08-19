@@ -44,11 +44,6 @@ export default function LikertSlider({ level, flavor, total, initialAnswers, onF
           “{item.text}”
         </div>
       </div>
-      {item.polarity && (
-        <div className="muted" style={{ textAlign: 'center', marginBottom: 14, fontSize: 12 }}>
-          {item.polarity === 'UF' ? '↔ Item unfavorable (reverse-scored)' : '↔ Item favorable'}
-        </div>
-      )}
       <div className="lk-slider-wrap">
         <div className="lk-slider-labels">
           <span>😤 Nggak banget</span>

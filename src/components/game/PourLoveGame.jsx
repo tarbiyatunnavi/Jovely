@@ -473,8 +473,8 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
       }
     } else {
       insight = {
-        title: 'Profil Cintamu 🎨',
-        text: 'Cat sudah tercampur jadi satu warna — itu cerminan cintamu sekarang. Di level berikutnya kita bedah lebih dalam.'
+        title: 'Selesai! 🎨',
+        text: 'Cat sudah tercampur — itu cerminan cintamu. Di level berikutnya kita bedah lebih dalam.'
       }
     }
 

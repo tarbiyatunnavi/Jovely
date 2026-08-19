@@ -87,11 +87,6 @@ export default function LikertDial({ level, flavor, total, initialAnswers, onFin
           “{item.text}”
         </div>
       </div>
-      {item.polarity && (
-        <div className="muted" style={{ textAlign: 'center', marginBottom: 10, fontSize: 12 }}>
-          {item.polarity === 'UF' ? '↔ Item unfavorable (reverse-scored)' : '↔ Item favorable'}
-        </div>
-      )}
       <div className="lk-dial-wrap">
         <div
           ref={dialRef}
