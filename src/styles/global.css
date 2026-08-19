@@ -265,14 +265,21 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ===== Celebration (level complete) ===== */
-.celebrate { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 998; pointer-events: none; }
-.celebrate-inner { text-align: center; animation: celebrateIn .5s cubic-bezier(.34,1.56,.64,1); }
+/* Celebration: confetti overlay terpisah dari teks */
+.confetti-layer { position: fixed; inset: 0; pointer-events: none; z-index: 998; overflow: hidden; }
+
+/* Teks celebration inline di page flow (tidak fixed) */
+.celebrate-text { text-align: center; animation: celebrateIn .5s cubic-bezier(.34,1.56,.64,1); }
+.celebrate-text .c-emoji { font-size: 64px; margin-bottom: 8px; animation: celebrateBounce 1.2s ease infinite; }
 @keyframes celebrateIn { 0%{transform:scale(.6);opacity:0} 100%{transform:scale(1);opacity:1} }
-.celebrate .c-emoji { font-size: 64px; margin-bottom: 8px; animation: celebrateBounce 1.2s ease infinite; }
 @keyframes celebrateBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-.celebrate .c-title { font-size: 22px; font-weight: 800; color: var(--lylac-600); }
-.celebrate .c-xp { font-size: 16px; color: var(--muted); margin-top: 4px; }
-.celebrate .c-xp strong { color: var(--lylac-600); font-size: 20px; }
+.celebrate-text .c-title { font-size: 22px; font-weight: 800; color: var(--lylac-600); }
+.celebrate-text .c-sub { font-size: 14px; color: var(--muted); margin-top: 4px; }
+.celebrate-text .c-xp { font-size: 16px; color: var(--muted); margin-top: 4px; }
+.celebrate-text .c-xp strong { color: var(--lylac-600); font-size: 20px; }
+.celebrate-text.module-done .c-emoji { font-size: 80px; }
+.celebrate-text.module-done .c-title { font-size: 26px; }
+
 .confetti-piece { position: absolute; width: 8px; height: 14px; border-radius: 2px; will-change: transform, opacity; animation: confettiFall 1.8s cubic-bezier(.2,.6,.4,1) forwards; }
 @keyframes confettiFall {
   0% { transform: translate(0,0) rotate(0); opacity: 1; }
@@ -280,8 +287,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* module-complete celebration (bigger) */
-.celebrate.module-done .c-emoji { font-size: 80px; }
-.celebrate.module-done .c-title { font-size: 26px; }
+/* (module-done styles sudah dipindah ke .celebrate-text.module-done di atas) */
 
 /* item transition */
 .item-enter { animation: itemEnter .4s cubic-bezier(.2,.7,.3,1); }

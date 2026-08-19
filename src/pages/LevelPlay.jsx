@@ -99,20 +99,23 @@ export default function LevelPlay() {
   }, [advance])
 
   if (phase === 'celebrate') {
+    const celebEmoji = moduleDone ? (isLastOfModulA ? '💜' : '🎉') : flavor?.emoji || '🎉'
+    const celebTitle = moduleDone ? (isLastOfModulA ? 'Modul Cinta Romantis Selesai!' : 'Modul Kesiapan Selesai!') : 'Level Selesai!'
     return (
       <div className="app-wrap">
         <Topbar title="Level Selesai" onBack={() => nav('/map')} />
-        <div className="page" style={{ justifyContent: 'flex-start', alignItems: 'center', textAlign: 'center', paddingTop: '200px' }}>
-          <Celebration
-            show
-            emoji={moduleDone ? (isLastOfModulA ? '💜' : '🎉') : flavor?.emoji || '🎉'}
-            title={moduleDone ? (isLastOfModulA ? 'Modul Cinta Romantis Selesai!' : 'Modul Kesiapan Selesai!') : 'Level Selesai!'}
-            subtitle={level.name}
-            xp={getLevelXP(id)}
-            moduleDone={moduleDone}
-          />
+        <div className="page" style={{ justifyContent: 'flex-start', alignItems: 'center', textAlign: 'center', paddingTop: 40, gap: 20 }}>
+          {/* Confetti overlay (fixed, terpisah dari konten) */}
+          <Celebration show moduleDone={moduleDone} />
+          {/* Teks celebration inline di page flow */}
+          <div className={`celebrate-text ${moduleDone ? 'module-done' : ''}`}>
+            <div className="c-emoji">{celebEmoji}</div>
+            <div className="c-title">{celebTitle}</div>
+            <div className="c-sub">{level.name}</div>
+            <div className="c-xp">+<strong>{getLevelXP(id)}</strong> XP</div>
+          </div>
           {moduleDone && isLastOfModulA && (
-            <div className="card fade-in" style={{ marginTop: 24, background: 'var(--lylac-50)', textAlign: 'center' }}>
+            <div className="card fade-in" style={{ background: 'var(--lylac-50)', textAlign: 'center' }}>
               <div style={{ fontWeight: 700, color: 'var(--lylac-700)' }}>Lanjut ke Modul Kesiapan Menikah 💫</div>
               <p className="muted" style={{ marginTop: 6, fontSize: 13 }}>
                 Hasil refleksi cinta kamu akan muncul di akhir Modul B.
@@ -120,7 +123,7 @@ export default function LevelPlay() {
             </div>
           )}
           {moduleDone && isLastOfModulB && (
-            <div className="card fade-in" style={{ marginTop: 24, background: 'var(--lylac-50)', textAlign: 'center' }}>
+            <div className="card fade-in" style={{ background: 'var(--lylac-50)', textAlign: 'center' }}>
               <div style={{ fontWeight: 700, color: 'var(--lylac-700)' }}>Semua modul selesai! 🎊</div>
               <p className="muted" style={{ marginTop: 6, fontSize: 13 }}>
                 Mengarahkan ke halaman hasil akhir…
@@ -128,20 +131,20 @@ export default function LevelPlay() {
             </div>
           )}
           {!moduleDone && (
-            <p className="muted fade-in" style={{ marginTop: 24, fontSize: 13 }}>
+            <p className="muted fade-in" style={{ fontSize: 13 }}>
               Lanjut ke level berikutnya otomatis…
             </p>
           )}
           {/* Fallback: tombol manual muncul kalau auto-advance belum jalan */}
           {showFallback && (
-            <div className="col fade-in" style={{ marginTop: 24, gap: 10, width: '100%' }}>
+            <div className="col fade-in" style={{ gap: 10, width: '100%' }}>
               <button className="btn" onClick={goNext}>
                 {next ? `Lanjut: ${next.name} →` : 'Lihat Hasil →'}
               </button>
             </div>
           )}
         </div>
-        {/* Tombol "Kembali ke Peta" — fixed di bawah, terpisah dari konten perayaan */}
+        {/* Tombol "Kembali ke Peta" — fixed di bawah, terpisah dari konten */}
         <button
           onClick={() => nav('/map')}
           className="celebrate-back-btn"

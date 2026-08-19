@@ -37,9 +37,10 @@ export function ParticleBurst({ trigger, emojis = ['✨', '💜', '🤍', '💫'
   )
 }
 
-// Celebration overlay saat level/modul selesai (confetti + info)
+// Celebration: confetti overlay (fixed, pointer-events:none) — teks dirender inline
+// oleh pemanggil supaya tidak tumpang tindih dgn konten page.
 const CONFETTI_COLORS = ['#b8a4d9', '#d0b9e7', '#9b82c4', '#e0d1ef', '#7f5fa8', '#ffffff']
-export function Celebration({ show, emoji = '🎉', title = 'Level Selesai!', xp = 0, moduleDone = false, subtitle }) {
+export function Celebration({ show, moduleDone = false }) {
   const [pieces, setPieces] = useState([])
   useEffect(() => {
     if (!show) { setPieces([]); return }
@@ -57,13 +58,7 @@ export function Celebration({ show, emoji = '🎉', title = 'Level Selesai!', xp
 
   if (!show) return null
   return (
-    <div className="celebrate">
-      <div className="celebrate-inner">
-        <div className={`c-emoji ${moduleDone ? 'big' : ''}`}>{emoji}</div>
-        <div className="c-title">{title}</div>
-        {subtitle && <div className="c-xp">{subtitle}</div>}
-        {xp > 0 && <div className="c-xp">+<strong>{xp}</strong> XP</div>}
-      </div>
+    <div className="confetti-layer">
       {pieces.map(p => (
         <span key={p.id} className="confetti-piece" style={{
           left: `${p.left}%`, top: '-20px',
