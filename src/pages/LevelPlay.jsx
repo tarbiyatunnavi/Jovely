@@ -1,10 +1,14 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useProgress } from '../context/ProgressContext'
 import { getLevel, getNextLevel, getModuleOf, GAME_MECHANICS, getLevelXP } from '../data/levels'
 import { Topbar } from '../components/Layout'
 import GameEngine from '../components/GameEngine'
 import { Celebration } from '../components/Particles'
+
+const CELEBRATE_DELAY = 1800
+const MODULE_DONE_DELAY = 2600
+const FALLBACK_AFTER = 3500 // tampilkan tombol manual kalau auto belum jalan
 
 export default function LevelPlay() {
   const { id } = useParams()
@@ -14,7 +18,27 @@ export default function LevelPlay() {
   const mod = getModuleOf(id)
   const flavor = GAME_MECHANICS[id]
   const existing = getLevelProgress(id)
+
   const [phase, setPhase] = useState('play') // 'play' | 'celebrate'
+  const [showFallback, setShowFallback] = useState(false)
+  const advanceTimer = useRef(null)
+  const fallbackTimer = useRef(null)
+  const currentLevelId = useRef(id)
+
+  // Reset phase ke 'play' setiap kali id (level) berubah — INI KUNCINYA
+  // supaya navigate dari /level/A1 → /level/A2 benar-benar render game baru.
+  useEffect(() => {
+    currentLevelId.current = id
+    setPhase('play')
+    setShowFallback(false)
+    // bersihkan timer lama kalau ada
+    if (advanceTimer.current) { clearTimeout(advanceTimer.current); advanceTimer.current = null }
+    if (fallbackTimer.current) { clearTimeout(fallbackTimer.current); fallbackTimer.current = null }
+    return () => {
+      if (advanceTimer.current) { clearTimeout(advanceTimer.current); advanceTimer.current = null }
+      if (fallbackTimer.current) { clearTimeout(fallbackTimer.current); fallbackTimer.current = null }
+    }
+  }, [id])
 
   if (!level) {
     return (
@@ -43,16 +67,35 @@ export default function LevelPlay() {
   const isLastOfModulB = mod.id === 'B' && id === 'B8'
   const moduleDone = isLastOfModulA || isLastOfModulB
 
-  const onComplete = async (finalAnswers) => {
-    await saveLevel(id, finalAnswers, 'completed')
+  const advance = useCallback(() => {
+    // pastikan level id yang dirayakan masih sama dgn level aktif (hindari race condition)
+    if (currentLevelId.current !== id) return
+    if (next) nav(`/level/${next.id}`, { replace: true })
+    else nav('/result', { replace: true })
+  }, [id, next, nav])
+
+  const onComplete = useCallback((finalAnswers) => {
+    // Mulai simpan progress di background (jangan tunggu)
+    saveLevel(id, finalAnswers, 'completed').catch(() => {})
+
+    // Tampilkan layar perayaan
     setPhase('celebrate')
-    // Jeda perayaan lalu auto-advance
-    const delay = moduleDone ? 2600 : 1800
-    setTimeout(() => {
-      if (next) nav(`/level/${next.id}`, { replace: true })
-      else nav('/result', { replace: true })
-    }, delay)
-  }
+
+    // Jadwalkan auto-advance
+    const delay = moduleDone ? MODULE_DONE_DELAY : CELEBRATE_DELAY
+    if (advanceTimer.current) clearTimeout(advanceTimer.current)
+    advanceTimer.current = setTimeout(() => advance(), delay)
+
+    // Fallback: kalau setelah FALLBACK_AFTER ms belum pindah, tampilkan tombol manual
+    if (fallbackTimer.current) clearTimeout(fallbackTimer.current)
+    fallbackTimer.current = setTimeout(() => setShowFallback(true), FALLBACK_AFTER)
+  }, [id, moduleDone, saveLevel, advance])
+
+  const goNext = useCallback(() => {
+    if (advanceTimer.current) { clearTimeout(advanceTimer.current); advanceTimer.current = null }
+    if (fallbackTimer.current) { clearTimeout(fallbackTimer.current); fallbackTimer.current = null }
+    advance()
+  }, [advance])
 
   if (phase === 'celebrate') {
     return (
@@ -83,9 +126,30 @@ export default function LevelPlay() {
               </p>
             </div>
           )}
-          <a href="/map" className="muted" style={{ marginTop: 16, fontSize: 13, textDecoration: 'underline' }}>
-            Kembali ke Peta
-          </a>
+          {!moduleDone && (
+            <p className="muted fade-in" style={{ marginTop: 16, fontSize: 13 }}>
+              Lanjut ke level berikutnya otomatis…
+            </p>
+          )}
+          {/* Fallback: tombol manual muncul kalau auto-advance belum jalan */}
+          {showFallback && (
+            <div className="col fade-in" style={{ marginTop: 20, gap: 10, width: '100%' }}>
+              <button className="btn" onClick={goNext}>
+                {next ? `Lanjut: ${next.name} →` : 'Lihat Hasil →'}
+              </button>
+              <button className="btn btn-ghost" onClick={() => nav('/map')}>Kembali ke Peta</button>
+            </div>
+          )}
+          {!showFallback && (
+            <a
+              href="#"
+              onClick={(e) => { e.preventDefault(); nav('/map') }}
+              className="muted"
+              style={{ marginTop: 16, fontSize: 13, textDecoration: 'underline' }}
+            >
+              Kembali ke Peta
+            </a>
+          )}
         </div>
       </div>
     )
