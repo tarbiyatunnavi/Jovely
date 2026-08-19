@@ -369,15 +369,9 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
     return () => clearInterval(interval)
   }, [])
 
-  // === Fase 1: Intro ===
+  // === Langsung mulai fase play (tanpa intro) ===
   useEffect(() => {
-    const t = setTimeout(() => startRounds(), TUTORIAL_DURATION)
-    return () => clearTimeout(t)
-  }, [])
-
-  const startRounds = useCallback(() => {
     const st = stateRef.current
-    if (st.phase !== 'intro') return
     st.phase = 'play'
     setPhaseUI('play')
     startRound(0)
@@ -479,8 +473,8 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
       }
     } else {
       insight = {
-        title: `Warna ${max.colorName} Paling Pekat ✨`,
-        text: `${max.label} paling kuat buatmu. Consummate love butuh ketiganya — di level berikutnya kita bedah.`
+        title: 'Profil Cintamu 🎨',
+        text: 'Cat sudah tercampur jadi satu warna — itu cerminan cintamu sekarang. Di level berikutnya kita bedah lebih dalam.'
       }
     }
 
@@ -511,25 +505,6 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
           onMouseUp={onPointerUp}
           onMouseLeave={onPointerUp}
         />
-
-        {/* HUD fase intro */}
-        {phaseUI === 'intro' && (
-          <div className="pl-hud pl-intro fade-in">
-            <div className="pl-hud-emoji">🫖</div>
-            <div className="pl-hud-title">Tuang Cat Cinta</div>
-            <p className="pl-hud-text">
-              Tuang ke <strong style={{color:'#4A90D9'}}>kanan</strong> kalau setuju.
-              Tuang ke <strong style={{color:'#d95a8a'}}>kiri</strong> kalau nggak.
-            </p>
-            <p className="pl-hud-text muted" style={{ marginTop: 6, fontSize: 13 }}>
-              Banyak cat = makin yakin. Tap kedua area buat lihat warna menyala. 🤍
-            </p>
-            <p className="pl-hud-text muted" style={{ marginTop: 4, fontSize: 12, fontStyle: 'italic' }}>
-              Bingung? Angkat teko tanpa tuang, lanjut aja.
-            </p>
-            <button className="btn pl-skip" onClick={startRounds}>Lanjut →</button>
-          </div>
-        )}
 
         {/* HUD fase play */}
         {phaseUI === 'play' && (
