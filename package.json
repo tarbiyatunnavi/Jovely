@@ -1,0 +1,26 @@
+{
+  "name": "jovely",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "cf:db:create": "wrangler d1 create jovely-db",
+    "cf:db:init": "wrangler d1 execute jovely-db --file=./schema.sql",
+    "cf:db:init:local": "wrangler d1 execute jovely-db --local --file=./schema.sql"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2",
+    "recharts": "^2.12.7"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.4.2",
+    "vite-plugin-pwa": "^0.20.5",
+    "wrangler": "^4.124.0"
+  }
+}
