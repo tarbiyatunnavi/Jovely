@@ -304,3 +304,28 @@ a { color: inherit; text-decoration: none; }
 .celebrate-back-btn:active { transform: translateX(-50%) scale(.94); }
 .celebrate-back-btn:hover { background: #fff; border-color: var(--lylac-300); }
 
+/* ===== Map node: idle animations (hanya level terbuka) ===== */
+.map-node { will-change: transform; }
+.map-node:disabled { animation: none !important; opacity: .5; filter: grayscale(.7); }
+
+.idle-bounce { animation: idleBounce 2.4s ease-in-out infinite; }
+@keyframes idleBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
+
+.idle-float { animation: idleFloat 3.2s ease-in-out infinite; }
+@keyframes idleFloat { 0%,100%{transform:translateY(0) rotate(0)} 50%{transform:translateY(-5px) rotate(3deg)} }
+
+.idle-pulse { animation: idlePulse 2.8s ease-in-out infinite; }
+@keyframes idlePulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+
+.idle-wiggle { animation: idleWiggle 3s ease-in-out infinite; }
+@keyframes idleWiggle { 0%,100%{transform:rotate(-4deg)} 50%{transform:rotate(4deg)} }
+
+/* Stagger delay supaya tidak semua sinkron */
+.idle-float { animation-delay: .4s; }
+.idle-pulse { animation-delay: .8s; }
+.idle-wiggle { animation-delay: 1.2s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .idle-bounce, .idle-float, .idle-pulse, .idle-wiggle { animation: none; }
+}
+
