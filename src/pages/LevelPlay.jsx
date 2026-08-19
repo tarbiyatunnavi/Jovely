@@ -65,7 +65,7 @@ export default function LevelPlay() {
 
   const next = getNextLevel(id)
   const isLastOfModulA = mod.id === 'A' && id === 'A12'
-  const isLastOfModulB = mod.id === 'B' && id === 'B8'
+  const isLastOfModulB = mod.id === 'B' && id === 'B7'
   const moduleDone = isLastOfModulA || isLastOfModulB
 
   const advance = useCallback(() => {

@@ -109,10 +109,12 @@ export const MODULES = [
     order: 2,
     levels: [
       {
-        id: 'B1', order: 13, name: 'Kesiapan Emosi', icon: 'emotion',
+        id: 'B1', order: 13, name: 'Kesiapan Emosi & Menerima', icon: 'emotion',
         items: [
-          { id: 'B1.1', polarity: 'UF', text: 'Pengalaman menyakitkan di masa lalu bikin ragu untuk berkomitmen menikah.' },
-          { id: 'B1.2', polarity: 'UF', text: 'Takut kalau masalah/trauma masa lalu akan mengganggu kebahagiaan pernikahan di masa depan.' }
+          { id: 'B1.1', polarity: 'F', text: 'Siap mengutamakan kebutuhan pasangan di atas kebutuhan pribadi.' },
+          { id: 'B1.2', polarity: 'UF', text: 'Merasa keterbukaan dengan pasangan nggak membantu dalam berbagi peran rumah tangga.' },
+          { id: 'B1.3', polarity: 'UF', text: 'Pengalaman menyakitkan di masa lalu bikin ragu untuk berkomitmen menikah.' },
+          { id: 'B1.4', polarity: 'UF', text: 'Takut kalau masalah/trauma masa lalu akan mengganggu kebahagiaan pernikahan di masa depan.' }
         ]
       },
       {
@@ -126,44 +128,37 @@ export const MODULES = [
       {
         id: 'B3', order: 15, name: 'Kesiapan Peran', icon: 'role',
         items: [
-          { id: 'B3.1', polarity: 'UF', text: 'Merasa keterbukaan dengan pasangan nggak membantu dalam berbagi peran rumah tangga.' },
-          { id: 'B3.2', polarity: 'F', text: 'Nggak keberatan kalau suami-istri berbagi peran dan tugas pekerjaan rumah tangga.' },
-          { id: 'B3.3', polarity: 'UF', text: 'Merasa keberatan kalau harus berbagi tugas pekerjaan rumah dengan pasangan.' }
+          { id: 'B3.1', polarity: 'F', text: 'Nggak keberatan kalau suami-istri berbagi peran dan tugas pekerjaan rumah tangga.' },
+          { id: 'B3.2', polarity: 'UF', text: 'Merasa keberatan kalau harus berbagi tugas pekerjaan rumah dengan pasangan.' }
         ]
       },
       {
         id: 'B4', order: 16, name: 'Kesiapan Finansial', icon: 'finance',
         items: [
           { id: 'B4.1', polarity: 'F', text: 'Sebelum menikah, harus sudah punya pekerjaan atau penghasilan.' },
-          { id: 'B4.2', polarity: 'UF', text: 'Menurutku pekerjaan dan penghasilan nggak berpengaruh terhadap pernikahan.' },
-          { id: 'B4.3', polarity: 'UF', text: 'Nggak punya penghasilan/pekerjaan sebelum atau sesudah menikah itu hal yang wajar.' }
+          { id: 'B4.2', polarity: 'F', text: 'Akan tetap menghargai pekerjaan pasangan meskipun penghasilannya kecil.' },
+          { id: 'B4.3', polarity: 'UF', text: 'Menurutku pekerjaan dan penghasilan nggak berpengaruh terhadap pernikahan.' },
+          { id: 'B4.4', polarity: 'UF', text: 'Nggak punya penghasilan/pekerjaan sebelum atau sesudah menikah itu hal yang wajar.' }
         ]
       },
       {
-        id: 'B5', order: 17, name: 'Kesiapan Agama', icon: 'religion',
+        id: 'B5', order: 17, name: 'Kesiapan Mental', icon: 'mental',
         items: [
-          { id: 'B5.1', polarity: 'F', text: 'Harus menikah dengan pasangan yang agamanya sama.' },
-          { id: 'B5.2', polarity: 'F', text: 'Mempelajari dan menyiapkan ilmu agama itu penting sebagai bekal berumah tangga.' }
+          { id: 'B5.1', polarity: 'UF', text: 'Belum punya rencana untuk membangun kehidupan berumah tangga.' }
         ]
       },
       {
-        id: 'B6', order: 18, name: 'Kesiapan Norma Masyarakat', icon: 'norms',
+        id: 'B6', order: 18, name: 'Kesiapan Norma Agama', icon: 'religion',
         items: [
-          { id: 'B6.1', polarity: 'F', text: 'Sadar bahwa pacaran itu sesuatu yang nggak sesuai dengan norma masyarakat.' },
-          { id: 'B6.2', polarity: 'UF', text: 'Merasa pacaran dan kontak fisik itu hal yang wajar menurut norma masyarakat.' }
+          { id: 'B6.1', polarity: 'F', text: 'Harus menikah dengan pasangan yang agamanya sama.' },
+          { id: 'B6.2', polarity: 'F', text: 'Mempelajari dan menyiapkan ilmu agama itu penting sebagai bekal berumah tangga.' }
         ]
       },
       {
-        id: 'B7', order: 19, name: 'Kesiapan Mental', icon: 'mental',
+        id: 'B7', order: 19, name: 'Kesiapan Norma Masyarakat', icon: 'norms',
         items: [
-          { id: 'B7.1', polarity: 'UF', text: 'Belum punya rencana untuk membangun kehidupan berumah tangga.' }
-        ]
-      },
-      {
-        id: 'B8', order: 20, name: 'Kesiapan Menerima', icon: 'acceptance',
-        items: [
-          { id: 'B8.1', polarity: 'F', text: 'Siap mengutamakan kebutuhan pasangan di atas kebutuhan pribadi.' },
-          { id: 'B8.2', polarity: 'F', text: 'Akan tetap menghargai pekerjaan pasangan meskipun penghasilannya kecil.' }
+          { id: 'B7.1', polarity: 'F', text: 'Sadar bahwa pacaran itu sesuatu yang nggak sesuai dengan norma masyarakat.' },
+          { id: 'B7.2', polarity: 'UF', text: 'Merasa pacaran dan kontak fisik itu hal yang wajar menurut norma masyarakat.' }
         ]
       }
     ]
@@ -368,7 +363,7 @@ export const GAME_MECHANICS = {
   // === Modul B: Kesiapan Menikah (Likert 5 poin, 3 varian interaksi) ===
   B1: {
     type: 'likert-slider', emoji: '💧', accent: '#b8a4d9',
-    tagline: 'Kesiapan Emosi', greeting: 'Geser slider-nya',
+    tagline: 'Emosi & Menerima', greeting: 'Geser slider-nya',
     hint: 'Geser dari Sangat Tidak Setuju sampai Sangat Setuju.'
   },
   B2: {
@@ -387,24 +382,19 @@ export const GAME_MECHANICS = {
     hint: 'Geser dari Sangat Tidak Setuju sampai Sangat Setuju.'
   },
   B5: {
-    type: 'likert-emoji', emoji: '🕌', accent: '#c8a8d4',
-    tagline: 'Kesiapan Agama', greeting: 'Pilih emoji yang cocok',
+    type: 'likert-emoji', emoji: '🧠', accent: '#c8a8d4',
+    tagline: 'Kesiapan Mental', greeting: 'Pilih emoji yang cocok',
     hint: 'Tap emoji yang ngewakiliin perasaan kamu.'
   },
   B6: {
-    type: 'likert-dial', emoji: '🌐', accent: '#d0b9e7',
-    tagline: 'Kesiapan Norma Masyarakat', greeting: 'Puter dial-nya',
+    type: 'likert-dial', emoji: '🕌', accent: '#d0b9e7',
+    tagline: 'Norma Agama', greeting: 'Puter dial-nya',
     hint: 'Puter dial ke tingkat setuju yang kamu mau.'
   },
   B7: {
-    type: 'likert-slider', emoji: '🧠', accent: '#b8a4d9',
-    tagline: 'Kesiapan Mental', greeting: 'Geser slider-nya',
+    type: 'likert-slider', emoji: '🌐', accent: '#b8a4d9',
+    tagline: 'Norma Masyarakat', greeting: 'Geser slider-nya',
     hint: 'Geser dari Sangat Tidak Setuju sampai Sangat Setuju.'
-  },
-  B8: {
-    type: 'likert-emoji', emoji: '🤝', accent: '#c8a8d4',
-    tagline: 'Menerima', greeting: 'Pilih emoji yang cocok',
-    hint: 'Tap emoji yang ngewakiliin perasaan kamu.'
   }
 }
 
@@ -412,7 +402,7 @@ export const GAME_MECHANICS = {
 export const LEVEL_EMOJI = {
   A1: '💞', A2: '🏠', A3: '✨', A4: '🧲', A5: '⚡', A6: '🌱', A7: '🧩', A8: '🤍',
   A9: '🤝', A10: '🙈', A11: '🚩', A12: '🔥',
-  B1: '💧', B2: '👥', B3: '⚖️', B4: '💰', B5: '🕌', B6: '🌐', B7: '🧠', B8: '🫂'
+  B1: '💧', B2: '👥', B3: '⚖️', B4: '💰', B5: '🧠', B6: '🕌', B7: '🌐'
 }
 
 export const LEVEL_GRADIENT = {
@@ -424,6 +414,6 @@ export const LEVEL_GRADIENT = {
   A11: 'linear-gradient(135deg,#d8b8c0,#9b82c4)', A12: 'linear-gradient(135deg,#f0a0a0,#c45050)',
   B1: 'linear-gradient(135deg,#a8d0e8,#9b82c4)', B2: 'linear-gradient(135deg,#c8e8d4,#9b82c4)',
   B3: 'linear-gradient(135deg,#e8e0a8,#9b82c4)', B4: 'linear-gradient(135deg,#f0d8a0,#9b82c4)',
-  B5: 'linear-gradient(135deg,#d0d8c4,#9b82c4)', B6: 'linear-gradient(135deg,#c8d0e8,#9b82c4)',
-  B7: 'linear-gradient(135deg,#e8c8d0,#9b82c4)', B8: 'linear-gradient(135deg,#d0b9e7,#c8a8d4)'
+  B5: 'linear-gradient(135deg,#e8c8d0,#9b82c4)', B6: 'linear-gradient(135deg,#d0d8c4,#9b82c4)',
+  B7: 'linear-gradient(135deg,#c8d0e8,#9b82c4)'
 }

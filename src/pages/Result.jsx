@@ -61,7 +61,7 @@ export default function Result() {
   }
 
   const radarData = Object.values(readiness.dims).map(d => ({
-    name: d.name.replace('Kesiapan ', '').replace('Menerima Satu Sama Lain', 'Menerima'),
+    name: d.name.replace('Kesiapan ', '').replace('Norma ', ''),
     percent: d.percent,
     fullMark: 100
   }))
