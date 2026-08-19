@@ -1,29 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 import { useProgress } from '../context/ProgressContext'
-import { MODULES, TOTAL_LEVELS, getLevelXP, GAME_MECHANICS } from '../data/levels'
+import { MODULES, TOTAL_LEVELS, getLevelXP, GAME_MECHANICS, LEVEL_EMOJI, LEVEL_GRADIENT } from '../data/levels'
 import { Topbar } from '../components/Layout'
 import { Icon } from '../components/Icon'
-
-// Emoji representatif per dimensi (ambil dari flavor, B8 ganti 🫂 untuk acceptance)
-const LEVEL_EMOJI = {
-  A1: '💞', A2: '🏠', A3: '✨', A4: '🧲', A5: '⚡', A6: '🌱', A7: '🧩', A8: '🤍',
-  A9: '🤝', A10: '🙈', A11: '🚩', A12: '🔥',
-  B1: '💧', B2: '👥', B3: '⚖️', B4: '💰', B5: '🕌', B6: '🌐', B7: '🧠', B8: '🫂'
-}
-
-// Gradasi warna per dimensi (soft lylac + aksen senada per tema)
-const LEVEL_GRADIENT = {
-  A1: 'linear-gradient(135deg,#f9c5d1,#b8a4d9)', A2: 'linear-gradient(135deg,#c8a8d4,#9b82c4)',
-  A3: 'linear-gradient(135deg,#d0b9e7,#b8a4d9)', A4: 'linear-gradient(135deg,#b8a4d9,#7f5fa8)',
-  A5: 'linear-gradient(135deg,#f0d1ef,#b8a4d9)', A6: 'linear-gradient(135deg,#c4e8c4,#9b82c4)',
-  A7: 'linear-gradient(135deg,#d0b9e7,#c8a8d4)', A8: 'linear-gradient(135deg,#f0f0f5,#b8a4d9)',
-  A9: 'linear-gradient(135deg,#b8a4d9,#d0b9e7)', A10: 'linear-gradient(135deg,#e8c8d4,#b8a4d9)',
-  A11: 'linear-gradient(135deg,#d8b8c0,#9b82c4)', A12: 'linear-gradient(135deg,#f0a0a0,#c45050)',
-  B1: 'linear-gradient(135deg,#a8d0e8,#9b82c4)', B2: 'linear-gradient(135deg,#c8e8d4,#9b82c4)',
-  B3: 'linear-gradient(135deg,#e8e0a8,#9b82c4)', B4: 'linear-gradient(135deg,#f0d8a0,#9b82c4)',
-  B5: 'linear-gradient(135deg,#d0d8c4,#9b82c4)', B6: 'linear-gradient(135deg,#c8d0e8,#9b82c4)',
-  B7: 'linear-gradient(135deg,#e8c8d0,#9b82c4)', B8: 'linear-gradient(135deg,#d0b9e7,#c8a8d4)'
-}
 
 // 4 jenis animasi idle di-cycle supaya tiap level beda gerakan
 const IDLE_ANIMS = ['idle-bounce', 'idle-float', 'idle-pulse', 'idle-wiggle']

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useProgress } from '../context/ProgressContext'
-import { scoreLoveStyles, scoreMarriageReadiness, interpret, ALL_LEVELS, MODULES } from '../data/levels'
+import { scoreLoveStyles, scoreMarriageReadiness, interpret, ALL_LEVELS, MODULES, LEVEL_EMOJI, LEVEL_GRADIENT } from '../data/levels'
 import { Topbar, Spinner, Alert } from '../components/Layout'
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Cell } from 'recharts'
 
@@ -101,15 +101,24 @@ export default function Result() {
         <div className="col">
           {Object.values(readiness.dims).map(d => {
             const interp = interpret(d.percent)
+            const emoji = LEVEL_EMOJI[d.levelId] || '💜'
+            const gradient = LEVEL_GRADIENT[d.levelId] || 'var(--lylac-400)'
             return (
-              <div key={d.levelId} className="card">
-                <div className="between" style={{ marginBottom: 8 }}>
-                  <div style={{ fontWeight: 700 }}>{d.name}</div>
-                  <span className="pill">{d.percent}%</span>
-                </div>
-                <div className="progress-bar" style={{ marginBottom: 10 }}><div style={{ width: `${d.percent}%` }} /></div>
-                <div className="muted" style={{ fontSize: 13 }}>
-                  <strong style={{ color: 'var(--lylac-700)' }}>{interp.label}.</strong> {interp.note}
+              <div key={d.levelId} className="card" style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
+                <div style={{
+                  width: 48, height: 48, borderRadius: '50%', flexShrink: 0,
+                  background: gradient, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 24, color: '#fff'
+                }}>{emoji}</div>
+                <div style={{ flex: 1 }}>
+                  <div className="between" style={{ marginBottom: 6 }}>
+                    <div style={{ fontWeight: 700 }}>{d.name}</div>
+                    <span className="pill">{d.percent}%</span>
+                  </div>
+                  <div className="progress-bar" style={{ marginBottom: 8 }}><div style={{ width: `${d.percent}%` }} /></div>
+                  <div className="muted" style={{ fontSize: 13 }}>
+                    <strong style={{ color: 'var(--lylac-700)' }}>{interp.label}.</strong> {interp.note}
+                  </div>
                 </div>
               </div>
             )
@@ -123,21 +132,31 @@ export default function Result() {
               Dari Modul Cinta Romantis — refleksi pandangan cinta kamu (3 tertinggi).
             </p>
             <div className="col">
-              {topLove.slice(0, 3).map((s, i) => (
-                <div key={s.levelId} className="card" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <div style={{
-                    width: 36, height: 36, borderRadius: '50%',
-                    background: i === 0 ? 'var(--lylac-400)' : 'var(--lylac-100)',
-                    color: i === 0 ? '#fff' : 'var(--lylac-600)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontWeight: 800, fontSize: 14
-                  }}>{i + 1}</div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 700 }}>{s.name}</div>
-                    <div className="muted" style={{ fontSize: 12 }}>{s.percent}% setuju</div>
+              {topLove.slice(0, 3).map((s, i) => {
+                const emoji = LEVEL_EMOJI[s.levelId] || '💜'
+                const gradient = LEVEL_GRADIENT[s.levelId] || 'var(--lylac-400)'
+                return (
+                  <div key={s.levelId} className="card" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <div style={{
+                      width: 40, height: 40, borderRadius: '50%',
+                      background: gradient,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontSize: 20, color: '#fff'
+                    }}>{emoji}</div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: 700 }}>{s.name}</div>
+                      <div className="muted" style={{ fontSize: 12 }}>{s.percent}% setuju</div>
+                    </div>
+                    <div style={{
+                      width: 28, height: 28, borderRadius: '50%',
+                      background: i === 0 ? 'var(--lylac-400)' : 'var(--lylac-100)',
+                      color: i === 0 ? '#fff' : 'var(--lylac-600)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontWeight: 800, fontSize: 13
+                    }}>{i + 1}</div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         )}
