@@ -102,7 +102,7 @@ export default function LevelPlay() {
     return (
       <div className="app-wrap">
         <Topbar title="Level Selesai" onBack={() => nav('/map')} />
-        <div className="page" style={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+        <div className="page" style={{ justifyContent: 'flex-start', alignItems: 'center', textAlign: 'center', paddingTop: '200px' }}>
           <Celebration
             show
             emoji={moduleDone ? (isLastOfModulA ? '💜' : '🎉') : flavor?.emoji || '🎉'}
@@ -112,7 +112,7 @@ export default function LevelPlay() {
             moduleDone={moduleDone}
           />
           {moduleDone && isLastOfModulA && (
-            <div className="card fade-in" style={{ marginTop: 20, background: 'var(--lylac-50)', textAlign: 'center' }}>
+            <div className="card fade-in" style={{ marginTop: 24, background: 'var(--lylac-50)', textAlign: 'center' }}>
               <div style={{ fontWeight: 700, color: 'var(--lylac-700)' }}>Lanjut ke Modul Kesiapan Menikah 💫</div>
               <p className="muted" style={{ marginTop: 6, fontSize: 13 }}>
                 Hasil refleksi cinta kamu akan muncul di akhir Modul B.
@@ -120,7 +120,7 @@ export default function LevelPlay() {
             </div>
           )}
           {moduleDone && isLastOfModulB && (
-            <div className="card fade-in" style={{ marginTop: 20, background: 'var(--lylac-50)', textAlign: 'center' }}>
+            <div className="card fade-in" style={{ marginTop: 24, background: 'var(--lylac-50)', textAlign: 'center' }}>
               <div style={{ fontWeight: 700, color: 'var(--lylac-700)' }}>Semua modul selesai! 🎊</div>
               <p className="muted" style={{ marginTop: 6, fontSize: 13 }}>
                 Mengarahkan ke halaman hasil akhir…
@@ -128,21 +128,20 @@ export default function LevelPlay() {
             </div>
           )}
           {!moduleDone && (
-            <p className="muted fade-in" style={{ marginTop: 16, fontSize: 13 }}>
+            <p className="muted fade-in" style={{ marginTop: 24, fontSize: 13 }}>
               Lanjut ke level berikutnya otomatis…
             </p>
           )}
           {/* Fallback: tombol manual muncul kalau auto-advance belum jalan */}
           {showFallback && (
-            <div className="col fade-in" style={{ marginTop: 20, gap: 10, width: '100%' }}>
+            <div className="col fade-in" style={{ marginTop: 24, gap: 10, width: '100%' }}>
               <button className="btn" onClick={goNext}>
                 {next ? `Lanjut: ${next.name} →` : 'Lihat Hasil →'}
               </button>
             </div>
           )}
         </div>
-        {/* Tombol "Kembali ke Peta" — fixed di bawah, terpisah dari konten perayaan,
-            area tap besar, tidak akan ketimpa confetti (pointer-events:none) */}
+        {/* Tombol "Kembali ke Peta" — fixed di bawah, terpisah dari konten perayaan */}
         <button
           onClick={() => nav('/map')}
           className="celebrate-back-btn"
