@@ -80,10 +80,16 @@ export function ProgressProvider({ children }) {
     return ALL_LEVELS.reduce((sum, l) => sum + (progress[l.id]?.status === 'completed' ? getLevelXP(l.id) : 0), 0)
   }, [progress])
 
-  const resetAll = useCallback(() => {
+  const resetAll = useCallback(async () => {
     setProgress({})
     localStorage.removeItem(LS_KEY)
-  }, [])
+    // hapus progress di server juga supaya tidak balik saat loadFromServer
+    if (isAuthed) {
+      try {
+        await authedFetch('/progress/reset', { method: 'POST' })
+      } catch {}
+    }
+  }, [isAuthed, authedFetch])
 
   return (
     <ProgressContext.Provider value={{

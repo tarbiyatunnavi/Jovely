@@ -8,7 +8,7 @@ import { TOTAL_LEVELS } from '../data/levels'
 
 export default function Profile() {
   const { user, logout, authedFetch } = useAuth()
-  const { completedCount, totalXP, resetAll } = useProgress()
+  const { completedCount, totalXP, resetAll, loadFromServer } = useProgress()
   const nav = useNavigate()
   const [history, setHistory] = useState([])
   const [err, setErr] = useState('')
@@ -28,8 +28,9 @@ export default function Profile() {
   }
 
   const onReset = async () => {
-    if (!confirm('Yakin reset semua progress? Hasil tersimpan di server tidak dihapus.')) return
-    resetAll()
+    if (!confirm('Yakin reset semua progress? Semua jawaban level akan dihapus.')) return
+    await resetAll()
+    await loadFromServer()
     nav('/map')
   }
 
