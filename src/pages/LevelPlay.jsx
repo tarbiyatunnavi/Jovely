@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useProgress } from '../context/ProgressContext'
 import { getLevel, getNextLevel, getModuleOf, GAME_MECHANICS, getLevelXP } from '../data/levels'
 import { Topbar } from '../components/Layout'
+import { Icon } from '../components/Icon'
 import GameEngine from '../components/GameEngine'
 import { Celebration } from '../components/Particles'
 
@@ -137,20 +138,19 @@ export default function LevelPlay() {
               <button className="btn" onClick={goNext}>
                 {next ? `Lanjut: ${next.name} →` : 'Lihat Hasil →'}
               </button>
-              <button className="btn btn-ghost" onClick={() => nav('/map')}>Kembali ke Peta</button>
             </div>
           )}
-          {!showFallback && (
-            <a
-              href="#"
-              onClick={(e) => { e.preventDefault(); nav('/map') }}
-              className="muted"
-              style={{ marginTop: 16, fontSize: 13, textDecoration: 'underline' }}
-            >
-              Kembali ke Peta
-            </a>
-          )}
         </div>
+        {/* Tombol "Kembali ke Peta" — fixed di bawah, terpisah dari konten perayaan,
+            area tap besar, tidak akan ketimpa confetti (pointer-events:none) */}
+        <button
+          onClick={() => nav('/map')}
+          className="celebrate-back-btn"
+          aria-label="Kembali ke Peta"
+        >
+          <Icon name="back" size={18} />
+          <span>Peta</span>
+        </button>
       </div>
     )
   }
