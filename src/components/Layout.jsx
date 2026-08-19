@@ -1,4 +1,5 @@
 import { Icon } from './Icon'
+import { useLocation, useNavigate, Link } from 'react-router-dom'
 
 export function Topbar({ title, showBack = true, onBack, right }) {
   return (
@@ -17,7 +18,7 @@ export function Topbar({ title, showBack = true, onBack, right }) {
 }
 
 export function BottomNav() {
-  const path = window.location.pathname
+  const { pathname } = useLocation()
   const navs = [
     { to: '/map', label: 'Peta', icon: 'map' },
     { to: '/result', label: 'Hasil', icon: 'result' },
@@ -26,10 +27,10 @@ export function BottomNav() {
   return (
     <nav className="bottomnav">
       {navs.map(n => (
-        <a key={n.to} href={n.to} className={path.startsWith(n.to) ? 'active' : ''}>
+        <Link key={n.to} to={n.to} className={pathname.startsWith(n.to) ? 'active' : ''}>
           <Icon name={n.icon} size={22} />
           {n.label}
-        </a>
+        </Link>
       ))}
     </nav>
   )

@@ -41,7 +41,7 @@ function RoutesInner() {
       <Route path="/map" element={<RequireAuth><ProgressProvider><Shell><MapPage /></Shell></ProgressProvider></RequireAuth>} />
       <Route path="/level/:id" element={<RequireAuth><ProgressProvider><Shell><LevelPlay /></Shell></ProgressProvider></RequireAuth>} />
       <Route path="/result" element={<RequireAuth><ProgressProvider><Shell><Result /></Shell></ProgressProvider></RequireAuth>} />
-      <Route path="/profile" element={<RequireAuth><Shell><Profile /></Shell></RequireAuth>} />
+      <Route path="/profile" element={<RequireAuth><ProgressProvider><Shell><Profile /></Shell></ProgressProvider></RequireAuth>} />
       <Route path="/terms" element={<Shell><Terms /></Shell>} />
       <Route path="/about" element={<Shell><About /></Shell>} />
       <Route path="/contact" element={<Shell><Contact /></Shell>} />
