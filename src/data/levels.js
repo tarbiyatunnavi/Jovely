@@ -55,7 +55,7 @@ export const MODULES = [
         ]
       },
       {
-        id: 'A6', order: 6, name: 'Pesona Gravitasi', icon: 'magnet',
+        id: 'A6', order: 6, name: 'Bahtera Sahabat Sejati', icon: 'companion',
         items: [
           { id: 'A6.1', text: 'Cinta itu kayak satu jiwa yang menyatu di dua orang.' },
           { id: 'A6.2', text: 'Cinta sering muncul justru dari ketemunya dua sisi rapuh/lemah dua orang.' },
@@ -319,12 +319,6 @@ export const GAME_MECHANICS = {
     leftLabel: 'Nggak Setuju', rightLabel: 'Setuju',
     hint: 'Swipe kiri = nggak, kanan = setuju.'
   },
-  A6: {
-    type: 'tap2', emoji: '🧩', accent: '#b8a4d9',
-    tagline: 'Tarik Menarik', greeting: 'Pilih yang ngewakiliin kamu',
-    leftLabel: 'Setuju', rightLabel: 'Nggak',
-    hint: 'Tap kartu yang sesuai perasaan kamu.'
-  },
   A7: {
     type: 'dragdrop', emoji: '🤍', accent: '#c8a8d4',
     tagline: 'Cinta Tanpa Syarat', greeting: 'Masukkan ke zona yang cocok',
@@ -395,7 +389,7 @@ export const GAME_MECHANICS = {
 
 // === Data visual bersama (dipakai peta & hasil) ===
 export const LEVEL_EMOJI = {
-  A1: '💞', A2: '🏠', A3: '✨', A4: '🧲', A5: '⚡', A6: '🧩', A7: '🤍',
+  A1: '💞', A2: '🏠', A3: '✨', A4: '🧲', A5: '⚡', A6: '🌱', A7: '🤍',
   A8: '🤝', A9: '🙈', A10: '🚩', A11: '🔥',
   B1: '💧', B2: '👥', B3: '⚖️', B4: '💰', B5: '🧠', B6: '🕌', B7: '🌐'
 }
@@ -404,7 +398,7 @@ export const LEVEL_GRADIENT = {
   A1: 'linear-gradient(135deg,#f9c5d1,#b8a4d9)', A2: 'linear-gradient(135deg,#c8a8d4,#9b82c4)',
   A3: 'linear-gradient(135deg,#d0b9e7,#b8a4d9)', A4: 'linear-gradient(135deg,#b8a4d9,#7f5fa8)',
   A5: 'linear-gradient(135deg,#f0d1ef,#b8a4d9)',
-  A6: 'linear-gradient(135deg,#d0b9e7,#c8a8d4)', A7: 'linear-gradient(135deg,#f0f0f5,#b8a4d9)',
+  A6: 'linear-gradient(135deg,#c4e8c4,#9b82c4)', A7: 'linear-gradient(135deg,#f0f0f5,#b8a4d9)',
   A8: 'linear-gradient(135deg,#b8a4d9,#d0b9e7)', A9: 'linear-gradient(135deg,#e8c8d4,#b8a4d9)',
   A10: 'linear-gradient(135deg,#d8b8c0,#9b82c4)', A11: 'linear-gradient(135deg,#f0a0a0,#c45050)',
   B1: 'linear-gradient(135deg,#a8d0e8,#9b82c4)', B2: 'linear-gradient(135deg,#c8e8d4,#9b82c4)',
