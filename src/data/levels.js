@@ -6,7 +6,7 @@ export const MODULES = [
   {
     id: 'A',
     name: 'Peta Samudra Rasa',
-    subtitle: 'Eksplorasi pandangan cinta kamu',
+    subtitle: 'Eksplorasi peta cintamu',
     order: 1,
     levels: [
       {
@@ -105,7 +105,7 @@ export const MODULES = [
   {
     id: 'B',
     name: 'Ekspedisi Pondasi Bahtera',
-    subtitle: 'Ukur kesiapan kamu',
+    subtitle: 'Ukur kesiapan perjalananmu',
     order: 2,
     levels: [
       {
