@@ -60,6 +60,33 @@ export default function Result() {
     )
   }
 
+  // Label radar: wrap ke 2 baris kalau lebih dari 2 kata (biar tidak terpotong)
+  const wrapLabel = (name) => {
+    const words = name.split(' ')
+    if (words.length <= 1) return [name]
+    const mid = Math.ceil(words.length / 2)
+    return [words.slice(0, mid).join(' '), words.slice(mid).join(' ')]
+  }
+
+  const RadarTick = ({ payload, x, y, textAnchor }) => {
+    const lines = wrapLabel(payload.value || '')
+    return (
+      <text
+        x={x} y={y}
+        textAnchor={textAnchor}
+        fill="var(--ink-soft)"
+        fontSize={9.5}
+        fontWeight={600}
+      >
+        {lines.map((line, i) => (
+          <tspan key={i} x={x} dy={i === 0 ? (lines.length > 1 ? -3 : 4) : 11}>
+            {line}
+          </tspan>
+        ))}
+      </text>
+    )
+  }
+
   const radarData = Object.values(readiness.dims).map(d => ({
     name: d.name,
     percent: d.percent,
@@ -87,10 +114,10 @@ export default function Result() {
           <h3 className="h-title" style={{ fontSize: 18, marginBottom: 4 }}>📊 Breakdown per Dimensi</h3>
           <p className="muted" style={{ fontSize: 13, marginBottom: 12 }}>Skor kesiapan kamu di tiap aspek.</p>
           <div className="card" style={{ padding: 12 }}>
-            <ResponsiveContainer width="100%" height={340}>
-              <RadarChart data={radarData} margin={{ top: 20, right: 30, bottom: 20, left: 30 }}>
+            <ResponsiveContainer width="100%" height={360}>
+              <RadarChart data={radarData} margin={{ top: 28, right: 48, bottom: 28, left: 48 }}>
                 <PolarGrid stroke="var(--line)" />
-                <PolarAngleAxis dataKey="name" tick={{ fill: 'var(--ink-soft)', fontSize: 10 }} />
+                <PolarAngleAxis dataKey="name" tick={<RadarTick />} />
                 <PolarRadiusAxis domain={[0, 100]} tick={{ fill: 'var(--muted)', fontSize: 9 }} />
                 <Radar dataKey="percent" stroke="var(--lylac-500)" fill="var(--lylac-400)" fillOpacity={0.5} />
               </RadarChart>
