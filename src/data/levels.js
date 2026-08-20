@@ -48,56 +48,51 @@ export const MODULES = [
       {
         id: 'A5', order: 5, name: 'Lentera Percik Api', icon: 'spark',
         items: [
-          { id: 'A5.1', text: 'Orang bisa jatuh cinta tanpa alasan jelas, bahkan tanpa direncanain — cinta emang nggak bisa diatur.' }
+          { id: 'A5.1', text: 'Orang bisa jatuh cinta tanpa alasan jelas, bahkan tanpa direncanakan – cinta memang nggak bisa diatur.' },
+          { id: 'A5.2', text: 'Cinta yang tulus itu nggak pernah benar-benar berakhir.' },
+          { id: 'A5.3', text: 'Cinta itu terbentuk dari semua hal yang udah dilalui bareng seseorang.' },
+          { id: 'A5.4', text: 'Cinta itu nggak tunduk sama waktu - dia melampaui waktu.' }
         ]
       },
       {
-        id: 'A6', order: 6, name: 'Bahtera Sahabat Sejati', icon: 'companion',
+        id: 'A6', order: 6, name: 'Pesona Gravitasi', icon: 'magnet',
         items: [
-          { id: 'A6.1', text: 'Cinta yang tulus itu nggak pernah benar-benar berakhir.' },
-          { id: 'A6.2', text: 'Cinta itu terbentuk dari semua hal yang udah dilalui bareng seseorang.' },
-          { id: 'A6.3', text: 'Cinta itu nggak tunduk sama waktu — dia melampaui waktu.' }
+          { id: 'A6.1', text: 'Cinta itu kayak satu jiwa yang menyatu di dua orang.' },
+          { id: 'A6.2', text: 'Cinta sering muncul justru dari ketemunya dua sisi rapuh/lemah dua orang.' },
+          { id: 'A6.3', text: 'Sebelum jatuh cinta sama seseorang, rasanya banyak hal belum terasa bermakna.' }
         ]
       },
       {
-        id: 'A7', order: 7, name: 'Pesona Gravitasi', icon: 'magnet',
+        id: 'A7', order: 7, name: 'Mata Air Ketulusan', icon: 'halo',
         items: [
-          { id: 'A7.1', text: 'Cinta itu kayak satu jiwa yang menyatu di dua orang.' },
-          { id: 'A7.2', text: 'Cinta sering muncul justru dari ketemunya dua sisi rapuh/lemah dua orang.' },
-          { id: 'A7.3', text: 'Sebelum jatuh cinta sama seseorang, rasanya banyak hal belum terasa bermakna.' }
+          { id: 'A7.1', text: 'Cinta yang paling kuat itu justru yang berani nunjukin sisi rapuhnya.' },
+          { id: 'A7.2', text: 'Mencintai seseorang apa adanya, tanpa syarat.' },
+          { id: 'A7.3', text: 'Cinta yang dikasih dengan tulus/ikhlas justru yang bakal bertahan lama.' },
+          { id: 'A7.4', text: 'Cinta itu bisa ngalahin apa pun.' }
         ]
       },
       {
-        id: 'A8', order: 8, name: 'Mata Air Ketulusan', icon: 'halo',
+        id: 'A8', order: 8, name: 'Kompas Logika', icon: 'handshake',
         items: [
-          { id: 'A8.1', text: 'Cinta yang paling kuat itu justru yang berani nunjukin sisi rapuhnya.' },
-          { id: 'A8.2', text: 'Mencintai seseorang apa adanya, tanpa syarat.' },
-          { id: 'A8.3', text: 'Cinta yang dikasih dengan tulus/ikhlas justru yang bakal bertahan lama.' },
-          { id: 'A8.4', text: 'Cinta itu bisa ngalahin apa pun.' }
+          { id: 'A8.1', text: 'Daripada capek nyari pasangan yang sempurna, mending fokus bangun hubungan yang sempurna bareng-bareng.' }
         ]
       },
       {
-        id: 'A9', order: 9, name: 'Kompas Logika', icon: 'handshake',
+        id: 'A9', order: 9, name: 'Kilat Tanpa Akar', icon: 'blindfold',
         items: [
-          { id: 'A9.1', text: 'Daripada capek nyari pasangan yang sempurna, mending fokus bangun hubungan yang sempurna bareng-bareng.' }
+          { id: 'A9.1', text: 'Cinta itu buta — kadang bikin nggak lihat kekurangan orang yang dicintai.' }
         ]
       },
       {
-        id: 'A10', order: 10, name: 'Kilat Tanpa Akar', icon: 'blindfold',
+        id: 'A10', order: 10, name: 'Sumpah Penjaga Takdir', icon: 'flag',
         items: [
-          { id: 'A10.1', text: 'Cinta itu buta — kadang bikin nggak lihat kekurangan orang yang dicintai.' }
+          { id: 'A10.1', text: 'Rela ngelakuin apa aja demi orang yang dicintai.' }
         ]
       },
       {
-        id: 'A11', order: 11, name: 'Sumpah Penjaga Takdir', icon: 'flag',
+        id: 'A11', order: 11, name: 'Pusaran Angin Gelisah', icon: 'fire',
         items: [
-          { id: 'A11.1', text: 'Rela ngelakuin apa aja demi orang yang dicintai.' }
-        ]
-      },
-      {
-        id: 'A12', order: 12, name: 'Pusaran Angin Gelisah', icon: 'fire',
-        items: [
-          { id: 'A12.1', text: 'Yang dibutuhkan cuma cinta — cinta itu segalanya.' }
+          { id: 'A11.1', text: 'Yang dibutuhkan cuma cinta — cinta itu segalanya.' }
         ]
       }
     ]
@@ -324,37 +319,37 @@ export const GAME_MECHANICS = {
     leftLabel: 'Nggak Setuju', rightLabel: 'Setuju',
     hint: 'Swipe kiri = nggak, kanan = setuju.'
   },
-  A7: {
+  A6: {
     type: 'tap2', emoji: '🧩', accent: '#b8a4d9',
     tagline: 'Tarik Menarik', greeting: 'Pilih yang ngewakiliin kamu',
     leftLabel: 'Setuju', rightLabel: 'Nggak',
     hint: 'Tap kartu yang sesuai perasaan kamu.'
   },
-  A8: {
+  A7: {
     type: 'dragdrop', emoji: '🤍', accent: '#c8a8d4',
     tagline: 'Cinta Tanpa Syarat', greeting: 'Masukkan ke zona yang cocok',
     leftLabel: 'Bukan Aku', rightLabel: 'Aku Banget',
     hint: 'Drag kartu ke kiri atau kanan.'
   },
-  A9: {
+  A8: {
     type: 'story', emoji: '🤝', accent: '#d0b9e7',
     tagline: 'Membangun Bersama', greeting: 'Bayangin skenarionya…',
     options: ['Setuju', 'Nggak Setuju'],
     hint: 'Pilih respons yang paling mirip sama kamu.'
   },
-  A10: {
+  A9: {
     type: 'tap2', emoji: '🙈', accent: '#b8a4d9',
     tagline: 'Cinta yang Buta', greeting: 'Apa cinta versi kamu?',
     leftLabel: 'Setuju', rightLabel: 'Nggak',
     hint: 'Tap kartu yang sesuai perasaan kamu.'
   },
-  A11: {
+  A10: {
     type: 'story', emoji: '🚩', accent: '#c8a8d4',
     tagline: 'Rela Berkorban', greeting: 'Bayangin skenarionya…',
     options: ['Setuju', 'Nggak Setuju'],
     hint: 'Pilih respons yang paling mirip sama kamu.'
   },
-  A12: {
+  A11: {
     type: 'quicktap', emoji: '🔥', accent: '#d0b9e7',
     tagline: 'Cinta Segalanya', greeting: 'Cepat jawab!',
     leftLabel: 'Salah', rightLabel: 'Benar',
@@ -400,18 +395,18 @@ export const GAME_MECHANICS = {
 
 // === Data visual bersama (dipakai peta & hasil) ===
 export const LEVEL_EMOJI = {
-  A1: '💞', A2: '🏠', A3: '✨', A4: '🧲', A5: '⚡', A6: '🌱', A7: '🧩', A8: '🤍',
-  A9: '🤝', A10: '🙈', A11: '🚩', A12: '🔥',
+  A1: '💞', A2: '🏠', A3: '✨', A4: '🧲', A5: '⚡', A6: '🧩', A7: '🤍',
+  A8: '🤝', A9: '🙈', A10: '🚩', A11: '🔥',
   B1: '💧', B2: '👥', B3: '⚖️', B4: '💰', B5: '🧠', B6: '🕌', B7: '🌐'
 }
 
 export const LEVEL_GRADIENT = {
   A1: 'linear-gradient(135deg,#f9c5d1,#b8a4d9)', A2: 'linear-gradient(135deg,#c8a8d4,#9b82c4)',
   A3: 'linear-gradient(135deg,#d0b9e7,#b8a4d9)', A4: 'linear-gradient(135deg,#b8a4d9,#7f5fa8)',
-  A5: 'linear-gradient(135deg,#f0d1ef,#b8a4d9)', A6: 'linear-gradient(135deg,#c4e8c4,#9b82c4)',
-  A7: 'linear-gradient(135deg,#d0b9e7,#c8a8d4)', A8: 'linear-gradient(135deg,#f0f0f5,#b8a4d9)',
-  A9: 'linear-gradient(135deg,#b8a4d9,#d0b9e7)', A10: 'linear-gradient(135deg,#e8c8d4,#b8a4d9)',
-  A11: 'linear-gradient(135deg,#d8b8c0,#9b82c4)', A12: 'linear-gradient(135deg,#f0a0a0,#c45050)',
+  A5: 'linear-gradient(135deg,#f0d1ef,#b8a4d9)',
+  A6: 'linear-gradient(135deg,#d0b9e7,#c8a8d4)', A7: 'linear-gradient(135deg,#f0f0f5,#b8a4d9)',
+  A8: 'linear-gradient(135deg,#b8a4d9,#d0b9e7)', A9: 'linear-gradient(135deg,#e8c8d4,#b8a4d9)',
+  A10: 'linear-gradient(135deg,#d8b8c0,#9b82c4)', A11: 'linear-gradient(135deg,#f0a0a0,#c45050)',
   B1: 'linear-gradient(135deg,#a8d0e8,#9b82c4)', B2: 'linear-gradient(135deg,#c8e8d4,#9b82c4)',
   B3: 'linear-gradient(135deg,#e8e0a8,#9b82c4)', B4: 'linear-gradient(135deg,#f0d8a0,#9b82c4)',
   B5: 'linear-gradient(135deg,#e8c8d0,#9b82c4)', B6: 'linear-gradient(135deg,#d0d8c4,#9b82c4)',
