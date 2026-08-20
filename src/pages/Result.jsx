@@ -52,7 +52,7 @@ export default function Result() {
           <div style={{ fontSize: 56 }}>🔒</div>
           <h2 className="h-title">Hasil Belum Tersedia</h2>
           <p className="muted" style={{ maxWidth: 280 }}>
-            Halaman hasil baru muncul setelah kamu selesai seluruh 20 level (Modul A & B).
+            Halaman hasil baru muncul setelah kamu selesai seluruh 19 level (Modul A & B).
           </p>
           <button className="btn" onClick={() => nav('/map')}>Lanjut Kerjakan</button>
         </div>
@@ -61,7 +61,7 @@ export default function Result() {
   }
 
   const radarData = Object.values(readiness.dims).map(d => ({
-    name: d.name.replace('Kesiapan ', '').replace('Norma ', ''),
+    name: d.name,
     percent: d.percent,
     fullMark: 100
   }))
@@ -73,7 +73,7 @@ export default function Result() {
       <Topbar title="Hasil Akhir" showBack={false} />
       <div className="page fade-in" style={{ paddingBottom: 120, gap: 20 }}>
         <div className="card" style={{ textAlign: 'center', background: 'linear-gradient(135deg, var(--lylac-100), #fff)' }}>
-          <div className="muted" style={{ fontSize: 12 }}>Skor Kesiapan Menikah</div>
+          <div className="muted" style={{ fontSize: 12 }}>Skor Ekspedisi Pondasi Bahtera</div>
           <div style={{ fontSize: 56, fontWeight: 800, color: 'var(--lylac-600)', lineHeight: 1.1, margin: '8px 0' }}>
             {readiness.totalPercent}%
           </div>
@@ -129,7 +129,7 @@ export default function Result() {
           <div>
             <h3 className="h-title" style={{ fontSize: 18, marginBottom: 4 }}>💜 Gaya Cinta yang Menonjol</h3>
             <p className="muted" style={{ fontSize: 13, marginBottom: 12 }}>
-              Dari Modul Cinta Romantis — refleksi pandangan cinta kamu (3 tertinggi).
+              Dari Modul Peta Samudra Rasa — refleksi pandangan cinta kamu (3 tertinggi).
             </p>
             <div className="col">
               {topLove.slice(0, 3).map((s, i) => {

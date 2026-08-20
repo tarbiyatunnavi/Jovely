@@ -5,18 +5,18 @@
 export const MODULES = [
   {
     id: 'A',
-    name: 'Cinta Romantis',
+    name: 'Peta Samudra Rasa',
     subtitle: 'Eksplorasi pandangan cinta kamu',
     order: 1,
     levels: [
       {
-        id: 'A1', order: 1, name: 'Consummate Love', icon: 'complete',
+        id: 'A1', order: 1, name: 'Puncak Mahkota Cita', icon: 'complete',
         items: [
           { id: 'A1.1', text: 'Cinta itu gabungan dari perhatian, komitmen, saling paham, tanggung jawab, penghargaan, dan kepercayaan ke pasangan.' }
         ]
       },
       {
-        id: 'A2', order: 2, name: 'Attachment', icon: 'attach',
+        id: 'A2', order: 2, name: 'Jangkar Pelabuhan Utama', icon: 'attach',
         items: [
           { id: 'A2.1', text: 'Mencintai seseorang apa adanya — baik dulu, sekarang, maupun nanti.' },
           { id: 'A2.2', text: '"Rumah" itu di mana pun berada bareng orang yang dicintai, meski sering pindah-pindah.' },
@@ -24,7 +24,7 @@ export const MODULES = [
         ]
       },
       {
-        id: 'A3', order: 3, name: 'Transcendence', icon: 'sparkle',
+        id: 'A3', order: 3, name: 'Lembah Ketenangan Jiwa', icon: 'sparkle',
         items: [
           { id: 'A3.1', text: 'Dicintai dengan tulus sama seseorang bikin ngerasa lebih kuat.' },
           { id: 'A3.2', text: 'Cinta bisa bikin pasangan jadi versi yang lebih kuat dan lebih baik.' },
@@ -37,7 +37,7 @@ export const MODULES = [
         ]
       },
       {
-        id: 'A4', order: 4, name: 'Limerence', icon: 'obsessed',
+        id: 'A4', order: 4, name: 'Badai Magnetik', icon: 'obsessed',
         items: [
           { id: 'A4.1', text: 'Pas lagi jatuh cinta, pikiran terus-terusan ke orang itu.' },
           { id: 'A4.2', text: 'Kamu nggak akan tahu seberapa dalam seseorang bisa mencintai.' },
@@ -46,13 +46,13 @@ export const MODULES = [
         ]
       },
       {
-        id: 'A5', order: 5, name: 'Infatuated Love', icon: 'spark',
+        id: 'A5', order: 5, name: 'Lentera Percik Api', icon: 'spark',
         items: [
           { id: 'A5.1', text: 'Orang bisa jatuh cinta tanpa alasan jelas, bahkan tanpa direncanain — cinta emang nggak bisa diatur.' }
         ]
       },
       {
-        id: 'A6', order: 6, name: 'Companionate Love', icon: 'companion',
+        id: 'A6', order: 6, name: 'Bahtera Sahabat Sejati', icon: 'companion',
         items: [
           { id: 'A6.1', text: 'Cinta yang tulus itu nggak pernah benar-benar berakhir.' },
           { id: 'A6.2', text: 'Cinta itu terbentuk dari semua hal yang udah dilalui bareng seseorang.' },
@@ -60,7 +60,7 @@ export const MODULES = [
         ]
       },
       {
-        id: 'A7', order: 7, name: 'Attraction', icon: 'magnet',
+        id: 'A7', order: 7, name: 'Pesona Gravitasi', icon: 'magnet',
         items: [
           { id: 'A7.1', text: 'Cinta itu kayak satu jiwa yang menyatu di dua orang.' },
           { id: 'A7.2', text: 'Cinta sering muncul justru dari ketemunya dua sisi rapuh/lemah dua orang.' },
@@ -68,7 +68,7 @@ export const MODULES = [
         ]
       },
       {
-        id: 'A8', order: 8, name: 'Agape', icon: 'halo',
+        id: 'A8', order: 8, name: 'Mata Air Ketulusan', icon: 'halo',
         items: [
           { id: 'A8.1', text: 'Cinta yang paling kuat itu justru yang berani nunjukin sisi rapuhnya.' },
           { id: 'A8.2', text: 'Mencintai seseorang apa adanya, tanpa syarat.' },
@@ -77,25 +77,25 @@ export const MODULES = [
         ]
       },
       {
-        id: 'A9', order: 9, name: 'Pragma', icon: 'handshake',
+        id: 'A9', order: 9, name: 'Kompas Logika', icon: 'handshake',
         items: [
           { id: 'A9.1', text: 'Daripada capek nyari pasangan yang sempurna, mending fokus bangun hubungan yang sempurna bareng-bareng.' }
         ]
       },
       {
-        id: 'A10', order: 10, name: 'Fatuous Love', icon: 'blindfold',
+        id: 'A10', order: 10, name: 'Kilat Tanpa Akar', icon: 'blindfold',
         items: [
           { id: 'A10.1', text: 'Cinta itu buta — kadang bikin nggak lihat kekurangan orang yang dicintai.' }
         ]
       },
       {
-        id: 'A11', order: 11, name: 'Commitment', icon: 'flag',
+        id: 'A11', order: 11, name: 'Sumpah Penjaga Takdir', icon: 'flag',
         items: [
           { id: 'A11.1', text: 'Rela ngelakuin apa aja demi orang yang dicintai.' }
         ]
       },
       {
-        id: 'A12', order: 12, name: 'Mania', icon: 'fire',
+        id: 'A12', order: 12, name: 'Pusaran Angin Gelisah', icon: 'fire',
         items: [
           { id: 'A12.1', text: 'Yang dibutuhkan cuma cinta — cinta itu segalanya.' }
         ]
@@ -104,12 +104,12 @@ export const MODULES = [
   },
   {
     id: 'B',
-    name: 'Kesiapan Menikah',
+    name: 'Ekspedisi Pondasi Bahtera',
     subtitle: 'Ukur kesiapan kamu',
     order: 2,
     levels: [
       {
-        id: 'B1', order: 13, name: 'Kesiapan Emosi & Menerima', icon: 'emotion',
+        id: 'B1', order: 13, name: 'Perisai Jiwa', icon: 'emotion',
         items: [
           { id: 'B1.1', polarity: 'F', text: 'Siap mengutamakan kebutuhan pasangan di atas kebutuhan pribadi.' },
           { id: 'B1.2', polarity: 'UF', text: 'Merasa keterbukaan dengan pasangan nggak membantu dalam berbagi peran rumah tangga.' },
@@ -118,7 +118,7 @@ export const MODULES = [
         ]
       },
       {
-        id: 'B2', order: 14, name: 'Kesiapan Sosial', icon: 'social',
+        id: 'B2', order: 14, name: 'Jaringan Aliansi', icon: 'social',
         items: [
           { id: 'B2.1', polarity: 'F', text: 'Nyaman menghabiskan waktu senggang bareng orang lain.' },
           { id: 'B2.2', polarity: 'F', text: 'Senang kenalan dan bertemu orang baru.' },
@@ -126,14 +126,14 @@ export const MODULES = [
         ]
       },
       {
-        id: 'B3', order: 15, name: 'Kesiapan Peran', icon: 'role',
+        id: 'B3', order: 15, name: 'Pembagian Singgasana', icon: 'role',
         items: [
           { id: 'B3.1', polarity: 'F', text: 'Nggak keberatan kalau suami-istri berbagi peran dan tugas pekerjaan rumah tangga.' },
           { id: 'B3.2', polarity: 'UF', text: 'Merasa keberatan kalau harus berbagi tugas pekerjaan rumah dengan pasangan.' }
         ]
       },
       {
-        id: 'B4', order: 16, name: 'Kesiapan Finansial', icon: 'finance',
+        id: 'B4', order: 16, name: 'Lumbung Perbekalan', icon: 'finance',
         items: [
           { id: 'B4.1', polarity: 'F', text: 'Sebelum menikah, harus sudah punya pekerjaan atau penghasilan.' },
           { id: 'B4.2', polarity: 'F', text: 'Akan tetap menghargai pekerjaan pasangan meskipun penghasilannya kecil.' },
@@ -142,20 +142,20 @@ export const MODULES = [
         ]
       },
       {
-        id: 'B5', order: 17, name: 'Kesiapan Mental', icon: 'mental',
+        id: 'B5', order: 17, name: 'Pondasi Karang', icon: 'mental',
         items: [
           { id: 'B5.1', polarity: 'UF', text: 'Belum punya rencana untuk membangun kehidupan berumah tangga.' }
         ]
       },
       {
-        id: 'B6', order: 18, name: 'Kesiapan Norma Agama', icon: 'religion',
+        id: 'B6', order: 18, name: 'Kompas Spiritual', icon: 'religion',
         items: [
           { id: 'B6.1', polarity: 'F', text: 'Harus menikah dengan pasangan yang agamanya sama.' },
           { id: 'B6.2', polarity: 'F', text: 'Mempelajari dan menyiapkan ilmu agama itu penting sebagai bekal berumah tangga.' }
         ]
       },
       {
-        id: 'B7', order: 19, name: 'Kesiapan Norma Masyarakat', icon: 'norms',
+        id: 'B7', order: 19, name: 'Pijakan Tradisi', icon: 'norms',
         items: [
           { id: 'B7.1', polarity: 'F', text: 'Sadar bahwa pacaran itu sesuatu yang nggak sesuai dengan norma masyarakat.' },
           { id: 'B7.2', polarity: 'UF', text: 'Merasa pacaran dan kontak fisik itu hal yang wajar menurut norma masyarakat.' }
@@ -363,37 +363,37 @@ export const GAME_MECHANICS = {
   // === Modul B: Kesiapan Menikah (Likert 5 poin, 3 varian interaksi) ===
   B1: {
     type: 'likert-slider', emoji: '💧', accent: '#b8a4d9',
-    tagline: 'Emosi & Menerima', greeting: 'Geser slider-nya',
+    tagline: 'Perisai Jiwa', greeting: 'Geser slider-nya',
     hint: 'Geser dari Sangat Tidak Setuju sampai Sangat Setuju.'
   },
   B2: {
     type: 'likert-emoji', emoji: '👥', accent: '#c8a8d4',
-    tagline: 'Kesiapan Sosial', greeting: 'Pilih emoji yang cocok',
+    tagline: 'Jaringan Aliansi', greeting: 'Pilih emoji yang cocok',
     hint: 'Tap emoji yang ngewakiliin perasaan kamu.'
   },
   B3: {
     type: 'likert-dial', emoji: '⚖️', accent: '#d0b9e7',
-    tagline: 'Kesiapan Peran', greeting: 'Puter dial-nya',
+    tagline: 'Pembagian Singgasana', greeting: 'Puter dial-nya',
     hint: 'Puter dial ke tingkat setuju yang kamu mau.'
   },
   B4: {
     type: 'likert-slider', emoji: '💰', accent: '#b8a4d9',
-    tagline: 'Kesiapan Finansial', greeting: 'Geser slider-nya',
+    tagline: 'Lumbung Perbekalan', greeting: 'Geser slider-nya',
     hint: 'Geser dari Sangat Tidak Setuju sampai Sangat Setuju.'
   },
   B5: {
     type: 'likert-emoji', emoji: '🧠', accent: '#c8a8d4',
-    tagline: 'Kesiapan Mental', greeting: 'Pilih emoji yang cocok',
+    tagline: 'Pondasi Karang', greeting: 'Pilih emoji yang cocok',
     hint: 'Tap emoji yang ngewakiliin perasaan kamu.'
   },
   B6: {
     type: 'likert-dial', emoji: '🕌', accent: '#d0b9e7',
-    tagline: 'Norma Agama', greeting: 'Puter dial-nya',
+    tagline: 'Kompas Spiritual', greeting: 'Puter dial-nya',
     hint: 'Puter dial ke tingkat setuju yang kamu mau.'
   },
   B7: {
     type: 'likert-slider', emoji: '🌐', accent: '#b8a4d9',
-    tagline: 'Norma Masyarakat', greeting: 'Geser slider-nya',
+    tagline: 'Pijakan Tradisi', greeting: 'Geser slider-nya',
     hint: 'Geser dari Sangat Tidak Setuju sampai Sangat Setuju.'
   }
 }

@@ -100,7 +100,7 @@ export default function LevelPlay() {
 
   if (phase === 'celebrate') {
     const celebEmoji = moduleDone ? (isLastOfModulA ? '💜' : '🎉') : flavor?.emoji || '🎉'
-    const celebTitle = moduleDone ? (isLastOfModulA ? 'Modul Cinta Romantis Selesai!' : 'Modul Kesiapan Selesai!') : 'Level Selesai!'
+    const celebTitle = moduleDone ? (isLastOfModulA ? 'Modul Peta Samudra Rasa Selesai!' : 'Modul Ekspedisi Pondasi Bahtera Selesai!') : 'Level Selesai!'
     return (
       <div className="app-wrap">
         <Topbar title="Level Selesai" onBack={() => nav('/map')} />
@@ -116,7 +116,7 @@ export default function LevelPlay() {
           </div>
           {moduleDone && isLastOfModulA && (
             <div className="card fade-in" style={{ background: 'var(--lylac-50)', textAlign: 'center' }}>
-              <div style={{ fontWeight: 700, color: 'var(--lylac-700)' }}>Lanjut ke Modul Kesiapan Menikah 💫</div>
+              <div style={{ fontWeight: 700, color: 'var(--lylac-700)' }}>Lanjut ke Modul Ekspedisi Pondasi Bahtera 💫</div>
               <p className="muted" style={{ marginTop: 6, fontSize: 13 }}>
                 Hasil refleksi cinta kamu akan muncul di akhir Modul B.
               </p>
