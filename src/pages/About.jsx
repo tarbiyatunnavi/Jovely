@@ -22,9 +22,8 @@ export default function About() {
         </div>
 
         <div className="card">
-          <h3 style={{ fontSize: 16, marginBottom: 8 }}>Apa itu Jovely?</h3>
           <div style={{ fontSize: 14, lineHeight: 1.7, color: 'var(--ink-soft)' }}>
-            <h4 style={{ fontSize: 15, fontWeight: 800, marginBottom: 10 }}>Selamat Datang di JOVELY! 🪐✨</h4>
+            <h3 style={{ fontSize: 16, fontWeight: 800, marginBottom: 12 }}>Selamat Datang di JOVELY! 🪐✨</h3>
             <p style={{ marginBottom: 12 }}>
               Pernah penasaran bagaimana caramu mengambil keputusan saat dihadapkan pada dinamika rasa, pilihan hidup, dan alur masa depan? JOVELY hadir sebagai ruang simulasi interaktif tempat kamu bisa bebas mengeksplorasi navigasi hatimu dengan cara yang seru, santai, dan penuh makna.
             </p>
