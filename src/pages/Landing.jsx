@@ -27,8 +27,8 @@ export default function Landing() {
           </div>
           <h1 className="h-title" style={{ fontSize: 32 }}>Jovely</h1>
           <p className="h-sub" style={{ maxWidth: 280, textAlign: 'center', fontSize: 15 }}>
-            Eksplorasi cinta & ukur kesiapan menikah kamu lewat perjalanan ala game. Bukan kuesioner
-            kaku — tapi self-discovery yang seru & bermakna.
+            Apakah kamu si perencana matang atau si penjelajah rasa? Ikuti alurnya, buat keputusanmu,
+            dan buka cermin refleksi diri dengan cara yang jauh lebih menyenangkan.
           </p>
         </div>
 
