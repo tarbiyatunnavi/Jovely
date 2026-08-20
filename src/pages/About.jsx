@@ -23,11 +23,36 @@ export default function About() {
 
         <div className="card">
           <h3 style={{ fontSize: 16, marginBottom: 8 }}>Apa itu Jovely?</h3>
-          <p className="muted" style={{ fontSize: 14, lineHeight: 1.6 }}>
-            Jovely adalah aplikasi self-assessment kesiapan menikah yang dikemas dengan gamifikasi
-            ala Duolingo. Bukan kuesioner kaku — tapi pengalaman seperti main game yang tetap
-            menghasilkan hasil psikometri bermakna di akhir.
-          </p>
+          <div style={{ fontSize: 14, lineHeight: 1.7, color: 'var(--ink-soft)' }}>
+            <h4 style={{ fontSize: 15, fontWeight: 800, marginBottom: 10 }}>Selamat Datang di JOVELY! 🪐✨</h4>
+            <p style={{ marginBottom: 12 }}>
+              Pernah penasaran bagaimana caramu mengambil keputusan saat dihadapkan pada dinamika rasa, pilihan hidup, dan alur masa depan? JOVELY hadir sebagai ruang simulasi interaktif tempat kamu bisa bebas mengeksplorasi navigasi hatimu dengan cara yang seru, santai, dan penuh makna.
+            </p>
+            <p style={{ marginBottom: 14 }}>
+              Di sini, kamu bukan sedang diuji atau dinilai. JOVELY adalah cermin interaktif sebuah petualangan mini untuk membantumu mengurai benang kusut di kepala, memahami pola energimu sendiri, dan menemukan kembali kejernihan langkahmu.
+            </p>
+            <h4 style={{ fontSize: 15, fontWeight: 800, marginBottom: 10 }}>Apa yang Bisa Kamu Temukan di JOVELY?</h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, marginBottom: 14, display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <li style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                <span>🧭</span>
+                <span><strong>Peta Eksplorasi Interaktif:</strong> Lewati berbagai alur cerita dan skenario unik. Setiap pilihan yang kamu ambil akan membuka babak baru dalam peta perjalananmu.</span>
+              </li>
+              <li style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                <span>🛡️</span>
+                <span><strong>Kartu Karakter Unik:</strong> Di akhir setiap petualangan, buka Archetype atau tipe karakter khusus yang menggambarkan gaya navigasimu dan amunisi yang kamu miliki.</span>
+              </li>
+              <li style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                <span>💡</span>
+                <span><strong>Ruang Refleksi Diri:</strong> Temukan insight bermakna yang bisa membantumu lebih mengenal diri sendiri dengan cara yang menyenangkan tanpa menghakimi.</span>
+              </li>
+            </ul>
+            <p style={{ marginBottom: 12 }}>
+              Tidak ada jawaban benar atau salah di dunia JOVELY. Setiap keputusan adalah cerminan dari cerita unikmu sendiri.
+            </p>
+            <p>
+              Siap memulai ekspedisimu hari ini? Ambil kendali kompasmu dan temukan ke mana arah angin membawamu! 🚀🎮
+            </p>
+          </div>
         </div>
 
         <div className="card">
