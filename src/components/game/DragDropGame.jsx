@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { LevelHeader } from './LevelHeader'
 import { ParticleBurst } from '../Particles'
+import { startWindSFX, stopWindSFX } from '../../hooks/useAmbientMusic'
 
 // Drag kartu ke 2 zona. agree=kanan ("Aku Banget"), disagree=kiri ("Bukan Aku")
 export default function DragDropGame({ level, flavor, total, initialAnswers, onFinal }) {
@@ -23,6 +24,7 @@ export default function DragDropGame({ level, flavor, total, initialAnswers, onF
     const p = e.touches ? e.touches[0] : e
     start.current = { x: p.clientX, y: p.clientY }
     setDragging(true)
+    try { startWindSFX() } catch {}
   }
   const onMove = (e) => {
     if (!dragging || exit) return
@@ -34,6 +36,7 @@ export default function DragDropGame({ level, flavor, total, initialAnswers, onF
   }
   const finish = (dir) => {
     if (exit) return
+    stopWindSFX()
     setExit(dir)
     setBurst(b => b + 1)
     const final = { ...answers, [item.id]: dir === 'right' ? 'agree' : 'disagree' }
@@ -49,7 +52,7 @@ export default function DragDropGame({ level, flavor, total, initialAnswers, onF
     setHover(null)
     if (pos.x < -50) finish('left')
     else if (pos.x > 50) finish('right')
-    else setPos({ x: 0, y: 0 })
+    else { stopWindSFX(); setPos({ x: 0, y: 0 }) }
   }
 
   return (

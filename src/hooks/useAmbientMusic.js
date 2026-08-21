@@ -25,6 +25,13 @@ let _bubbleBuffer = null
 let _bubbleLoading = false
 let _bubbleReady = false
 
+// Wind SFX buffer (drag-drop, loop saat drag)
+let _windBuffer = null
+let _windLoading = false
+let _windReady = false
+let _windSource = null
+let _windGain = null
+
 function getAudioCtx() {
   if (!_ctx) {
     try { _ctx = new (window.AudioContext || window.webkitAudioContext)() } catch {}
@@ -97,6 +104,23 @@ async function loadBubbleSFX() {
     // fail-safe
   } finally {
     _bubbleLoading = false
+  }
+}
+
+async function loadWindSFX() {
+  if (_windReady || _windLoading) return
+  _windLoading = true
+  try {
+    const ctx = getAudioCtx()
+    if (!ctx) return
+    const res = await fetch('/wind-sfx.mp3')
+    const arrayBuf = await res.arrayBuffer()
+    _windBuffer = await ctx.decodeAudioData(arrayBuf)
+    _windReady = true
+  } catch {
+    // fail-safe
+  } finally {
+    _windLoading = false
   }
 }
 
@@ -207,6 +231,7 @@ export function useAmbientMusic() {
     loadPourSFX()
     loadSwipeSFX()
     loadBubbleSFX()
+    loadWindSFX()
   }, [])
 
   // mulai musik Peta setelah interaksi pertama
@@ -391,4 +416,39 @@ export function playBubbleSFX() {
     gain.connect(ctx.destination)
     source.start(0)
   } catch {}
+}
+
+// Wind SFX: loop saat drag kartu, stop saat lepas (fail-safe)
+export function startWindSFX() {
+  try {
+    const ctx = getAudioCtx()
+    if (!ctx || !_windReady || !_windBuffer) return
+    if (ctx.state === 'suspended') { try { ctx.resume() } catch {} }
+    if (ctx.state === 'closed') return
+    stopWindSFX()
+    const source = ctx.createBufferSource()
+    source.buffer = _windBuffer
+    source.loop = true
+    const gain = ctx.createGain()
+    gain.gain.value = 0.15
+    source.connect(gain)
+    gain.connect(ctx.destination)
+    source.start(0)
+    _windSource = source
+    _windGain = gain
+  } catch {}
+}
+
+export function stopWindSFX() {
+  try {
+    if (_windSource && _windGain) {
+      const ctx = getAudioCtx()
+      if (ctx && ctx.state !== 'closed') {
+        _windGain.gain.setTargetAtTime(0, ctx.currentTime, 0.03)
+        _windSource.stop(ctx.currentTime + 0.1)
+      }
+    }
+  } catch {}
+  _windSource = null
+  _windGain = null
 }
