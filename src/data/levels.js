@@ -285,103 +285,103 @@ export const LIKERT_OPTIONS = [
 export const GAME_MECHANICS = {
   // === Modul A: Cinta Romantis ===
   A1: {
-    type: 'pour-love', emoji: '💞', accent: '#b8a4d9',
+    type: 'pour-love', emoji: '👑', accent: '#b8a4d9',
     tagline: 'Cinta Sempurna', greeting: 'Tuang Cat Cinta',
     hint: 'Tuang cat ke gelas yang rasanya pas. Murni ekspresi diri, bukan menang/kalah.'
   },
   A2: {
-    type: 'swipe', emoji: '🏠', accent: '#c8a8d4',
+    type: 'swipe', emoji: '⚓', accent: '#c8a8d4',
     tagline: 'Rasa Nyaman', greeting: 'Geser kartunya ya',
     leftLabel: 'Nggak Setuju', rightLabel: 'Setuju',
     hint: 'Swipe kiri = nggak, kanan = setuju.'
   },
   A3: {
-    type: 'quicktap', emoji: '✨', accent: '#d0b9e7',
+    type: 'quicktap', emoji: '🌌', accent: '#d0b9e7',
     tagline: 'Kekuatan Cinta', greeting: 'Cepat jawab!',
     leftLabel: 'Salah', rightLabel: 'Benar',
     hint: 'Tap Benar kalau setuju, Salah kalau nggak. Jangan overthinking.'
   },
   A4: {
-    type: 'dragdrop', emoji: '🧲', accent: '#b8a4d9',
+    type: 'dragdrop', emoji: '🌀', accent: '#b8a4d9',
     tagline: 'Pikiran Terus ke Sana', greeting: 'Masukkan ke zona yang cocok',
     leftLabel: 'Bukan Aku', rightLabel: 'Aku Banget',
     hint: 'Drag kartu ke kiri (bukan aku) atau kanan (aku banget).'
   },
   A5: {
-    type: 'story', emoji: '⚡', accent: '#c8a8d4',
+    type: 'story', emoji: '🕯️', accent: '#c8a8d4',
     tagline: 'Jatuh Cinta Tiba-tiba', greeting: 'Bayangin skenarionya…',
     options: ['Setuju', 'Nggak Setuju'],
     hint: 'Pilih respons yang paling mirip sama kamu.'
   },
   A6: {
-    type: 'swipe', emoji: '🌱', accent: '#d0b9e7',
+    type: 'swipe', emoji: '⛵', accent: '#d0b9e7',
     tagline: 'Cinta yang Tumbuh', greeting: 'Geser ya',
     leftLabel: 'Nggak Setuju', rightLabel: 'Setuju',
     hint: 'Swipe kiri = nggak, kanan = setuju.'
   },
   A7: {
-    type: 'dragdrop', emoji: '🤍', accent: '#c8a8d4',
+    type: 'dragdrop', emoji: '💎', accent: '#c8a8d4',
     tagline: 'Cinta Tanpa Syarat', greeting: 'Masukkan ke zona yang cocok',
     leftLabel: 'Bukan Aku', rightLabel: 'Aku Banget',
     hint: 'Drag kartu ke kiri atau kanan.'
   },
   A8: {
-    type: 'story', emoji: '🤝', accent: '#d0b9e7',
+    type: 'story', emoji: '🕊️', accent: '#d0b9e7',
     tagline: 'Membangun Bersama', greeting: 'Bayangin skenarionya…',
     options: ['Setuju', 'Nggak Setuju'],
     hint: 'Pilih respons yang paling mirip sama kamu.'
   },
   A9: {
-    type: 'tap2', emoji: '🙈', accent: '#b8a4d9',
+    type: 'tap2', emoji: '⚡', accent: '#b8a4d9',
     tagline: 'Cinta yang Buta', greeting: 'Apa cinta versi kamu?',
     leftLabel: 'Setuju', rightLabel: 'Nggak',
     hint: 'Tap kartu yang sesuai perasaan kamu.'
   },
   A10: {
-    type: 'story', emoji: '🚩', accent: '#c8a8d4',
+    type: 'story', emoji: '📜', accent: '#c8a8d4',
     tagline: 'Rela Berkorban', greeting: 'Bayangin skenarionya…',
     options: ['Setuju', 'Nggak Setuju'],
     hint: 'Pilih respons yang paling mirip sama kamu.'
   },
   A11: {
-    type: 'quicktap', emoji: '🔥', accent: '#d0b9e7',
+    type: 'quicktap', emoji: '🌪️', accent: '#d0b9e7',
     tagline: 'Cinta Segalanya', greeting: 'Cepat jawab!',
     leftLabel: 'Salah', rightLabel: 'Benar',
     hint: 'Tap Benar kalau setuju, Salah kalau nggak.'
   },
   // === Modul B: Kesiapan Menikah (Likert 5 poin, 3 varian interaksi) ===
   B1: {
-    type: 'likert-slider', emoji: '💧', accent: '#b8a4d9',
+    type: 'likert-slider', emoji: '🛡️', accent: '#b8a4d9',
     tagline: 'Perisai Jiwa', greeting: 'Geser slider-nya',
     hint: 'Geser dari Sangat Tidak Setuju sampai Sangat Setuju.'
   },
   B2: {
-    type: 'likert-emoji', emoji: '👥', accent: '#c8a8d4',
+    type: 'likert-emoji', emoji: '🕸️', accent: '#c8a8d4',
     tagline: 'Jaringan Aliansi', greeting: 'Pilih emoji yang cocok',
     hint: 'Tap emoji yang ngewakiliin perasaan kamu.'
   },
   B3: {
-    type: 'likert-dial', emoji: '⚖️', accent: '#d0b9e7',
+    type: 'likert-dial', emoji: '👑', accent: '#d0b9e7',
     tagline: 'Pembagian Singgasana', greeting: 'Puter dial-nya',
     hint: 'Puter dial ke tingkat setuju yang kamu mau.'
   },
   B4: {
-    type: 'likert-slider', emoji: '💰', accent: '#b8a4d9',
+    type: 'likert-slider', emoji: '🌾', accent: '#b8a4d9',
     tagline: 'Lumbung Perbekalan', greeting: 'Geser slider-nya',
     hint: 'Geser dari Sangat Tidak Setuju sampai Sangat Setuju.'
   },
   B5: {
-    type: 'likert-emoji', emoji: '🧠', accent: '#c8a8d4',
+    type: 'likert-emoji', emoji: '🪨', accent: '#c8a8d4',
     tagline: 'Pondasi Karang', greeting: 'Pilih emoji yang cocok',
     hint: 'Tap emoji yang ngewakiliin perasaan kamu.'
   },
   B6: {
-    type: 'likert-dial', emoji: '🕌', accent: '#d0b9e7',
+    type: 'likert-dial', emoji: '🧿', accent: '#d0b9e7',
     tagline: 'Kompas Spiritual', greeting: 'Puter dial-nya',
     hint: 'Puter dial ke tingkat setuju yang kamu mau.'
   },
   B7: {
-    type: 'likert-slider', emoji: '🌐', accent: '#b8a4d9',
+    type: 'likert-slider', emoji: '🏛️', accent: '#b8a4d9',
     tagline: 'Pijakan Tradisi', greeting: 'Geser slider-nya',
     hint: 'Geser dari Sangat Tidak Setuju sampai Sangat Setuju.'
   }
@@ -389,9 +389,27 @@ export const GAME_MECHANICS = {
 
 // === Data visual bersama (dipakai peta & hasil) ===
 export const LEVEL_EMOJI = {
-  A1: '💞', A2: '🏠', A3: '✨', A4: '🧲', A5: '⚡', A6: '🌱', A7: '🤍',
-  A8: '🤝', A9: '🙈', A10: '🚩', A11: '🔥',
-  B1: '💧', B2: '👥', B3: '⚖️', B4: '💰', B5: '🧠', B6: '🕌', B7: '🌐'
+  // Modul A: Peta Samudra Rasa
+  A1: '👑',  // Puncak Mahkota Cita — mahkota
+  A2: '⚓',  // Jangkar Pelabuhan Utama — jangkar
+  A3: '🌌',  // Lembah Ketenangan Jiwa — lembah/galaksi tenang
+  A4: '🌀',  // Badai Magnetik — badai/pusaran
+  A5: '🕯️',  // Lentera Percik Api — lentera
+  A6: '⛵',  // Bahtera Sahabat Sejati — bahtera/perahu
+  A7: '💎',  // Pesona Gravitasi — permata tertarik
+  A8: '🕊️',  // Mata Air Ketulusan — merpati (simbol ketulusan)
+  A9: '🧭',  // Kompas Logika — kompas
+  A10: '⚡',  // Kilat Tanpa Akar — kilat
+  A11: '📜',  // Sumpah Penjaga Takdir — gulungan sumpah
+  A12: '🌪️',  // Pusaran Angin Gelisah — angin pusaran
+  // Modul B: Ekspedisi Pondasi Bahtera
+  B1: '🛡️',  // Perisai Jiwa — perisai
+  B2: '🕸️',  // Jaringan Aliansi — jaring
+  B3: '👑',  // Pembagian Singgasana — singgasana
+  B4: '🌾',  // Lumbung Perbekalan — lumbung gandum
+  B5: '🪨',  // Pondasi Karang — karang/batu
+  B6: '🧿',  // Kompas Spiritual — mata spiritual
+  B7: '🏛️',  // Pijakan Tradisi — bangunan tradisi
 }
 
 export const LEVEL_GRADIENT = {
