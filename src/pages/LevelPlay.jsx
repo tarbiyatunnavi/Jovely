@@ -6,6 +6,7 @@ import { Topbar } from '../components/Layout'
 import { Icon } from '../components/Icon'
 import GameEngine from '../components/GameEngine'
 import { Celebration } from '../components/Particles'
+import { playTapSFX } from '../hooks/useAmbientMusic'
 
 const CELEBRATE_DELAY = 1800
 const MODULE_DONE_DELAY = 2600
@@ -97,6 +98,13 @@ export default function LevelPlay() {
     if (fallbackTimer.current) { clearTimeout(fallbackTimer.current); fallbackTimer.current = null }
     advance()
   }, [advance])
+
+  // Mainkan SFX saat halaman "Level Selesai!" muncul
+  useEffect(() => {
+    if (phase === 'celebrate') {
+      try { playTapSFX() } catch {}
+    }
+  }, [phase])
 
   if (phase === 'celebrate') {
     const celebEmoji = moduleDone ? (isLastOfModulA ? '💜' : '🎉') : flavor?.emoji || '🎉'
