@@ -136,6 +136,7 @@ a { color: inherit; text-decoration: none; }
 
 /* ===== Tap 2 cards ===== */
 .tap2-wrap { display: flex; flex-direction: column; gap: 14px; }
+.tap2-wrap-hex { flex-direction: row !important; justify-content: center; gap: 20px !important; }
 .tap2-card {
   position: relative; background: #fff; border-radius: var(--radius-lg); padding: 24px 18px;
   border: 2px solid var(--lylac-100); box-shadow: var(--shadow); cursor: pointer;
@@ -150,8 +151,10 @@ a { color: inherit; text-decoration: none; }
 .tap2-card.hexagon {
   border-radius: 0; border: none;
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  padding: 30px 16px; min-height: 140px;
+  padding: 16px 10px; min-height: 100px; width: 130px; flex: none;
 }
+.tap2-card.hexagon .t2-emoji { font-size: 26px; }
+.tap2-card.hexagon .t2-text { display: none; }
 .tap2-card.hexagon.picked-yes {
   background: linear-gradient(135deg, #e9f7ef, #fff);
   /* outline hexagon via drop-shadow filter */

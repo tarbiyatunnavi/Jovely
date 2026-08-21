@@ -34,7 +34,7 @@ export default function Tap2Game({ level, flavor, total, initialAnswers, onFinal
       <div ref={cardRef} className="card item-enter" style={{ textAlign: 'center', fontSize: 18, fontWeight: 600, lineHeight: 1.5, padding: '24px 18px', marginBottom: 16, minHeight: 120 }}>
         "{item.text}"
       </div>
-      <div className="tap2-wrap">
+      <div className={`tap2-wrap ${isHexagon ? 'tap2-wrap-hex' : ''}`}>
         <div className={`tap2-card ${isHexagon ? 'hexagon' : ''} ${picked === 'yes' ? 'picked-yes' : ''} ${picked === 'no' ? 'dimmed' : ''}`} onClick={() => choose('yes')}>
           <span className="t2-emoji">💜</span>
           <span className="t2-label">Setuju</span>
