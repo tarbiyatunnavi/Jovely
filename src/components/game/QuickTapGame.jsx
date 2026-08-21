@@ -9,26 +9,46 @@ export default function QuickTapGame({ level, flavor, total, initialAnswers, onF
   const [answers, setAnswers] = useState({ ...initialAnswers })
   const [picked, setPicked] = useState(null)
   const [burst, setBurst] = useState(0)
-  const [bubblePop, setBubblePop] = useState(null) // 'yes' | 'no' | null
+  const [popData, setPopData] = useState(null) // { x, y, color }
   const cardRef = useRef(null)
 
   const item = level.items[idx]
   const isLast = idx === total - 1
   const progress = (idx / total) * 100
 
-  const choose = (which) => {
+  const choose = (which, e) => {
     if (picked) return
     setPicked(which)
-    setBubblePop(which)
     setBurst(b => b + 1)
+
+    // dapat posisi bubble yang ditekan untuk partikel pecah
+    const rect = e.currentTarget.getBoundingClientRect()
+    setPopData({
+      x: rect.left + rect.width / 2,
+      y: rect.top + rect.height / 2,
+      color: which === 'yes' ? '#1e7a3e' : '#b3261e',
+      bgColor: which === 'yes' ? '#c8eccc' : '#f9d8de',
+    })
+
     const final = { ...answers, [item.id]: which === 'yes' ? 'agree' : 'disagree' }
     setAnswers(final)
-    // setelah animasi pecah (~450ms), lanjut
     setTimeout(() => {
       if (isLast) onFinal(final)
-      else { setIdx(i => i + 1); setPicked(null); setBubblePop(null) }
+      else { setIdx(i => i + 1); setPicked(null); setPopData(null) }
     }, 450)
   }
+
+  // generate partikel pecah (acak arah & ukuran)
+  const particles = popData ? Array.from({ length: 10 }).map((_, i) => {
+    const angle = (i / 10) * Math.PI * 2 + Math.random() * 0.4
+    const dist = 35 + Math.random() * 45
+    return {
+      dx: Math.cos(angle) * dist,
+      dy: Math.sin(angle) * dist,
+      size: 5 + Math.random() * 7,
+      delay: Math.random() * 0.08,
+    }
+  }) : []
 
   return (
     <div className="fade-in">
@@ -37,7 +57,7 @@ export default function QuickTapGame({ level, flavor, total, initialAnswers, onF
       <div className="qt-options">
         <button
           className={`qt-bubble qt-bubble-wrong ${picked === 'no' ? 'popping' : ''} ${picked === 'yes' ? 'dimmed' : ''}`}
-          onClick={() => choose('no')}
+          onClick={(e) => choose('no', e)}
           disabled={picked}
         >
           <span className="qt-bubble-icon">✗</span>
@@ -45,24 +65,29 @@ export default function QuickTapGame({ level, flavor, total, initialAnswers, onF
         </button>
         <button
           className={`qt-bubble qt-bubble-right ${picked === 'yes' ? 'popping' : ''} ${picked === 'no' ? 'dimmed' : ''}`}
-          onClick={() => choose('yes')}
+          onClick={(e) => choose('yes', e)}
           disabled={picked}
         >
           <span className="qt-bubble-icon">✓</span>
           <span>Benar</span>
         </button>
       </div>
-      {/* Partikel pecah bubble */}
-      {bubblePop && (
-        <div className="bubble-pop-particles">
-          {Array.from({ length: 8 }).map((_, i) => (
+      {/* Partikel pecah bubble — muncul dari posisi bubble yang ditekan */}
+      {popData && (
+        <div className="bubble-pop-overlay">
+          {particles.map((p, i) => (
             <span
               key={i}
-              className="bubble-pop-particle"
+              className="bubble-pop-shard"
               style={{
-                '--dx': `${Math.cos((i / 8) * Math.PI * 2) * (40 + Math.random() * 30)}px`,
-                '--dy': `${Math.sin((i / 8) * Math.PI * 2) * (40 + Math.random() * 30)}px`,
-                animationDelay: `${Math.random() * 0.1}s`
+                left: popData.x,
+                top: popData.y,
+                width: p.size + 'px',
+                height: p.size + 'px',
+                background: i % 3 === 0 ? popData.color : popData.bgColor,
+                '--dx': p.dx + 'px',
+                '--dy': p.dy + 'px',
+                animationDelay: p.delay + 's',
               }}
             />
           ))}

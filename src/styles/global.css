@@ -205,27 +205,29 @@ a { color: inherit; text-decoration: none; }
 
 .qt-bubble.dimmed { opacity: .3; transform: scale(.88); transition: opacity .3s, transform .3s; }
 
-/* Bubble pecah saat ditekan */
+/* Bubble pecah saat ditekan: sedikit membesar lalu hilang cepat */
 .qt-bubble.popping {
-  animation: bubblePop .45s cubic-bezier(.2,.6,.4,1) forwards;
+  animation: bubblePop .3s cubic-bezier(.2,.6,.4,1) forwards;
 }
 @keyframes bubblePop {
   0% { transform: scale(1); opacity: 1; }
-  30% { transform: scale(1.25); opacity: .8; }
-  60% { transform: scale(1.4); opacity: .3; }
-  100% { transform: scale(1.6); opacity: 0; }
+  25% { transform: scale(1.1); opacity: 1; }
+  40% { transform: scale(1.15); opacity: .3; }
+  100% { transform: scale(1.2); opacity: 0; }
 }
 
-/* Partikel pecah bubble */
-.bubble-pop-particles { position: fixed; inset: 0; pointer-events: none; z-index: 999; }
-.bubble-pop-particle {
-  position: absolute; width: 8px; height: 8px; border-radius: 50%;
-  left: 50%; top: 60%; pointer-events: none;
-  animation: bubbleParticleFly .5s cubic-bezier(.2,.6,.4,1) forwards;
+/* Partikel pecah bubble — dari posisi button, menyebar acak */
+.bubble-pop-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 999; }
+.bubble-pop-shard {
+  position: fixed; border-radius: 50%; pointer-events: none;
+  transform: translate(-50%, -50%) scale(1);
+  box-shadow: 0 0 4px rgba(255,255,255,.5);
+  animation: bubbleShardFly .45s cubic-bezier(.2,.6,.4,1) forwards;
 }
-@keyframes bubbleParticleFly {
+@keyframes bubbleShardFly {
   0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-  100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(.3); opacity: 0; }
+  60% { opacity: .7; }
+  100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(.2); opacity: 0; }
 }
 
 /* ===== Drag and drop ===== */
