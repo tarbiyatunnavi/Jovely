@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { LevelHeader } from './LevelHeader'
 import { ParticleBurst } from '../Particles'
+import { playBubbleSFX } from '../../hooks/useAmbientMusic'
 
 // Quick-tap Benar/Salah. Tidak ada timer — "Cepat jawab!" cuma vibe teks.
 // Tombol berbentuk bubble, pecah saat ditekan.
@@ -20,6 +21,7 @@ export default function QuickTapGame({ level, flavor, total, initialAnswers, onF
     if (picked) return
     setPicked(which)
     setBurst(b => b + 1)
+    try { playBubbleSFX() } catch {}
 
     // dapat posisi bubble yang ditekan untuk partikel pecah
     const rect = e.currentTarget.getBoundingClientRect()

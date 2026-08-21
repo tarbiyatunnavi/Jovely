@@ -20,6 +20,11 @@ let _swipeBuffer = null
 let _swipeLoading = false
 let _swipeReady = false
 
+// Bubble SFX buffer (quick-tap pop)
+let _bubbleBuffer = null
+let _bubbleLoading = false
+let _bubbleReady = false
+
 function getAudioCtx() {
   if (!_ctx) {
     try { _ctx = new (window.AudioContext || window.webkitAudioContext)() } catch {}
@@ -75,6 +80,23 @@ async function loadSwipeSFX() {
     // fail-safe
   } finally {
     _swipeLoading = false
+  }
+}
+
+async function loadBubbleSFX() {
+  if (_bubbleReady || _bubbleLoading) return
+  _bubbleLoading = true
+  try {
+    const ctx = getAudioCtx()
+    if (!ctx) return
+    const res = await fetch('/bubble-sfx.mp3')
+    const arrayBuf = await res.arrayBuffer()
+    _bubbleBuffer = await ctx.decodeAudioData(arrayBuf)
+    _bubbleReady = true
+  } catch {
+    // fail-safe
+  } finally {
+    _bubbleLoading = false
   }
 }
 
@@ -184,6 +206,7 @@ export function useAmbientMusic() {
     loadSFX()
     loadPourSFX()
     loadSwipeSFX()
+    loadBubbleSFX()
   }, [])
 
   // mulai musik Peta setelah interaksi pertama
@@ -347,6 +370,23 @@ export function playSwipeSFX() {
     source.buffer = _swipeBuffer
     const gain = ctx.createGain()
     gain.gain.value = 0.2 // seimbang dengan tap (0.25) & pour (0.2)
+    source.connect(gain)
+    gain.connect(ctx.destination)
+    source.start(0)
+  } catch {}
+}
+
+// Bubble SFX: diputar saat tap bubble Benar/Salah (instant, no conflict)
+export function playBubbleSFX() {
+  try {
+    const ctx = getAudioCtx()
+    if (!ctx || !_bubbleReady || !_bubbleBuffer) return
+    if (ctx.state === 'suspended') { try { ctx.resume() } catch {} }
+    if (ctx.state === 'closed') return
+    const source = ctx.createBufferSource()
+    source.buffer = _bubbleBuffer
+    const gain = ctx.createGain()
+    gain.gain.value = 0.2
     source.connect(gain)
     gain.connect(ctx.destination)
     source.start(0)
