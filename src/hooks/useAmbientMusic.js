@@ -1,23 +1,47 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 
-// Hook untuk musik latar — pakai HTML5 audio element (bukan Web Audio API)
-// Fail-safe: kalau audio gagal load/play, app tetap jalan tanpa musik
+// Audio context GLOBAL — dibuat sekali, tidak pernah di-close
+// (close bikin error kalau playTap dipanggil setelah unmount/remount)
+let _ctx = null
+let _sfxBuffer = null
+let _sfxLoading = false
+let _sfxReady = false
+
+function getAudioCtx() {
+  if (!_ctx) {
+    try { _ctx = new (window.AudioContext || window.webkitAudioContext)() } catch {}
+  }
+  return _ctx
+}
+
+async function loadSFX() {
+  if (_sfxReady || _sfxLoading) return
+  _sfxLoading = true
+  try {
+    const ctx = getAudioCtx()
+    if (!ctx) return
+    const res = await fetch('/tap-sfx.mp3')
+    const arrayBuf = await res.arrayBuffer()
+    _sfxBuffer = await ctx.decodeAudioData(arrayBuf)
+    _sfxReady = true
+  } catch {
+    // fail-safe
+  } finally {
+    _sfxLoading = false
+  }
+}
+
 export function useAmbientMusic() {
   const audioRef = useRef(null)
   const [muted, setMuted] = useState(false)
   const [ready, setReady] = useState(false)
 
-  // load preferensi mute dari localStorage
+  // load preferensi mute
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem('jovely_muted')
-      setMuted(stored === '1')
-    } catch {
-      setMuted(false)
-    }
+    try { setMuted(localStorage.getItem('jovely_muted') === '1') } catch {}
   }, [])
 
-  // setup audio element
+  // setup musik latar
   useEffect(() => {
     try {
       const audio = new Audio('/music-loop.mp3')
@@ -25,51 +49,35 @@ export function useAmbientMusic() {
       audio.volume = 0.35
       audio.preload = 'auto'
       audioRef.current = audio
-
       audio.addEventListener('canplaythrough', () => setReady(true), { once: true })
-      audio.addEventListener('error', () => { setReady(false) }, { once: true })
-
-      return () => {
-        try { audio.pause(); audio.src = '' } catch {}
-        audioRef.current = null
-      }
-    } catch {
-      // fail-safe: kalau Audio() gagal, app tetap jalan
-      setReady(false)
-    }
+      audio.addEventListener('error', () => setReady(false), { once: true })
+      return () => { try { audio.pause(); audio.src = '' } catch {} }
+    } catch { setReady(false) }
   }, [])
 
-  // mulai musik setelah interaksi pertama (autoplay policy)
-  const tryStart = useCallback(() => {
-    if (!audioRef.current || muted) return
-    try {
-      const p = audioRef.current.play()
-      if (p && typeof p.catch === 'function') {
-        p.catch(() => {}) // autoplay blocked = silently ignore, no crash
-      }
-    } catch {
-      // fail-safe
-    }
-  }, [muted])
+  // pre-load SFX (global, sekali saja)
+  useEffect(() => { loadSFX() }, [])
 
-  // listen untuk interaksi pertama
+  // unlock audio context + mulai musik setelah interaksi pertama
   useEffect(() => {
-    const onInteract = () => tryStart()
+    const onInteract = () => {
+      const ctx = getAudioCtx()
+      if (ctx && ctx.state === 'suspended') { try { ctx.resume() } catch {} }
+      if (audioRef.current && !muted) {
+        try { const p = audioRef.current.play(); if (p?.catch) p.catch(() => {}) } catch {}
+      }
+    }
     document.addEventListener('click', onInteract, { once: true })
     document.addEventListener('touchstart', onInteract, { once: true })
     return () => {
       document.removeEventListener('click', onInteract)
       document.removeEventListener('touchstart', onInteract)
     }
-  }, [tryStart])
+  }, [muted])
 
-  // stop musik saat unmount
+  // pause musik saat unmount
   useEffect(() => {
-    return () => {
-      if (audioRef.current) {
-        try { audioRef.current.pause() } catch {}
-      }
-    }
+    return () => { if (audioRef.current) try { audioRef.current.pause() } catch {} }
   }, [])
 
   const toggleMute = useCallback(() => {
@@ -78,48 +86,32 @@ export function useAmbientMusic() {
       try { localStorage.setItem('jovely_muted', next ? '1' : '0') } catch {}
       if (audioRef.current) {
         try {
-          if (next) {
-            audioRef.current.pause()
-          } else {
-            const p = audioRef.current.play()
-            if (p && typeof p.catch === 'function') p.catch(() => {})
-          }
+          if (next) { audioRef.current.pause() }
+          else { const p = audioRef.current.play(); if (p?.catch) p.catch(() => {}) }
         } catch {}
       }
       return next
     })
   }, [])
 
-  // pre-load SFX supaya instant — pakai pool 3 Audio elements
-  // (rapid tap: tiap tap pakai Audio berbeda dari pool, reset ke 0, play)
-  const sfxPoolRef = useRef([])
-  const sfxIdxRef = useRef(0)
-  useEffect(() => {
+  // playTap: instant, no conflict, fail-safe
+  // Tiap tap buat BufferSource baru — tidak bisa konflik
+  const playTap = useCallback(() => {
     try {
-      const pool = []
-      for (let i = 0; i < 3; i++) {
-        const sfx = new Audio('/tap-sfx.mp3')
-        sfx.preload = 'auto'
-        sfx.volume = 0.25
-        pool.push(sfx)
-      }
-      sfxPoolRef.current = pool
-      return () => { pool.forEach(s => { try { s.src = '' } catch {} }) }
+      const ctx = getAudioCtx()
+      if (!ctx || !_sfxReady || !_sfxBuffer) return
+      if (ctx.state === 'suspended') { try { ctx.resume() } catch {} }
+      if (ctx.state === 'closed') return
+
+      const source = ctx.createBufferSource()
+      source.buffer = _sfxBuffer
+      const gain = ctx.createGain()
+      gain.gain.value = 0.25
+      source.connect(gain)
+      gain.connect(ctx.destination)
+      source.start(0)
     } catch {}
   }, [])
 
   return { muted, toggleMute, ready, playTap }
-
-  // playTap: instant, fail-safe, support rapid tap via pool
-  function playTap() {
-    try {
-      const pool = sfxPoolRef.current
-      if (!pool || pool.length === 0) return
-      const sfx = pool[sfxIdxRef.current % pool.length]
-      sfxIdxRef.current++
-      sfx.currentTime = 0
-      const p = sfx.play()
-      if (p && typeof p.catch === 'function') p.catch(() => {})
-    } catch {}
-  }
 }
