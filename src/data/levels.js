@@ -1,6 +1,6 @@
-// Data lengkap 20 level & 49 item Jovely (makna dipertahankan persis dari Jovely.md)
-// Modul A: Cinta Romantis (12 level, 31 item) - jawaban Setuju/Tidak Setuju
-// Modul B: Kesiapan Menikah (8 level, 18 item) - skala Likert 5 poin, F/UF reverse-score
+// Data lengkap level & item Jovely (makna dipertahankan persis dari Jovely.md)
+// Modul A: Peta Samudra Rasa (11 level, 28 item) - jawaban Setuju/Tidak Setuju
+// Modul B: Ekspedisi Pondasi Bahtera (7 level, 18 item) - skala Likert 5 poin, F/UF reverse-score
 
 export const MODULES = [
   {
@@ -161,8 +161,8 @@ export const MODULES = [
 ]
 
 export const ALL_LEVELS = MODULES.flatMap(m => m.levels)
-export const TOTAL_LEVELS = ALL_LEVELS.length // 20
-export const TOTAL_ITEMS = ALL_LEVELS.reduce((s, l) => s + l.items.length, 0) // 49
+export const TOTAL_LEVELS = ALL_LEVELS.length // 18
+export const TOTAL_ITEMS = ALL_LEVELS.reduce((s, l) => s + l.items.length, 0) // 46
 
 // mecari level by id
 export function getLevel(levelId) {

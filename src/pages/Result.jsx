@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useProgress } from '../context/ProgressContext'
-import { scoreLoveStyles, scoreMarriageReadiness, interpret, ALL_LEVELS, MODULES, LEVEL_EMOJI, LEVEL_GRADIENT } from '../data/levels'
+import { scoreLoveStyles, scoreMarriageReadiness, interpret, ALL_LEVELS, MODULES, LEVEL_EMOJI, LEVEL_GRADIENT, TOTAL_LEVELS } from '../data/levels'
 import { Topbar, Spinner, Alert } from '../components/Layout'
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Cell } from 'recharts'
 
@@ -52,7 +52,7 @@ export default function Result() {
           <div style={{ fontSize: 56 }}>🔒</div>
           <h2 className="h-title">Hasil Belum Tersedia</h2>
           <p className="muted" style={{ maxWidth: 280 }}>
-            Halaman hasil baru muncul setelah kamu selesai seluruh 19 level (Modul A & B).
+            Halaman hasil baru muncul setelah kamu selesai seluruh {TOTAL_LEVELS} level (Modul A & B).
           </p>
           <button className="btn" onClick={() => nav('/map')}>Lanjut Kerjakan</button>
         </div>
