@@ -145,6 +145,22 @@ a { color: inherit; text-decoration: none; }
 }
 .tap2-card:active { transform: scale(.97); }
 .tap2-card:hover { border-color: var(--lylac-300); box-shadow: var(--shadow-lg); }
+
+/* Hexagon variant untuk Level A9 (Kilat Tanpa Akar) */
+.tap2-card.hexagon {
+  border-radius: 0; border: none;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  padding: 30px 16px; min-height: 140px;
+}
+.tap2-card.hexagon.picked-yes {
+  background: linear-gradient(135deg, #e9f7ef, #fff);
+  /* outline hexagon via drop-shadow filter */
+  filter: drop-shadow(0 0 6px rgba(30,122,62,.3)) drop-shadow(0 2px 8px rgba(30,122,62,.15));
+}
+.tap2-card.hexagon.picked-no {
+  background: linear-gradient(135deg, #fdeef0, #fff);
+  filter: drop-shadow(0 0 6px rgba(179,38,30,.3)) drop-shadow(0 2px 8px rgba(179,38,30,.15));
+}
 .tap2-card .t2-emoji { font-size: 34px; }
 .tap2-card .t2-label { font-size: 15px; font-weight: 700; color: var(--ink); }
 .tap2-card .t2-text { font-size: 14px; color: var(--ink-soft); line-height: 1.5; }
