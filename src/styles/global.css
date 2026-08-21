@@ -150,12 +150,13 @@ a { color: inherit; text-decoration: none; }
 /* Hexagon variant untuk Level A9 (Kilat Tanpa Akar) */
 .tap2-card.hexagon {
   border-radius: 0; border: none;
-  padding: 16px 10px; min-height: 100px; width: 130px; flex: none;
-  /* SVG hexagon dengan border lylac soft + fill putih */
+  padding: 8px 6px; min-height: 90px; width: 120px; flex: none;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 100'%3E%3Cpath d='M60 2 L118 26 L118 74 L60 98 L2 74 L2 26 Z' fill='%23ffffff' stroke='%23d8cee8' stroke-width='3'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
   filter: drop-shadow(0 2px 6px rgba(149,122,196,.15));
 }
-.tap2-card.hexagon .t2-emoji { font-size: 26px; }
+.tap2-card.hexagon .t2-emoji { font-size: 24px; }
+.tap2-card.hexagon .t2-label { font-size: 13px; font-weight: 700; }
 .tap2-card.hexagon .t2-text { display: none; }
 .tap2-card.hexagon.picked-yes {
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 100'%3E%3Cpath d='M60 2 L118 26 L118 74 L60 98 L2 74 L2 26 Z' fill='%23e9f7ef' stroke='%231e7a3e' stroke-width='3'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
