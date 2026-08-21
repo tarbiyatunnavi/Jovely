@@ -157,27 +157,49 @@ a { color: inherit; text-decoration: none; }
 .qt-card { background: #fff; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); padding: 28px 20px; text-align: center; font-size: 18px; font-weight: 600; line-height: 1.5; min-height: 180px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
 .qt-options { display: flex; gap: 14px; justify-content: center; }
 
-/* Bubble buttons (quick-tap) */
+/* Bubble buttons (quick-tap) — transparan, glossy, seperti gelembung sabun */
 .qt-bubble {
-  width: 110px; height: 110px; border-radius: 50%; border: none;
+  width: 120px; height: 120px; border-radius: 50%; border: 1.5px solid;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
-  font-weight: 700; font-size: 14px; cursor: pointer; position: relative;
+  font-weight: 700; font-size: 14px; cursor: pointer; position: relative; overflow: hidden;
   transition: transform .15s cubic-bezier(.34,1.56,.64,1), opacity .2s;
   flex-shrink: 0;
+  backdrop-filter: blur(2px);
 }
 .qt-bubble:active { transform: scale(.92); }
-.qt-bubble-icon { font-size: 26px; }
+.qt-bubble-icon { font-size: 28px; text-shadow: 0 1px 3px rgba(255,255,255,.7); }
+.qt-bubble span:last-child { text-shadow: 0 1px 3px rgba(255,255,255,.7); }
+
+/* Glossy highlight: pantulan cahaya di kiri-atas */
+.qt-bubble::before {
+  content: ''; position: absolute; top: 8%; left: 15%; width: 50%; height: 35%;
+  border-radius: 50%; pointer-events: none;
+  background: radial-gradient(ellipse at center, rgba(255,255,255,.85), rgba(255,255,255,.15) 60%, transparent);
+  transform: rotate(-20deg);
+}
+
+/* Pantulan kecil di bawah */
+.qt-bubble::after {
+  content: ''; position: absolute; bottom: 12%; right: 20%; width: 25%; height: 12%;
+  border-radius: 50%; pointer-events: none;
+  background: radial-gradient(ellipse at center, rgba(255,255,255,.4), transparent 70%);
+}
+
+/* Salah: bubble merah muda transparan */
 .qt-bubble-wrong {
-  background: radial-gradient(circle at 35% 30%, #fff, #fdeef0 50%, #f9d8de);
-  color: #b3261e; border: 2.5px solid #e8a0aa;
-  box-shadow: 0 4px 16px rgba(179,38,30,.12), inset 0 -8px 16px rgba(179,38,30,.06), inset 0 8px 16px rgba(255,255,255,.6);
+  background: radial-gradient(circle at 30% 25%, rgba(255,255,255,.5), rgba(253,238,240,.35) 45%, rgba(249,200,210,.3) 80%);
+  color: #a0201a; border-color: rgba(232,160,170,.6);
+  box-shadow: 0 6px 20px rgba(179,38,30,.1), 0 2px 8px rgba(179,38,30,.06), inset 0 -6px 14px rgba(200,80,90,.08), inset 0 4px 12px rgba(255,255,255,.3);
 }
+
+/* Benar: bubble hijau muda transparan */
 .qt-bubble-right {
-  background: radial-gradient(circle at 35% 30%, #fff, #e9f7ef 50%, #c8eccc);
-  color: #1e7a3e; border: 2.5px solid #88c898;
-  box-shadow: 0 4px 16px rgba(30,122,62,.12), inset 0 -8px 16px rgba(30,122,62,.06), inset 0 8px 16px rgba(255,255,255,.6);
+  background: radial-gradient(circle at 30% 25%, rgba(255,255,255,.5), rgba(233,247,239,.35) 45%, rgba(200,236,204,.3) 80%);
+  color: #166a30; border-color: rgba(136,200,152,.6);
+  box-shadow: 0 6px 20px rgba(30,122,62,.1), 0 2px 8px rgba(30,122,62,.06), inset 0 -6px 14px rgba(60,140,80,.08), inset 0 4px 12px rgba(255,255,255,.3);
 }
-.qt-bubble.dimmed { opacity: .35; transform: scale(.9); transition: opacity .3s, transform .3s; }
+
+.qt-bubble.dimmed { opacity: .3; transform: scale(.88); transition: opacity .3s, transform .3s; }
 
 /* Bubble pecah saat ditekan */
 .qt-bubble.popping {
