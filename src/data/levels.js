@@ -320,7 +320,7 @@ export const GAME_MECHANICS = {
     hint: 'Swipe kiri = nggak, kanan = setuju.'
   },
   A7: {
-    type: 'dragdrop', emoji: '💎', accent: '#c8a8d4',
+    type: 'dragdrop', emoji: '🕊️', accent: '#c8a8d4',
     tagline: 'Cinta Tanpa Syarat', greeting: 'Masukkan ke zona yang cocok',
     leftLabel: 'Bukan Aku', rightLabel: 'Aku Banget',
     hint: 'Drag kartu ke kiri atau kanan.'
@@ -396,12 +396,11 @@ export const LEVEL_EMOJI = {
   A4: '🌀',  // Badai Magnetik — badai/pusaran
   A5: '🕯️',  // Lentera Percik Api — lentera
   A6: '⛵',  // Bahtera Sahabat Sejati — bahtera/perahu
-  A7: '💎',  // Pesona Gravitasi — permata tertarik
-  A8: '🕊️',  // Mata Air Ketulusan — merpati (simbol ketulusan)
-  A9: '🧭',  // Kompas Logika — kompas
-  A10: '⚡',  // Kilat Tanpa Akar — kilat
-  A11: '📜',  // Sumpah Penjaga Takdir — gulungan sumpah
-  A12: '🌪️',  // Pusaran Angin Gelisah — angin pusaran
+  A7: '🕊️',  // Mata Air Ketulusan — merpati
+  A8: '🧭',  // Kompas Logika — kompas
+  A9: '⚡',  // Kilat Tanpa Akar — kilat
+  A10: '📜',  // Sumpah Penjaga Takdir — gulungan sumpah
+  A11: '🌪️',  // Pusaran Angin Gelisah — angin pusaran
   // Modul B: Ekspedisi Pondasi Bahtera
   B1: '🛡️',  // Perisai Jiwa — perisai
   B2: '🕸️',  // Jaringan Aliansi — jaring
