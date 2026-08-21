@@ -337,47 +337,38 @@ a { color: inherit; text-decoration: none; }
 
 /* ===== Tuang Cat Cinta (Level 1) ===== */
 .pl-arena-wrap {
-  position: relative; width: 100%; aspect-ratio: 1 / 1; max-height: 62vh;
-  margin: 0 auto; border-radius: var(--radius-lg); overflow: hidden;
+  position: relative; width: 100%; aspect-ratio: 1 / 1; max-height: 50vh;
+  margin: 8px auto; border-radius: var(--radius-lg); overflow: hidden;
   background: #fbf8fd; box-shadow: var(--shadow-lg); touch-action: none;
 }
 .pl-canvas { display: block; width: 100%; height: 100%; cursor: grab; }
 .pl-canvas:active { cursor: grabbing; }
 
-.pl-hud {
-  position: absolute; left: 0; right: 0; padding: 14px 18px;
-  text-align: center; pointer-events: none;
-}
-.pl-hud .btn { pointer-events: auto; }
-.pl-intro {
-  top: 50%; transform: translateY(-50%); background: rgba(255,255,255,.92);
-  backdrop-filter: blur(10px); margin: 0 16px; padding: 22px 18px;
-  border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);
-}
-.pl-hud-emoji { font-size: 36px; margin-bottom: 6px; }
-.pl-hud-title { font-size: 17px; font-weight: 800; color: var(--lylac-700); }
-.pl-hud-text { font-size: 14px; line-height: 1.5; color: var(--ink-soft); margin-top: 4px; }
-.pl-skip { margin-top: 14px; width: auto; padding: 10px 24px; }
+/* HUD atas: pill + statement (flow normal, di luar arena) */
+.pl-top-hud { text-align: center; margin-bottom: 4px; }
+.pl-top-hud .pl-round-pill { margin-bottom: 6px; }
 
-.pl-play {
-  top: 8px; padding: 8px 12px;
-}
 .pl-round-pill {
   display: inline-block; background: rgba(255,255,255,.9); backdrop-filter: blur(8px);
   padding: 4px 12px; border-radius: 999px; font-size: 11px; font-weight: 700;
   color: var(--lylac-700); box-shadow: var(--shadow); margin-bottom: 6px;
 }
-.pl-moment {
-  background: rgba(255,255,255,.92); backdrop-filter: blur(8px); margin: 0 20px;
-  padding: 12px 16px; border-radius: var(--radius); font-size: 14px; font-weight: 600;
-  color: var(--ink); line-height: 1.5; box-shadow: var(--shadow);
-}
 .pl-statement {
-  background: rgba(255,255,255,.96); backdrop-filter: blur(10px); margin: 0 10px 4px;
+  background: rgba(255,255,255,.96); backdrop-filter: blur(10px); margin: 0 10px;
   padding: 12px 16px; border-radius: var(--radius); font-size: 15px; font-weight: 700;
   color: var(--ink); line-height: 1.4; text-align: center; box-shadow: var(--shadow);
 }
-.pl-hint { font-size: 11px; color: var(--muted); font-style: italic; margin-top: 4px; padding: 0 6px; }
+
+/* Label zona: HTML overlay di dalam arena, posisi absolute */
+.pl-zone-label {
+  position: absolute; font-size: 13px; font-weight: 700;
+  pointer-events: none; z-index: 5; text-align: center;
+  text-shadow: 0 1px 4px rgba(255,255,255,.8);
+}
+.pl-zone-left { color: #d95a8a; }
+.pl-zone-right { color: #4A90D9; }
+
+.pl-hint { font-size: 11px; color: var(--muted); font-style: italic; margin-top: 8px; padding: 0 6px; text-align: center; }
 
 .pl-result {
   bottom: 12px; background: rgba(255,255,255,.95); backdrop-filter: blur(10px);

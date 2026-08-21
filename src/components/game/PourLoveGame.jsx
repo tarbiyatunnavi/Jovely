@@ -99,10 +99,10 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
     const st = stateRef.current
     st.center = { x: cx, y: cy }
     st.canvasH = rect.height
-    // 2 zona: kiri & kanan, masing-masing panel besar — geser ke bawah supaya tidak ketimpa HUD atas
+    // 2 zona: kiri & kanan — posisi relatif terhadap arena canvas (bukan seluruh layar)
     const zoneW = rect.width * 0.36
-    const zoneH = rect.height * 0.34
-    const zoneY = cy - zoneH / 2 + 24
+    const zoneH = rect.height * 0.38
+    const zoneY = rect.height * 0.18 // mulai dari 18% dari atas arena
     st.zones.left = { x: cx - zoneW - 12, y: zoneY, w: zoneW, h: zoneH, glow: 0 }
     st.zones.right = { x: cx + 12, y: zoneY, w: zoneW, h: zoneH, glow: 0 }
     // teko di bawah tengah
@@ -164,14 +164,8 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
         ctx.lineWidth = isGlowing ? 2.5 : 1.5
         ctx.stroke()
 
-        // label zona (di atas)
-        ctx.fillStyle = z.side === 'left' ? '#d95a8a' : '#4A90D9'
-        ctx.font = '700 14px -apple-system, sans-serif'
-        ctx.textAlign = 'center'
-        const labelText = z.side === 'left' ? 'Bukan Aku' : 'Aku Banget'
-        ctx.fillText(labelText, z.x + z.w / 2, z.y - 10)
-
-        // cairan di zona (jika ada)
+    // label zona TIDAK digambar di canvas — dipindah ke HTML supaya tidak tabrakan dgn HUD
+    // cairan di zona (jika ada)
         if (z.fill > 0 && phase === 'play') {
           const fillH = (z.fill / MAX_VOLUME) * (z.h - 16)
           const liquidTop = z.y + z.h - fillH - 8
@@ -384,6 +378,15 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
   // === Render UI ===
   return (
     <div className="fade-in">
+      {/* HUD atas: pill + statement (di luar arena, flow normal) */}
+      {phaseUI === 'play' && (
+        <div className="pl-top-hud">
+          <div className="pl-round-pill">Momen {roundUI + 1} / 6</div>
+          <div className="pl-statement fade-in" key={roundUI}>{MOMENTS[roundUI].text}</div>
+        </div>
+      )}
+
+      {/* Arena canvas (zona + teko) */}
       <div ref={wrapRef} className="pl-arena-wrap">
         <canvas
           ref={canvasRef}
@@ -397,15 +400,19 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
           onMouseLeave={onPointerUp}
         />
 
-        {/* HUD fase play */}
+        {/* Label zona: HTML overlay di atas arena, posisi absolute mengikuti zona di canvas */}
         {phaseUI === 'play' && (
-          <div className="pl-hud pl-play">
-            <div className="pl-round-pill">Momen {roundUI + 1} / 6</div>
-            <div className="pl-statement fade-in" key={roundUI}>{MOMENTS[roundUI].text}</div>
-            <p className="pl-hint">Drag teko, tahan di kiri/kanan buat tuang. Lepas = lanjut. <span style={{ fontStyle: 'italic' }}>Bingung? Angkat teko tanpa tuang, lanjut aja.</span></p>
-          </div>
+          <>
+            <div className="pl-zone-label pl-zone-left" style={{ left: '6%', top: '12%' }}>Bukan Aku</div>
+            <div className="pl-zone-label pl-zone-right" style={{ right: '6%', top: '12%' }}>Aku Banget</div>
+          </>
         )}
       </div>
+
+      {/* Hint di bawah arena (flow normal, tidak overlap) */}
+      {phaseUI === 'play' && (
+        <p className="pl-hint">Drag teko, tahan di kiri/kanan buat tuang. Lepas = lanjut. <span style={{ fontStyle: 'italic' }}>Bingung? Angkat teko tanpa tuang, lanjut aja.</span></p>
+      )}
       <ParticleBurst trigger={burst} emojis={['🎨','💜','🤍','✨']} />
     </div>
   )
