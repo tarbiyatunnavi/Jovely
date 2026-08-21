@@ -158,6 +158,54 @@ a { color: inherit; text-decoration: none; }
 .tap2-card.hexagon .t2-emoji { font-size: 24px; }
 .tap2-card.hexagon .t2-label { font-size: 13px; font-weight: 700; }
 .tap2-card.hexagon .t2-text { display: none; }
+
+/* Hexagon pecah jadi kilat saat ditekan */
+.tap2-card.hexagon.hex-popping {
+  animation: hexShatter .3s cubic-bezier(.2,.6,.4,1) forwards;
+}
+@keyframes hexShatter {
+  0% { transform: scale(1); opacity: 1; }
+  20% { transform: scale(1.08); opacity: 1; }
+  35% { transform: scale(1.12); opacity: .4; }
+  100% { transform: scale(1.15); opacity: 0; }
+}
+
+/* Partikel kilat dari posisi hexagon */
+.hex-pop-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 999; }
+
+/* Flash kilat pusat */
+.hex-flash {
+  position: fixed; width: 80px; height: 80px; border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background: radial-gradient(circle, rgba(255,255,200,.7), rgba(255,200,50,.3), transparent);
+  animation: hexFlash .35s ease-out forwards;
+}
+@keyframes hexFlash {
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+  50% { transform: translate(-50%, -50%) scale(1.2); opacity: .8; }
+  100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+}
+
+/* Garis kilat (zigzag menjalar) */
+.hex-bolt {
+  position: fixed; width: 2px; height: 2px; pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+.hex-bolt::before {
+  content: ''; position: absolute; left: 50%; top: 50%;
+  width: 28px; height: 2px;
+  background: linear-gradient(to right, transparent, #ffe066, #fff8b0, transparent);
+  border-radius: 1px;
+  box-shadow: 0 0 4px rgba(255,210,50,.6);
+  transform-origin: left center;
+  animation: boltExtend .4s cubic-bezier(.2,.6,.4,1) forwards;
+}
+@keyframes boltExtend {
+  0% { transform: translate(-50%, -50%) translateX(0) rotate(var(--angle)); opacity: 0; width: 0; }
+  15% { opacity: 1; width: 15px; }
+  40% { transform: translate(calc(-50% + var(--mid-x)), calc(-50% + var(--mid-y))) rotate(0deg); opacity: 1; width: 25px; }
+  100% { transform: translate(calc(-50% + var(--end-x)), calc(-50% + var(--end-y))) rotate(0deg); opacity: 0; width: 20px; }
+}
 .tap2-card.hexagon.picked-yes {
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 100'%3E%3Cpath d='M60 2 L118 26 L118 74 L60 98 L2 74 L2 26 Z' fill='%23e9f7ef' stroke='%231e7a3e' stroke-width='3'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
   filter: drop-shadow(0 0 6px rgba(30,122,62,.3)) drop-shadow(0 2px 8px rgba(30,122,62,.15));
