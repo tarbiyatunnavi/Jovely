@@ -165,6 +165,9 @@ a { color: inherit; text-decoration: none; }
   transition: transform .15s cubic-bezier(.34,1.56,.64,1), opacity .2s;
   flex-shrink: 0;
   backdrop-filter: blur(2px);
+  /* Outline ring cahaya samar mengelilingi bubble */
+  outline: 2px solid rgba(255,255,255,.25);
+  outline-offset: -4px;
 }
 .qt-bubble:active { transform: scale(.92); }
 .qt-bubble-icon { font-size: 28px; text-shadow: 0 1px 3px rgba(255,255,255,.7); }
@@ -178,25 +181,26 @@ a { color: inherit; text-decoration: none; }
   transform: rotate(-20deg);
 }
 
-/* Pantulan kecil di bawah */
+/* Rim bawah: garis tepi lebih tebal & terang di bagian bawah lingkaran */
 .qt-bubble::after {
-  content: ''; position: absolute; bottom: 12%; right: 20%; width: 25%; height: 12%;
-  border-radius: 50%; pointer-events: none;
-  background: radial-gradient(ellipse at center, rgba(255,255,255,.4), transparent 70%);
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 45%;
+  border-radius: 0 0 50% 50% / 0 0 100% 100%; pointer-events: none;
+  background: linear-gradient(to top, rgba(255,255,255,.35), rgba(255,255,255,.08) 50%, transparent);
+  box-shadow: inset 0 -3px 6px rgba(255,255,255,.4);
 }
 
 /* Salah: bubble merah muda transparan */
 .qt-bubble-wrong {
   background: radial-gradient(circle at 30% 25%, rgba(255,255,255,.5), rgba(253,238,240,.35) 45%, rgba(249,200,210,.3) 80%);
-  color: #a0201a; border-color: rgba(232,160,170,.6);
-  box-shadow: 0 6px 20px rgba(179,38,30,.1), 0 2px 8px rgba(179,38,30,.06), inset 0 -6px 14px rgba(200,80,90,.08), inset 0 4px 12px rgba(255,255,255,.3);
+  color: #a0201a; border-color: rgba(232,160,170,.55);
+  box-shadow: 0 10px 28px rgba(179,38,30,.14), 0 4px 10px rgba(179,38,30,.08), inset 0 -8px 16px rgba(200,80,90,.1), inset 0 4px 12px rgba(255,255,255,.25);
 }
 
 /* Benar: bubble hijau muda transparan */
 .qt-bubble-right {
   background: radial-gradient(circle at 30% 25%, rgba(255,255,255,.5), rgba(233,247,239,.35) 45%, rgba(200,236,204,.3) 80%);
-  color: #166a30; border-color: rgba(136,200,152,.6);
-  box-shadow: 0 6px 20px rgba(30,122,62,.1), 0 2px 8px rgba(30,122,62,.06), inset 0 -6px 14px rgba(60,140,80,.08), inset 0 4px 12px rgba(255,255,255,.3);
+  color: #166a30; border-color: rgba(136,200,152,.55);
+  box-shadow: 0 10px 28px rgba(30,122,62,.14), 0 4px 10px rgba(30,122,62,.08), inset 0 -8px 16px rgba(60,140,80,.1), inset 0 4px 12px rgba(255,255,255,.25);
 }
 
 .qt-bubble.dimmed { opacity: .3; transform: scale(.88); transition: opacity .3s, transform .3s; }
