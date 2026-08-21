@@ -90,5 +90,18 @@ export function useAmbientMusic() {
     })
   }, [])
 
-  return { muted, toggleMute, ready }
+  return { muted, toggleMute, ready, playTap }
+
+  // playTap: efek suara saat tap level (fail-safe)
+  function playTap() {
+    try {
+      const sfx = new Audio('/tap-sfx.mp3')
+      sfx.volume = 0.5
+      const p = sfx.play()
+      if (p && typeof p.catch === 'function') p.catch(() => {})
+      sfx.addEventListener('ended', () => { try { sfx.src = '' } catch {} }, { once: true })
+    } catch {
+      // fail-safe: kalau gagal, abaikan
+    }
+  }
 }

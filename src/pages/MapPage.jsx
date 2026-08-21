@@ -11,7 +11,7 @@ const IDLE_ANIMS = ['idle-bounce', 'idle-float', 'idle-pulse', 'idle-wiggle']
 export default function MapPage() {
   const { isLevelUnlocked, getLevelProgress, completedCount, totalXP } = useProgress()
   const nav = useNavigate()
-  const { muted, toggleMute } = useAmbientMusic()
+  const { muted, toggleMute, playTap } = useAmbientMusic()
 
   return (
     <div className="app-wrap">
@@ -75,7 +75,7 @@ export default function MapPage() {
                   return (
                     <div key={level.id} style={{ transform: zig, transition: 'transform .3s' }}>
                       <button
-                        onClick={() => unlocked && nav(`/level/${level.id}`)}
+                        onClick={() => { playTap(); if (unlocked) nav(`/level/${level.id}`) }}
                         disabled={!unlocked}
                         className={`map-node ${animClass}`}
                         style={{
