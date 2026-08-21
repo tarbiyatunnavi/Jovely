@@ -3,6 +3,7 @@ import { useProgress } from '../context/ProgressContext'
 import { MODULES, TOTAL_LEVELS, getLevelXP, GAME_MECHANICS, LEVEL_EMOJI, LEVEL_GRADIENT } from '../data/levels'
 import { Topbar } from '../components/Layout'
 import { Icon } from '../components/Icon'
+import { useAmbientMusic } from '../hooks/useAmbientMusic'
 
 // 4 jenis animasi idle di-cycle supaya tiap level beda gerakan
 const IDLE_ANIMS = ['idle-bounce', 'idle-float', 'idle-pulse', 'idle-wiggle']
@@ -10,6 +11,7 @@ const IDLE_ANIMS = ['idle-bounce', 'idle-float', 'idle-pulse', 'idle-wiggle']
 export default function MapPage() {
   const { isLevelUnlocked, getLevelProgress, completedCount, totalXP } = useProgress()
   const nav = useNavigate()
+  const { muted, toggleMute } = useAmbientMusic()
 
   return (
     <div className="app-wrap">
@@ -17,8 +19,17 @@ export default function MapPage() {
         title="Jovely"
         showBack={false}
         right={
-          <div className="pill" style={{ background: 'var(--lylac-100)' }}>
-            <Icon name="star" size={14} /> {totalXP()} XP
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <button
+              onClick={toggleMute}
+              className="audio-toggle-btn"
+              aria-label={muted ? 'Unmute musik' : 'Mute musik'}
+            >
+              {muted ? '🔇' : '🔊'}
+            </button>
+            <div className="pill" style={{ background: 'var(--lylac-100)' }}>
+              <Icon name="star" size={14} /> {totalXP()} XP
+            </div>
           </div>
         }
       />
