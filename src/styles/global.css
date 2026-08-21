@@ -150,30 +150,19 @@ a { color: inherit; text-decoration: none; }
 /* Hexagon variant untuk Level A9 (Kilat Tanpa Akar) */
 .tap2-card.hexagon {
   border-radius: 0; border: none;
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   padding: 16px 10px; min-height: 100px; width: 130px; flex: none;
-  background: #fff;
-  /* inner border hexagon via background layers: lylac ring + white fill */
-  background-image:
-    linear-gradient(135deg, #fff, #fff),
-    linear-gradient(135deg, #d0b9e7, #b8a4d9);
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
-  /* fallback: drop-shadow untuk efek 3D */
+  /* SVG hexagon dengan border lylac soft + fill putih */
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 100'%3E%3Cpath d='M60 2 L118 26 L118 74 L60 98 L2 74 L2 26 Z' fill='%23ffffff' stroke='%23d8cee8' stroke-width='3'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
   filter: drop-shadow(0 2px 6px rgba(149,122,196,.15));
 }
 .tap2-card.hexagon .t2-emoji { font-size: 26px; }
 .tap2-card.hexagon .t2-text { display: none; }
 .tap2-card.hexagon.picked-yes {
-  background-image:
-    linear-gradient(135deg, #e9f7ef, #fff),
-    linear-gradient(135deg, #88c898, #1e7a3e);
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 100'%3E%3Cpath d='M60 2 L118 26 L118 74 L60 98 L2 74 L2 26 Z' fill='%23e9f7ef' stroke='%231e7a3e' stroke-width='3'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
   filter: drop-shadow(0 0 6px rgba(30,122,62,.3)) drop-shadow(0 2px 8px rgba(30,122,62,.15));
 }
 .tap2-card.hexagon.picked-no {
-  background-image:
-    linear-gradient(135deg, #fdeef0, #fff),
-    linear-gradient(135deg, #e8a0aa, #b3261e);
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 100'%3E%3Cpath d='M60 2 L118 26 L118 74 L60 98 L2 74 L2 26 Z' fill='%23fdeef0' stroke='%23b3261e' stroke-width='3'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
   filter: drop-shadow(0 0 6px rgba(179,38,30,.3)) drop-shadow(0 2px 8px rgba(179,38,30,.15));
 }
 .tap2-card .t2-emoji { font-size: 34px; }
