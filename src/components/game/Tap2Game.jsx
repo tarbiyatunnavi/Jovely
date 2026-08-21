@@ -36,16 +36,18 @@ export default function Tap2Game({ level, flavor, total, initialAnswers, onFinal
     }, 450)
   }
 
-  // generate partikel kilat (zigzag menjalar ke luar)
-  const bolts = popData ? Array.from({ length: 8 }).map((_, i) => {
-    const angle = (i / 8) * Math.PI * 2 + Math.random() * 0.3
-    const dist = 30 + Math.random() * 40
-    // zigzag offset untuk efek kilat
-    const midDx = Math.cos(angle) * dist * 0.5 + (Math.random() - 0.5) * 15
-    const midDy = Math.sin(angle) * dist * 0.5 + (Math.random() - 0.5) * 15
-    const endDx = Math.cos(angle) * dist
-    const endDy = Math.sin(angle) * dist
-    return { midDx, midDy, endDx, endDy, delay: Math.random() * 0.08 }
+  // generate retakan kilat (zigzag SVG path menjalar ke luar)
+  const bolts = popData ? Array.from({ length: 7 }).map((_, i) => {
+    const angle = (i / 7) * Math.PI * 2 + Math.random() * 0.35
+    const dist = 45 + Math.random() * 35
+    const endX = Math.cos(angle) * dist
+    const endY = Math.sin(angle) * dist
+    // zigzag midpoints
+    const mid1x = Math.cos(angle) * dist * 0.3 + (Math.random() - 0.5) * 20
+    const mid1y = Math.sin(angle) * dist * 0.3 + (Math.random() - 0.5) * 20
+    const mid2x = Math.cos(angle) * dist * 0.65 + (Math.random() - 0.5) * 18
+    const mid2y = Math.sin(angle) * dist * 0.65 + (Math.random() - 0.5) * 18
+    return { endX, endY, mid1x, mid1y, mid2x, mid2y, delay: Math.random() * 0.06, angle }
   }) : []
 
   return (
@@ -73,25 +75,19 @@ export default function Tap2Game({ level, flavor, total, initialAnswers, onFinal
         </div>
       </div>
 
-      {/* Partikel kilat pecah hexagon */}
+      {/* Retakan kilat dari hexagon yang ditekan */}
       {popData && isHexagon && (
         <div className="hex-pop-overlay">
-          {bolts.map((b, i) => (
-            <div
-              key={i}
-              className="hex-bolt"
-              style={{
-                left: popData.x,
-                top: popData.y,
-                '--mid-x': b.midDx + 'px',
-                '--mid-y': b.midDy + 'px',
-                '--end-x': b.endDx + 'px',
-                '--end-y': b.endDy + 'px',
-                animationDelay: b.delay + 's',
-              }}
-            />
-          ))}
-          {/* flash kilat pusat */}
+          <svg className="hex-crack-svg" style={{ left: popData.x, top: popData.y }}>
+            {bolts.map((b, i) => (
+              <path
+                key={i}
+                className="hex-crack-path"
+                d={`M0,0 L${b.mid1x},${b.mid1y} L${b.mid2x},${b.mid2y} L${b.endX},${b.endY}`}
+                style={{ animationDelay: b.delay + 's' }}
+              />
+            ))}
+          </svg>
           <div className="hex-flash" style={{ left: popData.x, top: popData.y }} />
         </div>
       )}

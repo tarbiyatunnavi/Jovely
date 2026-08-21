@@ -186,25 +186,25 @@ a { color: inherit; text-decoration: none; }
   100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
 }
 
-/* Garis kilat (zigzag menjalar) */
-.hex-bolt {
-  position: fixed; width: 2px; height: 2px; pointer-events: none;
-  transform: translate(-50%, -50%);
+/* SVG retakan kilat zigzag */
+.hex-crack-svg {
+  position: fixed; width: 1px; height: 1px; pointer-events: none;
+  overflow: visible; transform: translate(-50%, -50%);
 }
-.hex-bolt::before {
-  content: ''; position: absolute; left: 50%; top: 50%;
-  width: 28px; height: 2px;
-  background: linear-gradient(to right, transparent, #ffe066, #fff8b0, transparent);
-  border-radius: 1px;
-  box-shadow: 0 0 4px rgba(255,210,50,.6);
-  transform-origin: left center;
-  animation: boltExtend .4s cubic-bezier(.2,.6,.4,1) forwards;
+.hex-crack-path {
+  fill: none;
+  stroke: #ffd633;
+  stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 200; stroke-dashoffset: 200;
+  filter: drop-shadow(0 0 3px rgba(255,210,50,.7));
+  animation: crackAppear .4s cubic-bezier(.2,.6,.4,1) forwards;
 }
-@keyframes boltExtend {
-  0% { transform: translate(-50%, -50%) translateX(0) rotate(var(--angle)); opacity: 0; width: 0; }
-  15% { opacity: 1; width: 15px; }
-  40% { transform: translate(calc(-50% + var(--mid-x)), calc(-50% + var(--mid-y))) rotate(0deg); opacity: 1; width: 25px; }
-  100% { transform: translate(calc(-50% + var(--end-x)), calc(-50% + var(--end-y))) rotate(0deg); opacity: 0; width: 20px; }
+@keyframes crackAppear {
+  0% { stroke-dashoffset: 200; opacity: 1; stroke-width: 3; }
+  40% { stroke-dashoffset: 0; opacity: 1; stroke-width: 2.5; }
+  70% { opacity: .8; stroke-width: 2; }
+  100% { stroke-dashoffset: 0; opacity: 0; stroke-width: 1; }
 }
 .tap2-card.hexagon.picked-yes {
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 100'%3E%3Cpath d='M60 2 L118 26 L118 74 L60 98 L2 74 L2 26 Z' fill='%23e9f7ef' stroke='%231e7a3e' stroke-width='3'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
