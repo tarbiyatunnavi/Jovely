@@ -15,6 +15,11 @@ let _pourReady = false
 let _pourSource = null
 let _pourGain = null
 
+// Swipe SFX buffer
+let _swipeBuffer = null
+let _swipeLoading = false
+let _swipeReady = false
+
 function getAudioCtx() {
   if (!_ctx) {
     try { _ctx = new (window.AudioContext || window.webkitAudioContext)() } catch {}
@@ -53,6 +58,23 @@ async function loadPourSFX() {
     // fail-safe
   } finally {
     _pourLoading = false
+  }
+}
+
+async function loadSwipeSFX() {
+  if (_swipeReady || _swipeLoading) return
+  _swipeLoading = true
+  try {
+    const ctx = getAudioCtx()
+    if (!ctx) return
+    const res = await fetch('/swipe-sfx.mp3')
+    const arrayBuf = await res.arrayBuffer()
+    _swipeBuffer = await ctx.decodeAudioData(arrayBuf)
+    _swipeReady = true
+  } catch {
+    // fail-safe
+  } finally {
+    _swipeLoading = false
   }
 }
 
@@ -161,6 +183,7 @@ export function useAmbientMusic() {
     initMusic()
     loadSFX()
     loadPourSFX()
+    loadSwipeSFX()
   }, [])
 
   // mulai musik Peta setelah interaksi pertama
@@ -311,4 +334,21 @@ export function stopPourSFX() {
   } catch {}
   _pourSource = null
   _pourGain = null
+}
+
+// Swipe SFX: diputar saat mulai drag kartu (instant, no conflict)
+export function playSwipeSFX() {
+  try {
+    const ctx = getAudioCtx()
+    if (!ctx || !_swipeReady || !_swipeBuffer) return
+    if (ctx.state === 'suspended') { try { ctx.resume() } catch {} }
+    if (ctx.state === 'closed') return
+    const source = ctx.createBufferSource()
+    source.buffer = _swipeBuffer
+    const gain = ctx.createGain()
+    gain.gain.value = 0.2 // seimbang dengan tap (0.25) & pour (0.2)
+    source.connect(gain)
+    gain.connect(ctx.destination)
+    source.start(0)
+  } catch {}
 }

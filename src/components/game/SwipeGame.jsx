@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { LevelHeader } from './LevelHeader'
 import { ParticleBurst } from '../Particles'
+import { playSwipeSFX } from '../../hooks/useAmbientMusic'
 
 // Swipe kartu kiri/kanan. agree=kanan, disagree=kiri
 export default function SwipeGame({ level, flavor, total, initialAnswers, onFinal }) {
@@ -23,6 +24,7 @@ export default function SwipeGame({ level, flavor, total, initialAnswers, onFina
     const p = e.touches ? e.touches[0] : e
     start.current = { x: p.clientX, y: p.clientY }
     setDragging(true)
+    try { playSwipeSFX() } catch {}
   }
   const onMove = (e) => {
     if (!dragging || exit) return
