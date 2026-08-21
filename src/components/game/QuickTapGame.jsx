@@ -1,67 +1,74 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { LevelHeader } from './LevelHeader'
 import { ParticleBurst } from '../Particles'
 
-// Quick-tap true/false dengan timer ringan. agree=Benar, disagree=Salah
-const TIMER_MS = 6000
+// Quick-tap Benar/Salah. Tidak ada timer — "Cepat jawab!" cuma vibe teks.
+// Tombol berbentuk bubble, pecah saat ditekan.
 export default function QuickTapGame({ level, flavor, total, initialAnswers, onFinal }) {
   const [idx, setIdx] = useState(0)
   const [answers, setAnswers] = useState({ ...initialAnswers })
   const [picked, setPicked] = useState(null)
-  const [time, setTime] = useState(TIMER_MS)
   const [burst, setBurst] = useState(0)
+  const [bubblePop, setBubblePop] = useState(null) // 'yes' | 'no' | null
   const cardRef = useRef(null)
-  const raf = useRef(null)
-  const startT = useRef(0)
 
   const item = level.items[idx]
   const isLast = idx === total - 1
   const progress = (idx / total) * 100
 
-  useEffect(() => {
-    startT.current = Date.now()
-    setTime(TIMER_MS)
-    const tick = () => {
-      const elapsed = Date.now() - startT.current
-      const left = Math.max(0, TIMER_MS - elapsed)
-      setTime(left)
-      if (left <= 0) { choose('no'); return }
-      raf.current = requestAnimationFrame(tick)
-    }
-    raf.current = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(raf.current)
-  }, [idx])
-
   const choose = (which) => {
     if (picked) return
-    cancelAnimationFrame(raf.current)
     setPicked(which)
+    setBubblePop(which)
     setBurst(b => b + 1)
     const final = { ...answers, [item.id]: which === 'yes' ? 'agree' : 'disagree' }
     setAnswers(final)
+    // setelah animasi pecah (~450ms), lanjut
     setTimeout(() => {
       if (isLast) onFinal(final)
-      else { setIdx(i => i + 1); setPicked(null) }
-    }, 380)
+      else { setIdx(i => i + 1); setPicked(null); setBubblePop(null) }
+    }, 450)
   }
 
-  const pct = (time / TIMER_MS) * 100
-  const warn = time < TIMER_MS * 0.33
-
   return (
-    <div className="fade-in" key={idx}>
+    <div className="fade-in">
       <LevelHeader level={level} idx={idx} total={total} progress={progress} flavor={flavor} />
-      <div className="qt-timer"><div className={warn ? 'warn' : ''} style={{ width: `${pct}%` }} /></div>
-      <div ref={cardRef} className="qt-card item-enter">“{item.text}”</div>
+      <div ref={cardRef} className="qt-card item-enter">"{item.text}"</div>
       <div className="qt-options">
-        <button className={`qt-btn wrong ${picked === 'no' ? 'picked' : ''}`} onClick={() => choose('no')} disabled={picked}>
-          ✗ Salah
+        <button
+          className={`qt-bubble qt-bubble-wrong ${picked === 'no' ? 'popping' : ''} ${picked === 'yes' ? 'dimmed' : ''}`}
+          onClick={() => choose('no')}
+          disabled={picked}
+        >
+          <span className="qt-bubble-icon">✗</span>
+          <span>Salah</span>
         </button>
-        <button className={`qt-btn right ${picked === 'yes' ? 'picked' : ''}`} onClick={() => choose('yes')} disabled={picked}>
-          ✓ Benar
+        <button
+          className={`qt-bubble qt-bubble-right ${picked === 'yes' ? 'popping' : ''} ${picked === 'no' ? 'dimmed' : ''}`}
+          onClick={() => choose('yes')}
+          disabled={picked}
+        >
+          <span className="qt-bubble-icon">✓</span>
+          <span>Benar</span>
         </button>
       </div>
-      <ParticleBurst trigger={burst} emojis={['⚡', '🔥', '✨', flavor?.emoji]} />
+      {/* Partikel pecah bubble */}
+      {bubblePop && (
+        <div className="bubble-pop-particles">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <span
+              key={i}
+              className="bubble-pop-particle"
+              style={{
+                '--dx': `${Math.cos((i / 8) * Math.PI * 2) * (40 + Math.random() * 30)}px`,
+                '--dy': `${Math.sin((i / 8) * Math.PI * 2) * (40 + Math.random() * 30)}px`,
+                animationDelay: `${Math.random() * 0.1}s`
+              }}
+            />
+          ))}
+        </div>
+      )}
+      <ParticleBurst trigger={burst} emojis={['⚡', '✨', flavor?.emoji]} />
     </div>
   )
 }

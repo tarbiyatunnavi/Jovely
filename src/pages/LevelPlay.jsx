@@ -10,7 +10,7 @@ import { playTapSFX, playLevelMusic, playMapMusic, pauseAllMusic } from '../hook
 
 const CELEBRATE_DELAY = 1800
 const MODULE_DONE_DELAY = 2600
-const FALLBACK_AFTER = 3500 // tampilkan tombol manual kalau auto belum jalan
+const FALLBACK_AFTER = 3500
 
 export default function LevelPlay() {
   const { id } = useParams()
@@ -21,19 +21,22 @@ export default function LevelPlay() {
   const flavor = GAME_MECHANICS[id]
   const existing = getLevelProgress(id)
 
-  const [phase, setPhase] = useState('play') // 'play' | 'celebrate'
+  const [phase, setPhase] = useState('play')
   const [showFallback, setShowFallback] = useState(false)
   const advanceTimer = useRef(null)
   const fallbackTimer = useRef(null)
   const currentLevelId = useRef(id)
 
-  // Reset phase ke 'play' setiap kali id (level) berubah — INI KUNCINYA
-  // supaya navigate dari /level/A1 → /level/A2 benar-benar render game baru.
+  const next = getNextLevel(id)
+  const isLastOfModulA = mod?.id === 'A' && id === 'A11'
+  const isLastOfModulB = mod?.id === 'B' && id === 'B7'
+  const moduleDone = isLastOfModulA || isLastOfModulB
+
+  // Reset phase saat id berubah
   useEffect(() => {
     currentLevelId.current = id
     setPhase('play')
     setShowFallback(false)
-    // bersihkan timer lama kalau ada
     if (advanceTimer.current) { clearTimeout(advanceTimer.current); advanceTimer.current = null }
     if (fallbackTimer.current) { clearTimeout(fallbackTimer.current); fallbackTimer.current = null }
     return () => {
@@ -42,6 +45,40 @@ export default function LevelPlay() {
     }
   }, [id])
 
+  const advance = useCallback(() => {
+    if (currentLevelId.current !== id) return
+    if (next) nav(`/level/${next.id}`, { replace: true })
+    else nav('/result', { replace: true })
+  }, [id, next, nav])
+
+  const onComplete = useCallback((finalAnswers) => {
+    saveLevel(id, finalAnswers, 'completed').catch(() => {})
+    setPhase('celebrate')
+    const delay = moduleDone ? MODULE_DONE_DELAY : CELEBRATE_DELAY
+    if (advanceTimer.current) clearTimeout(advanceTimer.current)
+    advanceTimer.current = setTimeout(() => advance(), delay)
+    if (fallbackTimer.current) clearTimeout(fallbackTimer.current)
+    fallbackTimer.current = setTimeout(() => setShowFallback(true), FALLBACK_AFTER)
+  }, [id, moduleDone, saveLevel, advance])
+
+  const goNext = useCallback(() => {
+    if (advanceTimer.current) { clearTimeout(advanceTimer.current); advanceTimer.current = null }
+    if (fallbackTimer.current) { clearTimeout(fallbackTimer.current); fallbackTimer.current = null }
+    advance()
+  }, [advance])
+
+  // Musik level saat play, musik peta saat keluar
+  useEffect(() => {
+    if (phase === 'play') { try { playLevelMusic() } catch {} }
+    return () => { try { playMapMusic() } catch {} }
+  }, [phase, id])
+
+  // SFX saat celebrate
+  useEffect(() => {
+    if (phase === 'celebrate') { try { playTapSFX() } catch {} }
+  }, [phase])
+
+  // Early returns (setelah semua hooks)
   if (!level) {
     return (
       <div className="app-wrap">
@@ -64,59 +101,6 @@ export default function LevelPlay() {
     )
   }
 
-  const next = getNextLevel(id)
-  const isLastOfModulA = mod.id === 'A' && id === 'A11'
-  const isLastOfModulB = mod.id === 'B' && id === 'B7'
-  const moduleDone = isLastOfModulA || isLastOfModulB
-
-  const advance = useCallback(() => {
-    // pastikan level id yang dirayakan masih sama dgn level aktif (hindari race condition)
-    if (currentLevelId.current !== id) return
-    if (next) nav(`/level/${next.id}`, { replace: true })
-    else nav('/result', { replace: true })
-  }, [id, next, nav])
-
-  const onComplete = useCallback((finalAnswers) => {
-    // Mulai simpan progress di background (jangan tunggu)
-    saveLevel(id, finalAnswers, 'completed').catch(() => {})
-
-    // Tampilkan layar perayaan
-    setPhase('celebrate')
-
-    // Jadwalkan auto-advance
-    const delay = moduleDone ? MODULE_DONE_DELAY : CELEBRATE_DELAY
-    if (advanceTimer.current) clearTimeout(advanceTimer.current)
-    advanceTimer.current = setTimeout(() => advance(), delay)
-
-    // Fallback: kalau setelah FALLBACK_AFTER ms belum pindah, tampilkan tombol manual
-    if (fallbackTimer.current) clearTimeout(fallbackTimer.current)
-    fallbackTimer.current = setTimeout(() => setShowFallback(true), FALLBACK_AFTER)
-  }, [id, moduleDone, saveLevel, advance])
-
-  // Mulai musik level saat masuk, balik ke musik peta saat keluar
-  useEffect(() => {
-    if (phase === 'play') {
-      try { playLevelMusic() } catch {}
-    }
-    return () => {
-      // saat keluar dari level (unmount atau phase berubah), balik ke musik peta
-      try { playMapMusic() } catch {}
-    }
-  }, [phase, id])
-
-  const goNext = useCallback(() => {
-    if (advanceTimer.current) { clearTimeout(advanceTimer.current); advanceTimer.current = null }
-    if (fallbackTimer.current) { clearTimeout(fallbackTimer.current); fallbackTimer.current = null }
-    advance()
-  }, [advance])
-
-  // Mainkan SFX saat halaman "Level Selesai!" muncul
-  useEffect(() => {
-    if (phase === 'celebrate') {
-      try { playTapSFX() } catch {}
-    }
-  }, [phase])
-
   if (phase === 'celebrate') {
     const celebEmoji = moduleDone ? (isLastOfModulA ? '💜' : '🎉') : flavor?.emoji || '🎉'
     const celebTitle = moduleDone ? (isLastOfModulA ? 'Modul Peta Samudra Rasa Selesai!' : 'Modul Ekspedisi Pondasi Bahtera Selesai!') : 'Level Selesai!'
@@ -124,9 +108,7 @@ export default function LevelPlay() {
       <div className="app-wrap">
         <Topbar title="Level Selesai" onBack={() => nav('/map')} />
         <div className="page" style={{ justifyContent: 'flex-start', alignItems: 'center', textAlign: 'center', paddingTop: 40, gap: 20 }}>
-          {/* Confetti overlay (fixed, terpisah dari konten) */}
           <Celebration show moduleDone={moduleDone} />
-          {/* Teks celebration inline di page flow */}
           <div className={`celebrate-text ${moduleDone ? 'module-done' : ''}`}>
             <div className="c-emoji">{celebEmoji}</div>
             <div className="c-title">{celebTitle}</div>
@@ -154,7 +136,6 @@ export default function LevelPlay() {
               Lanjut ke level berikutnya otomatis…
             </p>
           )}
-          {/* Fallback: tombol manual muncul kalau auto-advance belum jalan */}
           {showFallback && (
             <div className="col fade-in" style={{ gap: 10, width: '100%' }}>
               <button className="btn" onClick={goNext}>
@@ -163,7 +144,6 @@ export default function LevelPlay() {
             </div>
           )}
         </div>
-        {/* Tombol "Kembali ke Peta" — fixed di bawah, terpisah dari konten */}
         <button
           onClick={() => nav('/map')}
           className="celebrate-back-btn"

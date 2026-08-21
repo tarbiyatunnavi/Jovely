@@ -154,15 +154,53 @@ a { color: inherit; text-decoration: none; }
 @keyframes popPicked { 0%{transform:scale(.9)} 50%{transform:scale(1.04)} 100%{transform:scale(1)} }
 
 /* ===== Quick tap (true/false + timer) ===== */
-.qt-timer { height: 6px; background: var(--lylac-100); border-radius: 999px; overflow: hidden; margin-bottom: 16px; }
-.qt-timer > div { height: 100%; background: linear-gradient(90deg, var(--lylac-400), var(--lylac-500)); transition: width .1s linear; }
-.qt-timer > div.warn { background: linear-gradient(90deg, #f0a0a0, #d04040); }
-.qt-card { background: #fff; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); padding: 28px 20px; text-align: center; font-size: 18px; font-weight: 600; line-height: 1.5; min-height: 180px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
-.qt-options { display: flex; gap: 12px; }
-.qt-btn { flex: 1; padding: 18px; border-radius: var(--radius); font-weight: 700; font-size: 16px; transition: transform .12s cubic-bezier(.34,1.56,.64,1); display: flex; align-items: center; justify-content: center; gap: 6px; }
-.qt-btn:active { transform: scale(.94); }
-.qt-btn.wrong { background: #fdeef0; color: #b3261e; border: 2px solid #b3261e; }
-.qt-btn.right { background: #e9f7ef; color: #1e7a3e; border: 2px solid #1e7a3e; }
+.qt-card { background: #fff; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); padding: 28px 20px; text-align: center; font-size: 18px; font-weight: 600; line-height: 1.5; min-height: 180px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+.qt-options { display: flex; gap: 14px; justify-content: center; }
+
+/* Bubble buttons (quick-tap) */
+.qt-bubble {
+  width: 110px; height: 110px; border-radius: 50%; border: none;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  font-weight: 700; font-size: 14px; cursor: pointer; position: relative;
+  transition: transform .15s cubic-bezier(.34,1.56,.64,1), opacity .2s;
+  flex-shrink: 0;
+}
+.qt-bubble:active { transform: scale(.92); }
+.qt-bubble-icon { font-size: 26px; }
+.qt-bubble-wrong {
+  background: radial-gradient(circle at 35% 30%, #fff, #fdeef0 50%, #f9d8de);
+  color: #b3261e; border: 2.5px solid #e8a0aa;
+  box-shadow: 0 4px 16px rgba(179,38,30,.12), inset 0 -8px 16px rgba(179,38,30,.06), inset 0 8px 16px rgba(255,255,255,.6);
+}
+.qt-bubble-right {
+  background: radial-gradient(circle at 35% 30%, #fff, #e9f7ef 50%, #c8eccc);
+  color: #1e7a3e; border: 2.5px solid #88c898;
+  box-shadow: 0 4px 16px rgba(30,122,62,.12), inset 0 -8px 16px rgba(30,122,62,.06), inset 0 8px 16px rgba(255,255,255,.6);
+}
+.qt-bubble.dimmed { opacity: .35; transform: scale(.9); transition: opacity .3s, transform .3s; }
+
+/* Bubble pecah saat ditekan */
+.qt-bubble.popping {
+  animation: bubblePop .45s cubic-bezier(.2,.6,.4,1) forwards;
+}
+@keyframes bubblePop {
+  0% { transform: scale(1); opacity: 1; }
+  30% { transform: scale(1.25); opacity: .8; }
+  60% { transform: scale(1.4); opacity: .3; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+/* Partikel pecah bubble */
+.bubble-pop-particles { position: fixed; inset: 0; pointer-events: none; z-index: 999; }
+.bubble-pop-particle {
+  position: absolute; width: 8px; height: 8px; border-radius: 50%;
+  left: 50%; top: 60%; pointer-events: none;
+  animation: bubbleParticleFly .5s cubic-bezier(.2,.6,.4,1) forwards;
+}
+@keyframes bubbleParticleFly {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(.3); opacity: 0; }
+}
 
 /* ===== Drag and drop ===== */
 .dd-zones { display: flex; gap: 10px; margin-bottom: 16px; }
