@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
 import { ParticleBurst } from '../Particles'
+import { startPourSFX, stopPourSFX } from '../../hooks/useAmbientMusic'
 
 // === Tuang Cat Cinta (Level 1: Consummate Love) — versi 2 zona ===
 // Murni ekspresi diri — BUKAN game menang/kalah.
@@ -210,7 +211,7 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
 
   useEffect(() => {
     rafRef.current = requestAnimationFrame(render)
-    return () => cancelAnimationFrame(rafRef.current)
+    return () => { cancelAnimationFrame(rafRef.current); stopPourSFX() }
   }, [render])
 
   // === Pointer handling ===
@@ -265,7 +266,11 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
       active = 'right'
     }
     st.activeZone = active
+    const wasPouring = st.pouring
     st.pouring = active !== null
+    // SFX tuang: mulai saat mulai menuang, stop saat berhenti
+    if (st.pouring && !wasPouring) startPourSFX()
+    else if (!st.pouring && wasPouring) stopPourSFX()
   }
 
   const onPointerUp = () => {
@@ -273,6 +278,7 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
     if (st.phase !== 'play') return
     if (st.potDragging) {
       st.potDragging = false
+      if (st.pouring) stopPourSFX()
       st.pouring = false
       st.activeZone = null
       st.potReleased = true
@@ -336,6 +342,7 @@ export default function PourLoveGame({ level, flavor, onFinal }) {
     st.potDragging = false
     st.pouring = false
     st.activeZone = null
+    stopPourSFX()
     // reset posisi teko ke bawah tengah
     st.potX = st.center.x
     st.potY = (st.canvasH || st.center.y * 2) - 50
