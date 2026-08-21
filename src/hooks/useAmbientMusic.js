@@ -90,18 +90,29 @@ export function useAmbientMusic() {
     })
   }, [])
 
-  return { muted, toggleMute, ready, playTap }
-
-  // playTap: efek suara saat tap level (fail-safe)
-  function playTap() {
+  // pre-load SFX sekali supaya instant (tidak delay)
+  const sfxRef = useRef(null)
+  useEffect(() => {
     try {
       const sfx = new Audio('/tap-sfx.mp3')
-      sfx.volume = 0.5
-      const p = sfx.play()
-      if (p && typeof p.catch === 'function') p.catch(() => {})
-      sfx.addEventListener('ended', () => { try { sfx.src = '' } catch {} }, { once: true })
-    } catch {
-      // fail-safe: kalau gagal, abaikan
-    }
+      sfx.preload = 'auto'
+      sfx.volume = 0.25
+      sfxRef.current = sfx
+      return () => { try { sfx.src = '' } catch {} }
+    } catch {}
+  }, [])
+
+  return { muted, toggleMute, ready, playTap }
+
+  // playTap: efek suara saat tap level (pre-loaded, instant, fail-safe)
+  function playTap() {
+    try {
+      const sfx = sfxRef.current
+      if (sfx) {
+        sfx.currentTime = 0
+        const p = sfx.play()
+        if (p && typeof p.catch === 'function') p.catch(() => {})
+      }
+    } catch {}
   }
 }
