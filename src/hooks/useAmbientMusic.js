@@ -430,7 +430,7 @@ export function startWindSFX() {
     source.buffer = _windBuffer
     source.loop = true
     const gain = ctx.createGain()
-    gain.gain.value = 0.15
+    gain.gain.value = 0.25
     source.connect(gain)
     gain.connect(ctx.destination)
     source.start(0)
