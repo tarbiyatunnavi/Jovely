@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { LevelHeader } from './LevelHeader'
 import { ParticleBurst } from '../Particles'
+import { playShineSFX } from '../../hooks/useAmbientMusic'
 
 // Mini story-telling: tampilkan skenario singkat, lalu pilih respons.
 // Makna item tetap sama; kita bungkus dalam narasi pendek.
@@ -34,6 +35,7 @@ export default function StoryGame({ level, flavor, total, initialAnswers, onFina
     if (picked !== null) return
     setPicked(i)
     setBurst(b => b + 1)
+    try { playShineSFX() } catch {}
     const final = { ...answers, [item.id]: i === 0 ? 'agree' : 'disagree' }
     setAnswers(final)
     setTimeout(() => {

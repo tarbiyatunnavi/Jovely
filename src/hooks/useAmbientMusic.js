@@ -32,6 +32,11 @@ let _windReady = false
 let _windSource = null
 let _windGain = null
 
+// Shine SFX buffer (story choice, saat kartu menyala kuning)
+let _shineBuffer = null
+let _shineLoading = false
+let _shineReady = false
+
 function getAudioCtx() {
   if (!_ctx) {
     try { _ctx = new (window.AudioContext || window.webkitAudioContext)() } catch {}
@@ -121,6 +126,23 @@ async function loadWindSFX() {
     // fail-safe
   } finally {
     _windLoading = false
+  }
+}
+
+async function loadShineSFX() {
+  if (_shineReady || _shineLoading) return
+  _shineLoading = true
+  try {
+    const ctx = getAudioCtx()
+    if (!ctx) return
+    const res = await fetch('/shine-sfx.mp3')
+    const arrayBuf = await res.arrayBuffer()
+    _shineBuffer = await ctx.decodeAudioData(arrayBuf)
+    _shineReady = true
+  } catch {
+    // fail-safe
+  } finally {
+    _shineLoading = false
   }
 }
 
@@ -232,6 +254,7 @@ export function useAmbientMusic() {
     loadSwipeSFX()
     loadBubbleSFX()
     loadWindSFX()
+    loadShineSFX()
   }, [])
 
   // mulai musik Peta setelah interaksi pertama
@@ -451,4 +474,21 @@ export function stopWindSFX() {
   } catch {}
   _windSource = null
   _windGain = null
+}
+
+// Shine SFX: diputar saat tap pilihan di level story (bersamaan dengan glow kuning)
+export function playShineSFX() {
+  try {
+    const ctx = getAudioCtx()
+    if (!ctx || !_shineReady || !_shineBuffer) return
+    if (ctx.state === 'suspended') { try { ctx.resume() } catch {} }
+    if (ctx.state === 'closed') return
+    const source = ctx.createBufferSource()
+    source.buffer = _shineBuffer
+    const gain = ctx.createGain()
+    gain.gain.value = 0.22
+    source.connect(gain)
+    gain.connect(ctx.destination)
+    source.start(0)
+  } catch {}
 }
