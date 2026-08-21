@@ -6,7 +6,7 @@ import { Topbar } from '../components/Layout'
 import { Icon } from '../components/Icon'
 import GameEngine from '../components/GameEngine'
 import { Celebration } from '../components/Particles'
-import { playTapSFX } from '../hooks/useAmbientMusic'
+import { playTapSFX, playLevelMusic, playMapMusic, pauseAllMusic } from '../hooks/useAmbientMusic'
 
 const CELEBRATE_DELAY = 1800
 const MODULE_DONE_DELAY = 2600
@@ -92,6 +92,17 @@ export default function LevelPlay() {
     if (fallbackTimer.current) clearTimeout(fallbackTimer.current)
     fallbackTimer.current = setTimeout(() => setShowFallback(true), FALLBACK_AFTER)
   }, [id, moduleDone, saveLevel, advance])
+
+  // Mulai musik level saat masuk, balik ke musik peta saat keluar
+  useEffect(() => {
+    if (phase === 'play') {
+      try { playLevelMusic() } catch {}
+    }
+    return () => {
+      // saat keluar dari level (unmount atau phase berubah), balik ke musik peta
+      try { playMapMusic() } catch {}
+    }
+  }, [phase, id])
 
   const goNext = useCallback(() => {
     if (advanceTimer.current) { clearTimeout(advanceTimer.current); advanceTimer.current = null }

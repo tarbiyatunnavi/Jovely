@@ -56,6 +56,96 @@ async function loadPourSFX() {
   }
 }
 
+// === Global music manager (Peta & Level) ===
+// Dua file: music-loop.mp3 (Peta) & level-music.mp3 (Level)
+// Transisi: fade out satu, fade in yang lain
+
+let _mapAudio = null
+let _levelAudio = null
+let _mapMusicLoaded = false
+let _levelMusicLoaded = false
+
+function initMusic() {
+  if (!_mapAudio) {
+    try {
+      _mapAudio = new Audio('/music-loop.mp3')
+      _mapAudio.loop = true
+      _mapAudio.volume = 0
+      _mapAudio.preload = 'auto'
+      _mapAudio.addEventListener('canplaythrough', () => { _mapMusicLoaded = true }, { once: true })
+    } catch {}
+  }
+  if (!_levelAudio) {
+    try {
+      _levelAudio = new Audio('/level-music.mp3')
+      _levelAudio.loop = true
+      _levelAudio.volume = 0
+      _levelAudio.preload = 'auto'
+      _levelAudio.addEventListener('canplaythrough', () => { _levelMusicLoaded = true }, { once: true })
+    } catch {}
+  }
+}
+
+function isMusicMuted() {
+  try { return localStorage.getItem('jovely_muted') === '1' } catch { return false }
+}
+
+function fadeTo(audio, targetVol, duration = 0.5) {
+  try {
+    const ctx = getAudioCtx()
+    if (ctx && ctx.state !== 'closed') {
+      audio.volume = targetVol // simple fade via volume (HTML5 audio)
+    }
+  } catch {}
+}
+
+export function playMapMusic() {
+  try {
+    initMusic()
+    if (!_mapAudio || isMusicMuted()) return
+    // stop level music
+    if (_levelAudio) { try { _levelAudio.pause() } catch {} }
+    // play map music
+    if (_mapAudio.paused) {
+      const p = _mapAudio.play()
+      if (p?.catch) p.catch(() => {})
+    }
+    _mapAudio.volume = 0.35
+  } catch {}
+}
+
+export function playLevelMusic() {
+  try {
+    initMusic()
+    if (!_levelAudio || isMusicMuted()) return
+    // stop map music
+    if (_mapAudio) { try { _mapAudio.pause() } catch {} }
+    // play level music
+    if (_levelAudio.paused) {
+      const p = _levelAudio.play()
+      if (p?.catch) p.catch(() => {})
+    }
+    _levelAudio.volume = 0.3 // sedikit lebih pelan dari map (0.35)
+  } catch {}
+}
+
+export function pauseAllMusic() {
+  try {
+    if (_mapAudio) { try { _mapAudio.pause() } catch {} }
+    if (_levelAudio) { try { _levelAudio.pause() } catch {} }
+  } catch {}
+}
+
+export function setMusicMuted(muted) {
+  try { localStorage.setItem('jovely_muted', muted ? '1' : '0') } catch {}
+  if (muted) {
+    pauseAllMusic()
+  } else {
+    // resume music yang aktif (cek dari URL/location)
+    // dipanggil dari toggleMute di hook
+  }
+}
+
 export function useAmbientMusic() {
   const audioRef = useRef(null)
   const [muted, setMuted] = useState(false)
@@ -66,31 +156,19 @@ export function useAmbientMusic() {
     try { setMuted(localStorage.getItem('jovely_muted') === '1') } catch {}
   }, [])
 
-  // setup musik latar
+  // init global music + pre-load SFX
   useEffect(() => {
-    try {
-      const audio = new Audio('/music-loop.mp3')
-      audio.loop = true
-      audio.volume = 0.35
-      audio.preload = 'auto'
-      audioRef.current = audio
-      audio.addEventListener('canplaythrough', () => setReady(true), { once: true })
-      audio.addEventListener('error', () => setReady(false), { once: true })
-      return () => { try { audio.pause(); audio.src = '' } catch {} }
-    } catch { setReady(false) }
+    initMusic()
+    loadSFX()
+    loadPourSFX()
   }, [])
 
-  // pre-load SFX (global, sekali saja)
-  useEffect(() => { loadSFX(); loadPourSFX() }, [])
-
-  // unlock audio context + mulai musik setelah interaksi pertama
+  // mulai musik Peta setelah interaksi pertama
   useEffect(() => {
     const onInteract = () => {
       const ctx = getAudioCtx()
       if (ctx && ctx.state === 'suspended') { try { ctx.resume() } catch {} }
-      if (audioRef.current && !muted) {
-        try { const p = audioRef.current.play(); if (p?.catch) p.catch(() => {}) } catch {}
-      }
+      playMapMusic()
     }
     document.addEventListener('click', onInteract, { once: true })
     document.addEventListener('touchstart', onInteract, { once: true })
@@ -98,22 +176,26 @@ export function useAmbientMusic() {
       document.removeEventListener('click', onInteract)
       document.removeEventListener('touchstart', onInteract)
     }
-  }, [muted])
+  }, [])
 
-  // pause musik saat unmount
+  // pause musik saat unmount (dari Peta)
   useEffect(() => {
-    return () => { if (audioRef.current) try { audioRef.current.pause() } catch {} }
+    return () => { try { pauseAllMusic() } catch {} }
   }, [])
 
   const toggleMute = useCallback(() => {
     setMuted(prev => {
       const next = !prev
       try { localStorage.setItem('jovely_muted', next ? '1' : '0') } catch {}
-      if (audioRef.current) {
-        try {
-          if (next) { audioRef.current.pause() }
-          else { const p = audioRef.current.play(); if (p?.catch) p.catch(() => {}) }
-        } catch {}
+      if (next) {
+        pauseAllMusic()
+      } else {
+        // resume — cek lokasi untuk tentukan musik mana
+        if (window.location.pathname.includes('/level/')) {
+          playLevelMusic()
+        } else {
+          playMapMusic()
+        }
       }
       return next
     })
@@ -177,7 +259,7 @@ export function useAmbientMusic() {
     _pourGain = null
   }, [])
 
-  return { muted, toggleMute, ready, playTap, startPour, stopPour }
+  return { muted, toggleMute, ready, playTap, startPour, stopPour, playMapMusic, playLevelMusic }
 }
 
 // Export fungsi global untuk dipanggil dari komponen lain (PourLoveGame dll)
