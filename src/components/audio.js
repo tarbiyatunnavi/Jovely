@@ -1,6 +1,6 @@
 // Audio manager untuk halaman Peta — Web Audio API (tanpa file eksternal)
-// Musik ambient: nuansa spa — drone rendah + air mengalir + chime lembut
-// Sound effect: pop/chime pendek saat tap level
+// Musik ambient: nuansa spa — singing bowl pad + chime lembut (TANPA noise/static)
+// Sound effect: cling lembut saat tap level
 
 let audioCtx = null
 let ambientNodes = null
@@ -29,19 +29,21 @@ export function setMuted(muted) {
   isMuted = muted
   try { localStorage.setItem('jovely_muted', muted ? '1' : '0') } catch {}
   if (ambientNodes) {
-    const vol = muted ? 0 : 0.06
+    const vol = muted ? 0 : 0.15
     ambientNodes.master.gain.setTargetAtTime(vol, getCtx().currentTime, 0.3)
   }
 }
 
-// === Musik ambient: nuansa spa ===
-// 3 lapisan: drone rendah (continuous) + air mengalir (noise filtered) + chime pelan (random)
+// === Musik ambient: nuansa spa — singing bowl pad + chime ===
+// Tidak ada noise/static. Hanya nada lembut berkelanjutan + chime sesekali.
 
-const DRONE_FREQS = [130.81, 196.00, 164.81] // C3, G3, E3 — chord lembut rendah
-const CHIME_NOTES = [523.25, 659.25, 783.99] // C5, E5, G5 — chime sangat pelan & jarang
+// Chord nada rendah (singing bowl style): C3, E3, G3, C4
+const PAD_FREQS = [130.81, 164.81, 196.00, 261.63]
+// Nada chime: C5, E5, G5, A5
+const CHIME_NOTES = [523.25, 659.25, 783.99, 880.00]
 
 let ambientInterval = null
-let droneOscs = []
+let padOscs = []
 
 export function startAmbient() {
   if (ambientPlaying) return
@@ -49,86 +51,85 @@ export function startAmbient() {
   if (ctx.state === 'suspended') ctx.resume()
 
   const master = ctx.createGain()
-  master.gain.value = isMuted ? 0 : 0.06 // sangat pelan, subtle
+  master.gain.value = isMuted ? 0 : 0.15
   master.connect(ctx.destination)
 
-  // --- Lapisan 1: Drone rendah (chord continuous, sangat lembut) ---
-  const droneGain = ctx.createGain()
-  droneGain.gain.value = 0.4
-  const droneFilter = ctx.createBiquadFilter()
-  droneFilter.type = 'lowpass'
-  droneFilter.frequency.value = 400 // cuma nada rendah yang lewat
-  droneFilter.Q.value = 0.3
-  droneGain.connect(droneFilter)
-  droneFilter.connect(master)
+  // --- Pad: singing bowl chord, sangat lembut, "bernafas" ---
+  // Lowpass filter dengan slow sweep untuk efek gelombang
+  const padFilter = ctx.createBiquadFilter()
+  padFilter.type = 'lowpass'
+  padFilter.frequency.value = 800
+  padFilter.Q.value = 1.0
+  padFilter.connect(master)
 
-  droneOscs = DRONE_FREQS.map((freq, i) => {
+  // LFO untuk slow filter sweep (efek "gelombang" lembut)
+  const filterLFO = ctx.createOscillator()
+  filterLFO.frequency.value = 0.04 // sangat lambat (25 detik per cycle)
+  const filterLFOGain = ctx.createGain()
+  filterLFOGain.gain.value = 200 // sweep 600-1000 Hz
+  filterLFO.connect(filterLFOGain)
+  filterLFOGain.connect(padFilter.frequency)
+  filterLFO.start()
+
+  padOscs = PAD_FREQS.map((freq, i) => {
     const osc = ctx.createOscillator()
     osc.type = 'sine'
     osc.frequency.value = freq
-    // LFO untuk volume supaya drone "bernafas" pelan
-    const lfo = ctx.createOscillator()
-    lfo.frequency.value = 0.06 + i * 0.02 // sangat lambat
-    const lfoGain = ctx.createGain()
-    lfoGain.gain.value = 0.15
-    lfo.connect(lfoGain)
-    lfoGain.connect(osc.frequency)
+    // detune halus untuk efek "bowl" (sedikit beating)
+    osc.detune.value = (i - 1.5) * 3
+
+    // LFO amplitude supaya tiap nada "bernafas" beda fase
+    const ampLFO = ctx.createOscillator()
+    ampLFO.frequency.value = 0.05 + i * 0.015 // beda tempo tiap nada
+    const ampLFOGain = ctx.createGain()
+    ampLFOGain.gain.value = 0.15
+    ampLFO.connect(ampLFOGain)
+
     const gain = ctx.createGain()
-    gain.gain.value = 0.3 / DRONE_FREQS.length
+    gain.gain.value = 0.12 // tiap nada pelan
+    ampLFOGain.connect(gain.gain) // modulasi gain
+
     osc.connect(gain)
-    gain.connect(droneGain)
+    gain.connect(padFilter)
     osc.start()
-    lfo.start()
-    return { osc, lfo }
+    ampLFO.start()
+    return { osc, ampLFO }
   })
 
-  // --- Lapisan 2: Suara air mengalir (filtered noise, sangat lembut) ---
-  // Buat noise buffer pendek, loop dengan bandpass filter = suara air
-  const noiseBuf = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate)
-  const data = noiseBuf.getChannelData(0)
-  for (let i = 0; i < data.length; i++) {
-    data[i] = (Math.random() * 2 - 1) * 0.5
-  }
-  const noiseSrc = ctx.createBufferSource()
-  noiseSrc.buffer = noiseBuf
-  noiseSrc.loop = true
-  const noiseFilter = ctx.createBiquadFilter()
-  noiseFilter.type = 'bandpass'
-  noiseFilter.frequency.value = 600 // frekuensi air mengalir
-  noiseFilter.Q.value = 0.5
-  const noiseGain = ctx.createGain()
-  noiseGain.gain.value = 0.08 // sangat lembut
-  noiseSrc.connect(noiseFilter)
-  noiseFilter.connect(noiseGain)
-  noiseGain.connect(master)
-  noiseSrc.start()
-
-  // --- Lapisan 3: Chime pelan (random, sangat jarang) ---
+  // --- Chime: lonceng lembut sesekali (singing bowl hit) ---
   const playChime = () => {
     if (!ambientPlaying || !ambientNodes) return
     const ctx2 = getCtx()
     const now = ctx2.currentTime
     const freq = CHIME_NOTES[Math.floor(Math.random() * CHIME_NOTES.length)]
 
-    const osc = ctx2.createOscillator()
-    osc.type = 'sine'
-    osc.frequency.value = freq
-    const gain = ctx2.createGain()
-    gain.gain.setValueAtTime(0, now)
-    gain.gain.linearRampToValueAtTime(0.15, now + 2.0) // fade in sangat lambat
-    gain.gain.linearRampToValueAtTime(0, now + 6.0) // fade out lambat
-    osc.connect(gain)
-    gain.connect(ambientNodes.master)
-    osc.start(now)
-    osc.stop(now + 6.5)
+    // Nada utama + harmonik (1x, 2x, 3x freq) untuk efek lonceng
+    const harmonics = [
+      { ratio: 1, gain: 0.12, decay: 3.0 },
+      { ratio: 2, gain: 0.05, decay: 2.0 },
+      { ratio: 3, gain: 0.025, decay: 1.5 },
+    ]
+    harmonics.forEach(h => {
+      const osc = ctx2.createOscillator()
+      osc.type = 'sine'
+      osc.frequency.value = freq * h.ratio
+      const gain = ctx2.createGain()
+      gain.gain.setValueAtTime(0, now)
+      gain.gain.linearRampToValueAtTime(h.gain, now + 0.05)
+      gain.gain.exponentialRampToValueAtTime(0.001, now + h.decay)
+      osc.connect(gain)
+      gain.connect(ambientNodes.master)
+      osc.start(now)
+      osc.stop(now + h.decay + 0.1)
+    })
   }
 
-  // chime setiap 8-12 detik (sangat jarang, tidak mengganggu)
+  // chime setiap 6-10 detik
   ambientInterval = setInterval(() => {
-    if (Math.random() < 0.4) playChime()
-  }, 8000)
+    if (Math.random() < 0.5) playChime()
+  }, 6000)
 
-  ambientNodes = { master, droneOscs, noiseSrc }
+  ambientNodes = { master, padOscs, filterLFO }
   ambientPlaying = true
 }
 
@@ -140,13 +141,13 @@ export function stopAmbient() {
       ambientNodes.master.gain.setTargetAtTime(0, getCtx().currentTime, 0.5)
     } catch {}
   }
-  // stop drone & noise setelah fade
+  // stop semua setelah fade
   setTimeout(() => {
-    if (droneOscs) {
-      droneOscs.forEach(({ osc, lfo }) => { try { osc.stop(); lfo.stop() } catch {} })
-      droneOscs = []
+    if (padOscs) {
+      padOscs.forEach(({ osc, ampLFO }) => { try { osc.stop(); ampLFO.stop() } catch {} })
+      padOscs = []
     }
-    if (ambientNodes?.noiseSrc) { try { ambientNodes.noiseSrc.stop() } catch {} }
+    if (ambientNodes?.filterLFO) { try { ambientNodes.filterLFO.stop() } catch {} }
     ambientNodes = null
   }, 800)
 }
@@ -159,20 +160,16 @@ export function playPop() {
   const now = ctx.currentTime
 
   // Nada utama: 587.33 Hz (D5) — nada lembut, tidak tinggi/tajam
-  // Frequency menurun pelan untuk efek "logam bergetar"
   const osc = ctx.createOscillator()
   osc.type = 'sine'
   osc.frequency.setValueAtTime(587.33, now)
-  osc.frequency.exponentialRampToValueAtTime(523.25, now + 0.15) // turun ke C5 pelan
+  osc.frequency.exponentialRampToValueAtTime(523.25, now + 0.15)
 
-  // Gain: attack cepat tapi lembut, decay panjang untuk resonansi/gema
   const gain = ctx.createGain()
   gain.gain.setValueAtTime(0, now)
-  gain.gain.linearRampToValueAtTime(0.18, now + 0.008) // attack sangat cepat tapi volume rendah
-  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6) // decay 0.6 detik = gema halus
+  gain.gain.linearRampToValueAtTime(0.18, now + 0.008)
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6)
 
-  // Convolver sederhana untuk efek ruang/resonansi (comb filter approach)
-  // Pakai feedback delay pendek = gema logam
   const delay = ctx.createDelay()
   delay.delayTime.value = 0.03
   const feedback = ctx.createGain()
@@ -191,10 +188,9 @@ export function playPop() {
   osc.start(now)
   osc.stop(now + 0.7)
 
-  // Harmonik lembut: oktaf di bawah (D4), volume sangat rendah, untuk "body" lonceng
   const osc2 = ctx.createOscillator()
   osc2.type = 'sine'
-  osc2.frequency.value = 293.66 // D4
+  osc2.frequency.value = 293.66
   const gain2 = ctx.createGain()
   gain2.gain.setValueAtTime(0, now)
   gain2.gain.linearRampToValueAtTime(0.06, now + 0.01)
