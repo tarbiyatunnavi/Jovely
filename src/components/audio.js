@@ -152,51 +152,58 @@ export function stopAmbient() {
   }, 800)
 }
 
-// === Sound effect: "cling" lembut saat tap level (nuansa lonceng spa) ===
+// === Sound effect: "cliing" lembut saat tap level (chime kristal/spa) ===
 export function playPop() {
   const ctx = getCtx()
   if (ctx.state === 'suspended') ctx.resume()
 
   const now = ctx.currentTime
 
-  // Nada utama: 587.33 Hz (D5) — nada lembut, tidak tinggi/tajam
-  const osc = ctx.createOscillator()
-  osc.type = 'sine'
-  osc.frequency.setValueAtTime(587.33, now)
-  osc.frequency.exponentialRampToValueAtTime(523.25, now + 0.15)
+  // Chime kristal: nada tinggi C6 (1046.5 Hz) dengan harmonik inharmonic
+  // Frekuensi lonceng = fundamental + harmonik yang BUKAN kelipatan bulat
+  // (ini yang membuat terdengar seperti lonceng/kristal, bukan sine biasa)
+  const baseFreq = 1046.50 // C6 — tinggi lembut
+  const partials = [
+    { ratio: 1.0,  gain: 0.14, decay: 1.2 },   // fundamental
+    { ratio: 2.76, gain: 0.06, decay: 0.9 },  // inharmonic partial (lonceng)
+    { ratio: 5.40, gain: 0.03, decay: 0.7 },  // inharmonic partial tinggi
+    { ratio: 8.93, gain: 0.015, decay: 0.5 }, // shimmer halus
+  ]
 
-  const gain = ctx.createGain()
-  gain.gain.setValueAtTime(0, now)
-  gain.gain.linearRampToValueAtTime(0.18, now + 0.008)
-  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6)
+  partials.forEach(p => {
+    const osc = ctx.createOscillator()
+    osc.type = 'sine'
+    osc.frequency.value = baseFreq * p.ratio
 
-  const delay = ctx.createDelay()
-  delay.delayTime.value = 0.03
-  const feedback = ctx.createGain()
-  feedback.gain.value = 0.35
-  const delayGain = ctx.createGain()
-  delayGain.gain.value = 0.25
+    const gain = ctx.createGain()
+    gain.gain.setValueAtTime(0, now)
+    gain.gain.linearRampToValueAtTime(p.gain, now + 0.005) // attack instan tapi lembut
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + p.decay) // decay halus menghilang
 
-  osc.connect(gain)
-  gain.connect(ctx.destination)
-  gain.connect(delay)
-  delay.connect(feedback)
-  feedback.connect(delay)
-  delay.connect(delayGain)
-  delayGain.connect(ctx.destination)
+    osc.connect(gain)
+    gain.connect(ctx.destination)
+    osc.start(now)
+    osc.stop(now + p.decay + 0.1)
+  })
 
-  osc.start(now)
-  osc.stop(now + 0.7)
-
-  const osc2 = ctx.createOscillator()
-  osc2.type = 'sine'
-  osc2.frequency.value = 293.66
-  const gain2 = ctx.createGain()
-  gain2.gain.setValueAtTime(0, now)
-  gain2.gain.linearRampToValueAtTime(0.06, now + 0.01)
-  gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.4)
-  osc2.connect(gain2)
-  gain2.connect(ctx.destination)
-  osc2.start(now)
-  osc2.stop(now + 0.45)
+  // Sedikit vibrato di nada utama untuk efek "bergetar" kristal
+  const vibOsc = ctx.createOscillator()
+  vibOsc.type = 'sine'
+  vibOsc.frequency.value = baseFreq
+  const vibLFO = ctx.createOscillator()
+  vibLFO.frequency.value = 5.5 // vibrato cepat halus
+  const vibDepth = ctx.createGain()
+  vibDepth.gain.value = 3 // 3 Hz wobble
+  vibLFO.connect(vibDepth)
+  vibDepth.connect(vibOsc.frequency)
+  const vibGain = ctx.createGain()
+  vibGain.gain.setValueAtTime(0, now)
+  vibGain.gain.linearRampToValueAtTime(0.08, now + 0.005)
+  vibGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.0)
+  vibOsc.connect(vibGain)
+  vibGain.connect(ctx.destination)
+  vibOsc.start(now)
+  vibLFO.start(now)
+  vibOsc.stop(now + 1.1)
+  vibLFO.stop(now + 1.1)
 }
