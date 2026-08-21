@@ -1,8 +1,10 @@
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useProgress } from '../context/ProgressContext'
 import { MODULES, TOTAL_LEVELS, getLevelXP, GAME_MECHANICS, LEVEL_EMOJI, LEVEL_GRADIENT } from '../data/levels'
 import { Topbar } from '../components/Layout'
 import { Icon } from '../components/Icon'
+import { startAmbient, stopAmbient, playPop, setMuted, loadMutePref, isAudioMuted } from '../components/audio'
 
 // 4 jenis animasi idle di-cycle supaya tiap level beda gerakan
 const IDLE_ANIMS = ['idle-bounce', 'idle-float', 'idle-pulse', 'idle-wiggle']
@@ -10,6 +12,48 @@ const IDLE_ANIMS = ['idle-bounce', 'idle-float', 'idle-pulse', 'idle-wiggle']
 export default function MapPage() {
   const { isLevelUnlocked, getLevelProgress, completedCount, totalXP } = useProgress()
   const nav = useNavigate()
+  const [muted, setMutedState] = useState(false)
+  const audioReady = useRef(false)
+
+  // load preferensi mute dari localStorage
+  useEffect(() => {
+    setMutedState(loadMutePref())
+  }, [])
+
+  // mulai ambient setelah interaksi pertama (autoplay policy)
+  const ensureAudio = useCallback(() => {
+    if (audioReady.current) return
+    audioReady.current = true
+    startAmbient()
+  }, [])
+
+  useEffect(() => {
+    const onFirstInteract = () => ensureAudio()
+    // coba langsung (kalau sudah ada interaksi sebelumnya di sesi ini)
+    ensureAudio()
+    document.addEventListener('click', onFirstInteract, { once: true })
+    document.addEventListener('touchstart', onFirstInteract, { once: true })
+    return () => {
+      stopAmbient()
+      document.removeEventListener('click', onFirstInteract)
+      document.removeEventListener('touchstart', onFirstInteract)
+    }
+  }, [ensureAudio])
+
+  const toggleMute = () => {
+    const newMuted = !muted
+    setMuted(newMuted)
+    setMutedState(newMuted)
+    if (!newMuted && !audioReady.current) {
+      audioReady.current = true
+      startAmbient()
+    }
+  }
+
+  const handleLevelClick = (levelId, unlocked) => {
+    playPop()
+    if (unlocked) nav(`/level/${levelId}`)
+  }
 
   return (
     <div className="app-wrap">
@@ -17,8 +61,17 @@ export default function MapPage() {
         title="Jovely"
         showBack={false}
         right={
-          <div className="pill" style={{ background: 'var(--lylac-100)' }}>
-            <Icon name="star" size={14} /> {totalXP()} XP
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <button
+              onClick={toggleMute}
+              className="audio-toggle-btn"
+              aria-label={muted ? 'Unmute musik' : 'Mute musik'}
+            >
+              {muted ? '🔇' : '🔊'}
+            </button>
+            <div className="pill" style={{ background: 'var(--lylac-100)' }}>
+              <Icon name="star" size={14} /> {totalXP()} XP
+            </div>
           </div>
         }
       />
@@ -64,7 +117,7 @@ export default function MapPage() {
                   return (
                     <div key={level.id} style={{ transform: zig, transition: 'transform .3s' }}>
                       <button
-                        onClick={() => unlocked && nav(`/level/${level.id}`)}
+                        onClick={() => handleLevelClick(level.id, unlocked)}
                         disabled={!unlocked}
                         className={`map-node ${animClass}`}
                         style={{
