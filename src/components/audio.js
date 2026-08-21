@@ -151,41 +151,56 @@ export function stopAmbient() {
   }, 800)
 }
 
-// === Sound effect: pop/chime pendek saat tap level ===
+// === Sound effect: "cling" lembut saat tap level (nuansa lonceng spa) ===
 export function playPop() {
   const ctx = getCtx()
   if (ctx.state === 'suspended') ctx.resume()
 
   const now = ctx.currentTime
 
-  // nada 1: tinggi lembut (chime)
-  const osc1 = ctx.createOscillator()
-  osc1.type = 'sine'
-  osc1.frequency.setValueAtTime(880, now)
-  osc1.frequency.exponentialRampToValueAtTime(1320, now + 0.08)
+  // Nada utama: 587.33 Hz (D5) — nada lembut, tidak tinggi/tajam
+  // Frequency menurun pelan untuk efek "logam bergetar"
+  const osc = ctx.createOscillator()
+  osc.type = 'sine'
+  osc.frequency.setValueAtTime(587.33, now)
+  osc.frequency.exponentialRampToValueAtTime(523.25, now + 0.15) // turun ke C5 pelan
 
-  const gain1 = ctx.createGain()
-  gain1.gain.setValueAtTime(0, now)
-  gain1.gain.linearRampToValueAtTime(0.25, now + 0.01)
-  gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.15)
+  // Gain: attack cepat tapi lembut, decay panjang untuk resonansi/gema
+  const gain = ctx.createGain()
+  gain.gain.setValueAtTime(0, now)
+  gain.gain.linearRampToValueAtTime(0.18, now + 0.008) // attack sangat cepat tapi volume rendah
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6) // decay 0.6 detik = gema halus
 
-  osc1.connect(gain1)
-  gain1.connect(ctx.destination)
-  osc1.start(now)
-  osc1.stop(now + 0.2)
+  // Convolver sederhana untuk efek ruang/resonansi (comb filter approach)
+  // Pakai feedback delay pendek = gema logam
+  const delay = ctx.createDelay()
+  delay.delayTime.value = 0.03
+  const feedback = ctx.createGain()
+  feedback.gain.value = 0.35
+  const delayGain = ctx.createGain()
+  delayGain.gain.value = 0.25
 
-  // nada 2: rendah lembut (body)
+  osc.connect(gain)
+  gain.connect(ctx.destination)
+  gain.connect(delay)
+  delay.connect(feedback)
+  feedback.connect(delay)
+  delay.connect(delayGain)
+  delayGain.connect(ctx.destination)
+
+  osc.start(now)
+  osc.stop(now + 0.7)
+
+  // Harmonik lembut: oktaf di bawah (D4), volume sangat rendah, untuk "body" lonceng
   const osc2 = ctx.createOscillator()
   osc2.type = 'sine'
-  osc2.frequency.setValueAtTime(440, now)
-
+  osc2.frequency.value = 293.66 // D4
   const gain2 = ctx.createGain()
   gain2.gain.setValueAtTime(0, now)
-  gain2.gain.linearRampToValueAtTime(0.15, now + 0.01)
-  gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.1)
-
+  gain2.gain.linearRampToValueAtTime(0.06, now + 0.01)
+  gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.4)
   osc2.connect(gain2)
   gain2.connect(ctx.destination)
   osc2.start(now)
-  osc2.stop(now + 0.15)
+  osc2.stop(now + 0.45)
 }
