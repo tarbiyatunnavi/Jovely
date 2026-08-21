@@ -90,29 +90,36 @@ export function useAmbientMusic() {
     })
   }, [])
 
-  // pre-load SFX sekali supaya instant (tidak delay)
-  const sfxRef = useRef(null)
+  // pre-load SFX supaya instant — pakai pool 3 Audio elements
+  // (rapid tap: tiap tap pakai Audio berbeda dari pool, reset ke 0, play)
+  const sfxPoolRef = useRef([])
+  const sfxIdxRef = useRef(0)
   useEffect(() => {
     try {
-      const sfx = new Audio('/tap-sfx.mp3')
-      sfx.preload = 'auto'
-      sfx.volume = 0.25
-      sfxRef.current = sfx
-      return () => { try { sfx.src = '' } catch {} }
+      const pool = []
+      for (let i = 0; i < 3; i++) {
+        const sfx = new Audio('/tap-sfx.mp3')
+        sfx.preload = 'auto'
+        sfx.volume = 0.25
+        pool.push(sfx)
+      }
+      sfxPoolRef.current = pool
+      return () => { pool.forEach(s => { try { s.src = '' } catch {} }) }
     } catch {}
   }, [])
 
   return { muted, toggleMute, ready, playTap }
 
-  // playTap: efek suara saat tap level (pre-loaded, instant, fail-safe)
+  // playTap: instant, fail-safe, support rapid tap via pool
   function playTap() {
     try {
-      const sfx = sfxRef.current
-      if (sfx) {
-        sfx.currentTime = 0
-        const p = sfx.play()
-        if (p && typeof p.catch === 'function') p.catch(() => {})
-      }
+      const pool = sfxPoolRef.current
+      if (!pool || pool.length === 0) return
+      const sfx = pool[sfxIdxRef.current % pool.length]
+      sfxIdxRef.current++
+      sfx.currentTime = 0
+      const p = sfx.play()
+      if (p && typeof p.catch === 'function') p.catch(() => {})
     } catch {}
   }
 }
