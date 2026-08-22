@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
 import { LevelHeader } from './LevelHeader'
 import { ParticleBurst } from '../Particles'
-import { startMouseSFX, stopMouseSFX } from '../../hooks/useAmbientMusic'
+import { startMouseSFX, stopMouseSFX, playShineSFX } from '../../hooks/useAmbientMusic'
 
 const OPTS = [
   { value: 1, label: 'Sangat Tidak Setuju', emoji: '😤' },
@@ -29,6 +29,8 @@ export default function LikertSlider({ level, flavor, total, initialAnswers, onF
     if (submitted) return
     setSubmitted(true)
     setBurst(b => b + 1)
+    try { stopMouseSFX() } catch {}
+    try { playShineSFX() } catch {}
     const final = { ...answers, [item.id]: val }
     setAnswers(final)
     setTimeout(() => {
