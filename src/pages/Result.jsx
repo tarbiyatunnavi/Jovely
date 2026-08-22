@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { useProgress } from '../context/ProgressContext'
 import { scoreLoveStyles, scoreMarriageReadiness, interpret, ALL_LEVELS, MODULES, LEVEL_EMOJI, LEVEL_GRADIENT, TOTAL_LEVELS } from '../data/levels'
 import { Topbar, Spinner, Alert } from '../components/Layout'
+import { Icon } from '../components/Icon'
+import { useAmbientMusic, playMapMusic } from '../hooks/useAmbientMusic'
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Cell } from 'recharts'
 
 export default function Result() {
@@ -10,6 +12,15 @@ export default function Result() {
   const { progress, loaded, getLevelProgress, authedFetch } = useProgress()
   const [saved, setSaved] = useState(false)
   const [serverResult, setServerResult] = useState(null)
+  const { muted, toggleMute } = useAmbientMusic()
+
+  // Mulai musik peta di halaman Hasil (preferensi mute sudah global via localStorage)
+  useEffect(() => {
+    try { playMapMusic() } catch {}
+    return () => {
+      // tidak pause saat unmount — biarkan musik tetap jalan saat navigasi
+    }
+  }, [])
 
   // Kumpulkan jawaban dari semua level
   const levelAnswers = {}
@@ -97,7 +108,17 @@ export default function Result() {
 
   return (
     <div className="app-wrap">
-      <Topbar title="Hasil Akhir" showBack={false} />
+      <Topbar
+        title="Hasil Akhir"
+        showBack={false}
+        right={
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <button onClick={toggleMute} className="audio-toggle-btn" aria-label={muted ? 'Unmute' : 'Mute'}>
+              {muted ? '🔇' : '🔊'}
+            </button>
+          </div>
+        }
+      />
       <div className="page fade-in" style={{ paddingBottom: 120, gap: 20 }}>
         <div className="card" style={{ textAlign: 'center', background: 'linear-gradient(135deg, var(--lylac-100), #fff)' }}>
           <div className="muted" style={{ fontSize: 12 }}>Skor Ekspedisi Pondasi Bahtera</div>
