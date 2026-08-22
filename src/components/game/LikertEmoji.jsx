@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { LevelHeader } from './LevelHeader'
 import { ParticleBurst } from '../Particles'
+import { playShineSFX } from '../../hooks/useAmbientMusic'
 
 const OPTS = [
   { value: 1, label: 'Sangat Tidak Setuju', emoji: '😤' },
@@ -25,6 +26,7 @@ export default function LikertEmoji({ level, flavor, total, initialAnswers, onFi
     if (picked) return
     setPicked(v)
     setBurst(b => b + 1)
+    try { playShineSFX() } catch {}
     const final = { ...answers, [item.id]: v }
     setAnswers(final)
     setTimeout(() => {

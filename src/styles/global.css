@@ -375,7 +375,12 @@ a { color: inherit; text-decoration: none; }
 .lk-emoji-btn:hover { border-color: var(--lylac-300); box-shadow: var(--shadow); }
 .lk-emoji-btn .e-icon { font-size: 30px; }
 .lk-emoji-btn .e-label { font-size: 10px; color: var(--muted); text-align: center; line-height: 1.2; font-weight: 600; }
-.lk-emoji-btn.picked { background: var(--lylac-100); border-color: var(--lylac-500); box-shadow: var(--shadow-lg); animation: popPicked .3s cubic-bezier(.34,1.56,.64,1); }
+.lk-emoji-btn.picked {
+  background: linear-gradient(135deg, #fff8d6, #ffeb99);
+  border-color: #f5c842;
+  box-shadow: 0 0 20px rgba(255,200,50,.35), 0 0 40px rgba(255,210,80,.2), inset 0 0 12px rgba(255,235,100,.2);
+  animation: popPicked .3s cubic-bezier(.34,1.56,.64,1);
+}
 .lk-emoji-btn.dimmed { opacity: .45; transform: scale(.92); }
 
 /* ===== Likert dial (roda berputar) ===== */
