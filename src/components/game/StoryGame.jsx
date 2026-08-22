@@ -15,7 +15,7 @@ function buildScene(item, level) {
   if (scenes[level.id]) {
     return { ...scenes[level.id], showItem: false }
   }
-  return { scene: 'Refleksi sebentar', q: item.text, showItem: true }
+  return { scene: 'Refleksi sebentar', q: item.text, showItem: false }
 }
 
 export default function StoryGame({ level, flavor, total, initialAnswers, onFinal }) {
