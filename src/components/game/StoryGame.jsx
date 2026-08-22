@@ -51,7 +51,6 @@ export default function StoryGame({ level, flavor, total, initialAnswers, onFina
         <div className="s-scene">{scene.scene} · {level.name}</div>
         <div className="s-body">
           {scene.q}
-          {scene.showItem && <><br /><br /><span className="s-quote">“{item.text}”</span></>}
         </div>
       </div>
       <div className="story-choices">
