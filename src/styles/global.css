@@ -152,25 +152,26 @@ a { color: inherit; text-decoration: none; }
   border-radius: 0; border: none;
   padding: 8px 6px; min-height: 90px; width: 120px; flex: none;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 100'%3E%3Cpath d='M60 2 L118 26 L118 74 L60 98 L2 74 L2 26 Z' fill='%23ffffff' stroke='%23d8cee8' stroke-width='3'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
-  filter: drop-shadow(0 2px 6px rgba(149,122,196,.15));
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 100'%3E%3Cdefs%3E%3CradialGradient id='glass' cx='35%25' cy='25%25'%3E%3Cstop offset='0%25' stop-color='%23ffffff' stop-opacity='0.85'/%3E%3Cstop offset='40%25' stop-color='%23f0eef8' stop-opacity='0.5'/%3E%3Cstop offset='100%25' stop-color='%23d8cee8' stop-opacity='0.35'/%3E%3C/radialGradient%3E%3C/defs%3E%3Cpath d='M60 2 L118 26 L118 74 L60 98 L2 74 L2 26 Z' fill='url(%23glass)' stroke='%23b8a4d9' stroke-width='1.5' stroke-opacity='0.6'/%3E%3Cpath d='M60 5 L40 30 L55 50' fill='none' stroke='%23ffffff' stroke-width='3' stroke-opacity='0.5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
+  backdrop-filter: blur(3px);
+  filter: drop-shadow(0 3px 8px rgba(149,122,196,.18));
 }
 .tap2-card.hexagon .t2-emoji { font-size: 24px; }
 .tap2-card.hexagon .t2-label { font-size: 13px; font-weight: 700; }
 .tap2-card.hexagon .t2-text { display: none; }
 
-/* Hexagon pecah jadi kilat saat ditekan */
-.tap2-card.hexagon.hex-popping {
-  animation: hexShatter .3s cubic-bezier(.2,.6,.4,1) forwards;
+/* Glass pecah: retakan muncul, hexagon glow lalu hilang */
+.tap2-card.hexagon.hex-cracking {
+  animation: hexGlassShatter .5s cubic-bezier(.2,.6,.4,1) forwards;
 }
-@keyframes hexShatter {
-  0% { transform: scale(1); opacity: 1; }
-  20% { transform: scale(1.08); opacity: 1; }
-  35% { transform: scale(1.12); opacity: .4; }
-  100% { transform: scale(1.15); opacity: 0; }
+@keyframes hexGlassShatter {
+  0% { transform: scale(1); opacity: 1; filter: drop-shadow(0 3px 8px rgba(149,122,196,.18)); }
+  15% { transform: scale(1.05); opacity: 1; filter: drop-shadow(0 0 10px rgba(255,220,50,.5)); }
+  30% { transform: scale(1.08); opacity: .8; filter: drop-shadow(0 0 14px rgba(255,200,50,.4)); }
+  100% { transform: scale(1.12); opacity: 0; filter: drop-shadow(0 0 0 transparent); }
 }
 
-/* Partikel kilat dari posisi hexagon */
+/* Overlay pecahan (retakan + flash + shards) */
 .hex-pop-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 999; }
 
 /* Flash kilat pusat */
@@ -186,33 +187,32 @@ a { color: inherit; text-decoration: none; }
   100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
 }
 
-/* SVG retakan kilat zigzag */
-.hex-crack-svg {
-  position: fixed; width: 1px; height: 1px; pointer-events: none;
-  overflow: visible; transform: translate(-50%, -50%);
-}
+/* SVG retakan kaca bercabang */
+.hex-crack-svg { position: fixed; width: 1px; height: 1px; pointer-events: none; overflow: visible; transform: translate(-50%, -50%); }
+.hex-crack-group { animation: crackGroupAppear .5s ease-out forwards; }
+@keyframes crackGroupAppear { 0% { opacity: 0; } 10% { opacity: 1; } 70% { opacity: .9; } 100% { opacity: 0; } }
 .hex-crack-path {
-  fill: none;
-  stroke: #ffd633;
-  stroke-width: 2;
-  stroke-linecap: round; stroke-linejoin: round;
-  stroke-dasharray: 200; stroke-dashoffset: 200;
-  filter: drop-shadow(0 0 3px rgba(255,210,50,.7));
-  animation: crackAppear .4s cubic-bezier(.2,.6,.4,1) forwards;
+  fill: none; stroke: rgba(255,255,255,.9); stroke-width: 1.5;
+  stroke-linecap: round; stroke-dasharray: 200; stroke-dashoffset: 200;
+  filter: drop-shadow(0 0 2px rgba(255,230,100,.6));
+  animation: crackDraw .35s ease-out forwards;
 }
-@keyframes crackAppear {
-  0% { stroke-dashoffset: 200; opacity: 1; stroke-width: 3; }
-  40% { stroke-dashoffset: 0; opacity: 1; stroke-width: 2.5; }
-  70% { opacity: .8; stroke-width: 2; }
-  100% { stroke-dashoffset: 0; opacity: 0; stroke-width: 1; }
+.hex-crack-branch { stroke-width: 1; stroke: rgba(255,255,255,.6); }
+@keyframes crackDraw { to { stroke-dashoffset: 0; } }
+
+/* Pecahan kaca jatuh + rotate */
+.hex-shard {
+  position: fixed; border-radius: 1px; pointer-events: none;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(135deg, rgba(255,255,255,.9), rgba(200,190,220,.6));
+  border: 0.5px solid rgba(184,164,217,.4);
+  box-shadow: 0 0 3px rgba(255,255,255,.4);
+  animation: shardFall .5s cubic-bezier(.3,.7,.5,1) forwards;
 }
-.tap2-card.hexagon.picked-yes {
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 100'%3E%3Cpath d='M60 2 L118 26 L118 74 L60 98 L2 74 L2 26 Z' fill='%23e9f7ef' stroke='%231e7a3e' stroke-width='3'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
-  filter: drop-shadow(0 0 6px rgba(30,122,62,.3)) drop-shadow(0 2px 8px rgba(30,122,62,.15));
-}
-.tap2-card.hexagon.picked-no {
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 100'%3E%3Cpath d='M60 2 L118 26 L118 74 L60 98 L2 74 L2 26 Z' fill='%23fdeef0' stroke='%23b3261e' stroke-width='3'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
-  filter: drop-shadow(0 0 6px rgba(179,38,30,.3)) drop-shadow(0 2px 8px rgba(179,38,30,.15));
+@keyframes shardFall {
+  0% { transform: translate(-50%, -50%) rotate(0deg) scale(1); opacity: 1; }
+  30% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) rotate(calc(var(--rot) * 0.3)) scale(.9); opacity: .9; }
+  100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy) + var(--fall))) rotate(var(--rot)) scale(.4); opacity: 0; }
 }
 .tap2-card .t2-emoji { font-size: 34px; }
 .tap2-card .t2-label { font-size: 15px; font-weight: 700; color: var(--ink); }
