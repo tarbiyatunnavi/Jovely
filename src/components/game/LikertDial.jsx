@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { LevelHeader } from './LevelHeader'
 import { ParticleBurst } from '../Particles'
+import { startMouseSFX, stopMouseSFX, playShineSFX } from '../../hooks/useAmbientMusic'
 
 const OPTS = [
   { value: 1, label: 'Sangat Tidak Setuju', emoji: '😤' },
@@ -45,6 +46,7 @@ export default function LikertDial({ level, flavor, total, initialAnswers, onFin
     center.current = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 }
     lastAngle.current = getAngle(p.clientX, p.clientY)
     setDragging(true)
+    try { startMouseSFX() } catch {}
   }
   const onMove = (e) => {
     if (!dragging || submitted) return
@@ -59,6 +61,7 @@ export default function LikertDial({ level, flavor, total, initialAnswers, onFin
   const onUp = () => {
     if (!dragging) return
     setDragging(false)
+    try { stopMouseSFX() } catch {}
     const snap = snapRot(rot)
     setRot(snap.rot)
   }
@@ -70,6 +73,8 @@ export default function LikertDial({ level, flavor, total, initialAnswers, onFin
     if (submitted) return
     setSubmitted(true)
     setBurst(b => b + 1)
+    try { stopMouseSFX() } catch {}
+    try { playShineSFX() } catch {}
     const final = { ...answers, [item.id]: snapRot(rot).value }
     setAnswers(final)
     setTimeout(() => {
