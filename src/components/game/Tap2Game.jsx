@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { LevelHeader } from './LevelHeader'
 import { ParticleBurst } from '../Particles'
+import { playBreakingSFX } from '../../hooks/useAmbientMusic'
 
 // Pilih 1 dari 2 kartu besar. agree=kartu "Setuju", disagree=kartu "Nggak"
 // Level A9 (Kilat Tanpa Akar): kartu hexagon glass, retak & pecah saat ditekan
@@ -21,6 +22,7 @@ export default function Tap2Game({ level, flavor, total, initialAnswers, onFinal
     if (picked) return
     setPicked(which)
     setBurst(b => b + 1)
+    try { playBreakingSFX() } catch {}
 
     if (isHexagon && e?.currentTarget) {
       const rect = e.currentTarget.getBoundingClientRect()

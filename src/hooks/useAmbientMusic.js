@@ -37,6 +37,11 @@ let _shineBuffer = null
 let _shineLoading = false
 let _shineReady = false
 
+// Breaking SFX buffer (hexagon glass pecah, Level A9)
+let _breakingBuffer = null
+let _breakingLoading = false
+let _breakingReady = false
+
 function getAudioCtx() {
   if (!_ctx) {
     try { _ctx = new (window.AudioContext || window.webkitAudioContext)() } catch {}
@@ -143,6 +148,23 @@ async function loadShineSFX() {
     // fail-safe
   } finally {
     _shineLoading = false
+  }
+}
+
+async function loadBreakingSFX() {
+  if (_breakingReady || _breakingLoading) return
+  _breakingLoading = true
+  try {
+    const ctx = getAudioCtx()
+    if (!ctx) return
+    const res = await fetch('/breaking-sfx.mp3')
+    const arrayBuf = await res.arrayBuffer()
+    _breakingBuffer = await ctx.decodeAudioData(arrayBuf)
+    _breakingReady = true
+  } catch {
+    // fail-safe
+  } finally {
+    _breakingLoading = false
   }
 }
 
@@ -255,6 +277,7 @@ export function useAmbientMusic() {
     loadBubbleSFX()
     loadWindSFX()
     loadShineSFX()
+    loadBreakingSFX()
   }, [])
 
   // mulai musik Peta setelah interaksi pertama
@@ -485,6 +508,23 @@ export function playShineSFX() {
     if (ctx.state === 'closed') return
     const source = ctx.createBufferSource()
     source.buffer = _shineBuffer
+    const gain = ctx.createGain()
+    gain.gain.value = 0.22
+    source.connect(gain)
+    gain.connect(ctx.destination)
+    source.start(0)
+  } catch {}
+}
+
+// Breaking SFX: diputar saat hexagon glass pecah (Level A9)
+export function playBreakingSFX() {
+  try {
+    const ctx = getAudioCtx()
+    if (!ctx || !_breakingReady || !_breakingBuffer) return
+    if (ctx.state === 'suspended') { try { ctx.resume() } catch {} }
+    if (ctx.state === 'closed') return
+    const source = ctx.createBufferSource()
+    source.buffer = _breakingBuffer
     const gain = ctx.createGain()
     gain.gain.value = 0.22
     source.connect(gain)
