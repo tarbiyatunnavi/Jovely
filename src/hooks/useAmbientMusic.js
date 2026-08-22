@@ -42,6 +42,13 @@ let _breakingBuffer = null
 let _breakingLoading = false
 let _breakingReady = false
 
+// Mouse SFX buffer (slider drag, loop saat drag)
+let _mouseBuffer = null
+let _mouseLoading = false
+let _mouseReady = false
+let _mouseSource = null
+let _mouseGain = null
+
 function getAudioCtx() {
   if (!_ctx) {
     try { _ctx = new (window.AudioContext || window.webkitAudioContext)() } catch {}
@@ -168,6 +175,23 @@ async function loadBreakingSFX() {
   }
 }
 
+async function loadMouseSFX() {
+  if (_mouseReady || _mouseLoading) return
+  _mouseLoading = true
+  try {
+    const ctx = getAudioCtx()
+    if (!ctx) return
+    const res = await fetch('/mouse-sfx.mp3')
+    const arrayBuf = await res.arrayBuffer()
+    _mouseBuffer = await ctx.decodeAudioData(arrayBuf)
+    _mouseReady = true
+  } catch {
+    // fail-safe
+  } finally {
+    _mouseLoading = false
+  }
+}
+
 // === Global music manager (Peta & Level) ===
 // Dua file: music-loop.mp3 (Peta) & level-music.mp3 (Level)
 // Transisi: fade out satu, fade in yang lain
@@ -278,6 +302,7 @@ export function useAmbientMusic() {
     loadWindSFX()
     loadShineSFX()
     loadBreakingSFX()
+    loadMouseSFX()
   }, [])
 
   // mulai musik Peta setelah interaksi pertama
@@ -531,4 +556,39 @@ export function playBreakingSFX() {
     gain.connect(ctx.destination)
     source.start(0)
   } catch {}
+}
+
+// Mouse SFX: loop saat slider di-drag, stop saat lepas (fail-safe)
+export function startMouseSFX() {
+  try {
+    const ctx = getAudioCtx()
+    if (!ctx || !_mouseReady || !_mouseBuffer) return
+    if (ctx.state === 'suspended') { try { ctx.resume() } catch {} }
+    if (ctx.state === 'closed') return
+    stopMouseSFX()
+    const source = ctx.createBufferSource()
+    source.buffer = _mouseBuffer
+    source.loop = true
+    const gain = ctx.createGain()
+    gain.gain.value = 0.15
+    source.connect(gain)
+    gain.connect(ctx.destination)
+    source.start(0)
+    _mouseSource = source
+    _mouseGain = gain
+  } catch {}
+}
+
+export function stopMouseSFX() {
+  try {
+    if (_mouseSource && _mouseGain) {
+      const ctx = getAudioCtx()
+      if (ctx && ctx.state !== 'closed') {
+        _mouseGain.gain.setTargetAtTime(0, ctx.currentTime, 0.03)
+        _mouseSource.stop(ctx.currentTime + 0.1)
+      }
+    }
+  } catch {}
+  _mouseSource = null
+  _mouseGain = null
 }

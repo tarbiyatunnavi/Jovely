@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { LevelHeader } from './LevelHeader'
 import { ParticleBurst } from '../Particles'
+import { startMouseSFX, stopMouseSFX } from '../../hooks/useAmbientMusic'
 
 const OPTS = [
   { value: 1, label: 'Sangat Tidak Setuju', emoji: '😤' },
@@ -17,6 +18,7 @@ export default function LikertSlider({ level, flavor, total, initialAnswers, onF
   const [submitted, setSubmitted] = useState(false)
   const [burst, setBurst] = useState(0)
   const cardRef = useRef(null)
+  const draggingRef = useRef(false)
 
   const item = level.items[idx]
   const isLast = idx === total - 1
@@ -35,13 +37,30 @@ export default function LikertSlider({ level, flavor, total, initialAnswers, onF
     }, 500)
   }
 
+  const onPointerDown = () => {
+    if (submitted) return
+    draggingRef.current = true
+    try { startMouseSFX() } catch {}
+  }
+
+  const onInput = (e) => {
+    setVal(Number(e.target.value))
+  }
+
+  const onPointerUp = () => {
+    if (draggingRef.current) {
+      draggingRef.current = false
+      try { stopMouseSFX() } catch {}
+    }
+  }
+
   return (
     <div className="fade-in" key={idx}>
       <LevelHeader level={level} idx={idx} total={total} progress={progress} flavor={flavor} />
       <div ref={cardRef} className="lk-card item-enter">
         <div>
           <div style={{ fontSize: 26, marginBottom: 8 }}>{flavor?.emoji}</div>
-          “{item.text}”
+          "{item.text}"
         </div>
       </div>
       <div className="lk-slider-wrap">
@@ -54,7 +73,10 @@ export default function LikertSlider({ level, flavor, total, initialAnswers, onF
           className="lk-slider"
           type="range" min="1" max="5" step="1" value={val}
           disabled={submitted}
-          onChange={e => setVal(Number(e.target.value))}
+          onPointerDown={onPointerDown}
+          onPointerUp={onPointerUp}
+          onPointerLeave={onPointerUp}
+          onChange={onInput}
         />
         <div className="lk-current">{cur.emoji} {cur.label}</div>
         <button className="btn lk-submit" onClick={submit} disabled={submitted}>
