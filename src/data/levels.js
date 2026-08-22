@@ -48,10 +48,7 @@ export const MODULES = [
       {
         id: 'A5', order: 5, name: 'Lentera Percik Api', icon: 'spark',
         items: [
-          { id: 'A5.1', text: 'Orang bisa jatuh cinta tanpa alasan jelas, bahkan tanpa direncanakan – cinta memang nggak bisa diatur.' },
-          { id: 'A5.2', text: 'Cinta yang tulus itu nggak pernah benar-benar berakhir.' },
-          { id: 'A5.3', text: 'Cinta itu terbentuk dari semua hal yang udah dilalui bareng seseorang.' },
-          { id: 'A5.4', text: 'Cinta itu nggak tunduk sama waktu - dia melampaui waktu.' }
+          { id: 'A5.1', text: 'Orang bisa jatuh cinta tanpa alasan jelas, bahkan tanpa direncanakan – cinta memang nggak bisa diatur.' }
         ]
       },
       {
