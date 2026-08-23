@@ -3,19 +3,21 @@ import { LevelHeader } from './LevelHeader'
 import { ParticleBurst } from '../Particles'
 import { playSwipeSFX } from '../../hooks/useAmbientMusic'
 
-// Modul B (Arus Bawah Laut): kartu skenario + 2 kartu pilihan (sehat/tidak sehat)
-// Pemain drag/swipe kartu pilihan. agree = sehat, disagree = tidak sehat.
+// Modul B (Arus Bawah Laut): kartu skenario + 2 kartu pilihan
+// Drag/swipe — pakai ref untuk drag tracking (sync, tidak lag)
 export default function ParentingChoiceGame({ level, flavor, total, initialAnswers, onFinal }) {
   const [idx, setIdx] = useState(0)
   const [answers, setAnswers] = useState({ ...initialAnswers })
   const [picked, setPicked] = useState(null)
   const [burst, setBurst] = useState(0)
-  const [dragData, setDragData] = useState({ side: null, x: 0, y: 0 })
+  const [dragStyle, setDragStyle] = useState(null) // { side, x, y }
 
-  const start = useRef({ x: 0, y: 0 })
-  const active = useRef(null)
-  const moved = useRef(false)
-  const sfx = useRef(false)
+  const startRef = useRef({ x: 0, y: 0 })
+  const activeRef = useRef(null) // 'healthy' | 'unhealthy' | null
+  const movedRef = useRef(false)
+  const sfxRef = useRef(false)
+  const rafRef = useRef(null)
+  const posRef = useRef({ x: 0, y: 0 })
 
   const item = level.items[idx]
   const isLast = idx === total - 1
@@ -29,63 +31,64 @@ export default function ParentingChoiceGame({ level, flavor, total, initialAnswe
     setAnswers(final)
     setTimeout(() => {
       if (isLast) onFinal(final)
-      else { setIdx(i => i + 1); setPicked(null); setDragData({ side: null, x: 0, y: 0 }) }
+      else { setIdx(i => i + 1); setPicked(null); setDragStyle(null) }
     }, 450)
   }, [picked, answers, item, isLast, onFinal])
 
-  const handleStart = (e, side) => {
+  const onDown = (e, side) => {
     if (picked) return
     const p = e.touches ? e.touches[0] : e
-    start.current = { x: p.clientX, y: p.clientY }
-    active.current = side
-    moved.current = false
-    setDragData({ side, x: 0, y: 0 })
-    if (!sfx.current) { try { playSwipeSFX() } catch {}; sfx.current = true }
+    startRef.current = { x: p.clientX, y: p.clientY }
+    activeRef.current = side
+    movedRef.current = false
+    posRef.current = { x: 0, y: 0 }
+    setDragStyle({ side, x: 0, y: 0 })
+    if (!sfxRef.current) { try { playSwipeSFX() } catch {}; sfxRef.current = true }
   }
 
-  const handleMove = (e) => {
-    if (!active.current || picked) return
+  const onMove = (e) => {
+    if (!activeRef.current || picked) return
     const p = e.touches ? e.touches[0] : e
-    const dx = p.clientX - start.current.x
-    const dy = p.clientY - start.current.y
-    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) moved.current = true
-    setDragData({ side: active.current, x: dx, y: dy })
-  }
-
-  const handleEnd = () => {
-    if (!active.current) return
-    const side = active.current
-    const { x, y } = dragData
-    active.current = null
-    sfx.current = false
-    if (moved.current && (Math.abs(x) > 50 || Math.abs(y) > 50)) {
-      choose(side)
-    } else {
-      setDragData({ side: null, x: 0, y: 0 })
+    const dx = p.clientX - startRef.current.x
+    const dy = p.clientY - startRef.current.y
+    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) movedRef.current = true
+    posRef.current = { x: dx, y: dy }
+    // throttle via rAF — hanya update state sekali per frame
+    if (!rafRef.current) {
+      rafRef.current = requestAnimationFrame(() => {
+        rafRef.current = null
+        setDragStyle({ side: activeRef.current, x: posRef.current.x, y: posRef.current.y })
+      })
     }
   }
 
-  const styleFor = (side) => {
-    if (dragData.side === side) {
-      const rot = Math.max(-12, Math.min(12, dragData.x / 12))
+  const onUp = () => {
+    if (!activeRef.current) return
+    const side = activeRef.current
+    const { x, y } = posRef.current
+    activeRef.current = null
+    if (sfxRef.current) sfxRef.current = false
+    if (rafRef.current) { cancelAnimationFrame(rafRef.current); rafRef.current = null }
+    if (movedRef.current && (Math.abs(x) > 50 || Math.abs(y) > 50)) {
+      setDragStyle(null)
+      choose(side)
+    } else {
+      setDragStyle(null)
+    }
+  }
+
+  const cardStyle = (side) => {
+    if (dragStyle && dragStyle.side === side) {
+      const rot = Math.max(-10, Math.min(10, dragStyle.x / 14))
       return {
-        transform: `translate(${dragData.x}px, ${dragData.y}px) rotate(${rot}deg) scale(1.05)`,
+        transform: `translate(${dragStyle.x}px, ${dragStyle.y}px) rotate(${rot}deg) scale(1.05)`,
         transition: 'none',
         zIndex: 10,
         boxShadow: '0 12px 32px rgba(149,122,196,.25), 0 4px 12px rgba(149,122,196,.15)',
       }
     }
     if (picked && picked !== side) return { opacity: .4, transform: 'scale(.95)', transition: 'all .3s' }
-    if (picked && picked === side) return {}
-    return { transition: 'transform .3s cubic-bezier(.2,.7,.3,1), box-shadow .3s ease' }
-  }
-
-  const classFor = (side) => {
-    const base = 'tap2-card parenting-card'
-    const sideClass = side === 'healthy' ? 'parenting-healthy' : 'parenting-unhealthy'
-    const pickClass = picked === side ? 'parenting-picked' : ''
-    const dragClass = dragData.side === side ? 'dragging' : ''
-    return `${base} ${sideClass} ${pickClass} ${dragClass}`.trim()
+    return {}
   }
 
   return (
@@ -96,31 +99,31 @@ export default function ParentingChoiceGame({ level, flavor, total, initialAnswe
       </div>
       <div className="tap2-wrap tap2-wrap-hex">
         <div
-          className={classFor('unhealthy')}
-          style={{ ...styleFor('unhealthy'), touchAction: 'none' }}
-          onTouchStart={(e) => handleStart(e, 'unhealthy')}
-          onTouchMove={handleMove}
-          onTouchEnd={handleEnd}
-          onMouseDown={(e) => handleStart(e, 'unhealthy')}
-          onMouseMove={handleMove}
-          onMouseUp={handleEnd}
-          onMouseLeave={() => { if (active.current) handleEnd() }}
-          onClick={() => { if (!moved.current && !picked) choose('unhealthy') }}
+          className={`parenting-card parenting-unhealthy ${picked === 'unhealthy' ? 'parenting-picked' : ''} ${dragStyle?.side === 'unhealthy' ? 'dragging' : ''}`}
+          onTouchStart={(e) => onDown(e, 'unhealthy')}
+          onTouchMove={onMove}
+          onTouchEnd={onUp}
+          onMouseDown={(e) => onDown(e, 'unhealthy')}
+          onMouseMove={dragStyle?.side === 'unhealthy' ? onMove : undefined}
+          onMouseUp={onUp}
+          onMouseLeave={dragStyle?.side === 'unhealthy' ? onUp : undefined}
+          onClick={() => { if (!movedRef.current && !picked) choose('unhealthy') }}
+          style={cardStyle('unhealthy')}
         >
           <span className="parenting-card-icon">🤍</span>
           <span className="parenting-card-text">{item.unhealthy}</span>
         </div>
         <div
-          className={classFor('healthy')}
-          style={{ ...styleFor('healthy'), touchAction: 'none' }}
-          onTouchStart={(e) => handleStart(e, 'healthy')}
-          onTouchMove={handleMove}
-          onTouchEnd={handleEnd}
-          onMouseDown={(e) => handleStart(e, 'healthy')}
-          onMouseMove={handleMove}
-          onMouseUp={handleEnd}
-          onMouseLeave={() => { if (active.current) handleEnd() }}
-          onClick={() => { if (!moved.current && !picked) choose('healthy') }}
+          className={`parenting-card parenting-healthy ${picked === 'healthy' ? 'parenting-picked' : ''} ${dragStyle?.side === 'healthy' ? 'dragging' : ''}`}
+          onTouchStart={(e) => onDown(e, 'healthy')}
+          onTouchMove={onMove}
+          onTouchEnd={onUp}
+          onMouseDown={(e) => onDown(e, 'healthy')}
+          onMouseMove={dragStyle?.side === 'healthy' ? onMove : undefined}
+          onMouseUp={onUp}
+          onMouseLeave={dragStyle?.side === 'healthy' ? onUp : undefined}
+          onClick={() => { if (!movedRef.current && !picked) choose('healthy') }}
+          style={cardStyle('healthy')}
         >
           <span className="parenting-card-icon">💜</span>
           <span className="parenting-card-text">{item.healthy}</span>
