@@ -10,14 +10,12 @@ export default function ParentingChoiceGame({ level, flavor, total, initialAnswe
   const [answers, setAnswers] = useState({ ...initialAnswers })
   const [picked, setPicked] = useState(null)
   const [burst, setBurst] = useState(0)
-  const [dragState, setDragState] = useState({ side: null, offset: { x: 0, y: 0 } })
+  const [dragData, setDragData] = useState({ side: null, x: 0, y: 0 })
 
-  const dragSide = useRef(null)
-  const dragging = useRef(false)
-  const dragStart = useRef({ x: 0, y: 0 })
-  const dragOffsetRef = useRef({ x: 0, y: 0 })
-  const sfxStarted = useRef(false)
-  const movedRef = useRef(false)
+  const start = useRef({ x: 0, y: 0 })
+  const active = useRef(null)
+  const moved = useRef(false)
+  const sfx = useRef(false)
 
   const item = level.items[idx]
   const isLast = idx === total - 1
@@ -31,87 +29,64 @@ export default function ParentingChoiceGame({ level, flavor, total, initialAnswe
     setAnswers(final)
     setTimeout(() => {
       if (isLast) onFinal(final)
-      else { setIdx(i => i + 1); setPicked(null); setDragState({ side: null, offset: { x: 0, y: 0 } }) }
+      else { setIdx(i => i + 1); setPicked(null); setDragData({ side: null, x: 0, y: 0 }) }
     }, 450)
   }, [picked, answers, item, isLast, onFinal])
 
-  const onDown = (e, side) => {
+  const handleStart = (e, side) => {
     if (picked) return
-    if (e.cancelable) e.preventDefault()
     const p = e.touches ? e.touches[0] : e
-    dragStart.current = { x: p.clientX, y: p.clientY }
-    dragSide.current = side
-    dragging.current = true
-    movedRef.current = false
-    dragOffsetRef.current = { x: 0, y: 0 }
-    setDragState({ side, offset: { x: 0, y: 0 } })
-    if (!sfxStarted.current) {
-      try { playSwipeSFX() } catch {}
-      sfxStarted.current = true
-    }
+    start.current = { x: p.clientX, y: p.clientY }
+    active.current = side
+    moved.current = false
+    setDragData({ side, x: 0, y: 0 })
+    if (!sfx.current) { try { playSwipeSFX() } catch {}; sfx.current = true }
   }
 
-  const onMove = (e) => {
-    if (!dragging.current || picked) return
-    if (e.cancelable) e.preventDefault()
+  const handleMove = (e) => {
+    if (!active.current || picked) return
     const p = e.touches ? e.touches[0] : e
-    const dx = p.clientX - dragStart.current.x
-    const dy = p.clientY - dragStart.current.y
-    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) movedRef.current = true
-    dragOffsetRef.current = { x: dx, y: dy }
-    setDragState(prev => ({ side: prev.side, offset: { x: dx, y: dy } }))
+    const dx = p.clientX - start.current.x
+    const dy = p.clientY - start.current.y
+    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) moved.current = true
+    setDragData({ side: active.current, x: dx, y: dy })
   }
 
-  const onUp = () => {
-    if (!dragging.current) return
-    dragging.current = false
-    if (sfxStarted.current) sfxStarted.current = false
-    const side = dragSide.current
-    const offset = dragOffsetRef.current
-    dragSide.current = null
-    setDragState({ side: null, offset: { x: 0, y: 0 } })
-    if (side && (Math.abs(offset.x) > 50 || Math.abs(offset.y) > 50)) {
+  const handleEnd = () => {
+    if (!active.current) return
+    const side = active.current
+    const { x, y } = dragData
+    active.current = null
+    sfx.current = false
+    if (moved.current && (Math.abs(x) > 50 || Math.abs(y) > 50)) {
       choose(side)
+    } else {
+      setDragData({ side: null, x: 0, y: 0 })
     }
   }
 
-  const getCardStyle = (side) => {
-    if (dragState.side === side) {
-      const rotate = Math.max(-12, Math.min(12, dragState.offset.x / 12))
+  const styleFor = (side) => {
+    if (dragData.side === side) {
+      const rot = Math.max(-12, Math.min(12, dragData.x / 12))
       return {
-        transform: `translate(${dragState.offset.x}px, ${dragState.offset.y}px) rotate(${rotate}deg) scale(1.05)`,
+        transform: `translate(${dragData.x}px, ${dragData.y}px) rotate(${rot}deg) scale(1.05)`,
         transition: 'none',
         zIndex: 10,
         boxShadow: '0 12px 32px rgba(149,122,196,.25), 0 4px 12px rgba(149,122,196,.15)',
       }
     }
-    if (picked && picked !== side) {
-      return { opacity: 0.4, transform: 'scale(.95)', transition: 'all .3s' }
-    }
-    if (picked && picked === side) {
-      return {}
-    }
+    if (picked && picked !== side) return { opacity: .4, transform: 'scale(.95)', transition: 'all .3s' }
+    if (picked && picked === side) return {}
     return { transition: 'transform .3s cubic-bezier(.2,.7,.3,1), box-shadow .3s ease' }
   }
 
-  const getCardClass = (side) => {
-    const base = `tap2-card parenting-card ${side === 'healthy' ? 'parenting-healthy' : 'parenting-unhealthy'}`
-    const pickedClass = picked === side ? 'parenting-picked' : ''
-    const dragClass = dragState.side === side ? 'dragging' : ''
-    return `${base} ${pickedClass} ${dragClass}`.trim()
+  const classFor = (side) => {
+    const base = 'tap2-card parenting-card'
+    const sideClass = side === 'healthy' ? 'parenting-healthy' : 'parenting-unhealthy'
+    const pickClass = picked === side ? 'parenting-picked' : ''
+    const dragClass = dragData.side === side ? 'dragging' : ''
+    return `${base} ${sideClass} ${pickClass} ${dragClass}`.trim()
   }
-
-  // Shared handlers attached to EACH card (not wrapper) — same as SwipeGame
-  const cardHandlers = (side) => ({
-    onTouchStart: (e) => onDown(e, side),
-    onTouchMove: (e) => onMove(e),
-    onTouchEnd: () => onUp(),
-    onMouseDown: (e) => onDown(e, side),
-    onMouseMove: (e) => onMove(e),
-    onMouseUp: () => onUp(),
-    onMouseLeave: () => { if (dragging.current) onUp() },
-    onClick: () => { if (!movedRef.current && !picked) choose(side) },
-  })
 
   return (
     <div className="fade-in" key={idx}>
@@ -119,12 +94,34 @@ export default function ParentingChoiceGame({ level, flavor, total, initialAnswe
       <div className="card item-enter" style={{ textAlign: 'center', fontSize: 16, fontWeight: 600, lineHeight: 1.5, padding: '20px 16px', marginBottom: 16, minHeight: 100 }}>
         "{item.scenario}"
       </div>
-      <div className="tap2-wrap tap2-wrap-hex" style={{ touchAction: 'none' }}>
-        <div className={getCardClass('unhealthy')} style={getCardStyle('unhealthy')} {...cardHandlers('unhealthy')}>
+      <div className="tap2-wrap tap2-wrap-hex">
+        <div
+          className={classFor('unhealthy')}
+          style={{ ...styleFor('unhealthy'), touchAction: 'none' }}
+          onTouchStart={(e) => handleStart(e, 'unhealthy')}
+          onTouchMove={handleMove}
+          onTouchEnd={handleEnd}
+          onMouseDown={(e) => handleStart(e, 'unhealthy')}
+          onMouseMove={handleMove}
+          onMouseUp={handleEnd}
+          onMouseLeave={() => { if (active.current) handleEnd() }}
+          onClick={() => { if (!moved.current && !picked) choose('unhealthy') }}
+        >
           <span className="parenting-card-icon">🤍</span>
           <span className="parenting-card-text">{item.unhealthy}</span>
         </div>
-        <div className={getCardClass('healthy')} style={getCardStyle('healthy')} {...cardHandlers('healthy')}>
+        <div
+          className={classFor('healthy')}
+          style={{ ...styleFor('healthy'), touchAction: 'none' }}
+          onTouchStart={(e) => handleStart(e, 'healthy')}
+          onTouchMove={handleMove}
+          onTouchEnd={handleEnd}
+          onMouseDown={(e) => handleStart(e, 'healthy')}
+          onMouseMove={handleMove}
+          onMouseUp={handleEnd}
+          onMouseLeave={() => { if (active.current) handleEnd() }}
+          onClick={() => { if (!moved.current && !picked) choose('healthy') }}
+        >
           <span className="parenting-card-icon">💜</span>
           <span className="parenting-card-text">{item.healthy}</span>
         </div>
