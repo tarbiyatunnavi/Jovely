@@ -48,7 +48,6 @@ export default function StoryGame({ level, flavor, total, initialAnswers, onFina
     <div className="fade-in" key={idx}>
       <LevelHeader level={level} idx={idx} total={total} progress={progress} flavor={flavor} />
       <div ref={cardRef} className="story-box item-enter">
-        <div className="s-scene">{scene.scene} · {level.name}</div>
         <div className="s-body">
           {scene.q}
         </div>
