@@ -124,7 +124,7 @@ export default function Result() {
       />
       <div className="page fade-in" style={{ paddingBottom: 120, gap: 20 }}>
         <div className="card" style={{ textAlign: 'center', background: 'linear-gradient(135deg, var(--lylac-100), #fff)' }}>
-          <div className="muted" style={{ fontSize: 12 }}>Skor Kesiapan Menikah</div>
+          <div className="muted" style={{ fontSize: 12 }}>Skor Ekspedisi Pondasi Bahtera</div>
           <div style={{ fontSize: 56, fontWeight: 800, color: 'var(--lylac-600)', lineHeight: 1.1, margin: '8px 0' }}>
             {readiness.totalPercent}%
           </div>

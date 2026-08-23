@@ -1,7 +1,7 @@
 // Data lengkap level & item Jovely
 // Modul A: Peta Samudra Rasa (11 level, 27 item) - jawaban Setuju/Tidak Setuju
 // Modul B: Tipe Pola Asuh (7 level, 8 item) - jawaban Setuju/Tidak Setuju (swipe)
-// Modul C: Kesiapan Menikah (7 level, 18 item) - skala Likert 5 poin, F/UF reverse-score
+// Modul C: Ekspedisi Pondasi Bahtera (7 level, 18 item) - skala Likert 5 poin, F/UF reverse-score
 
 export const MODULES = [
   {
@@ -148,7 +148,7 @@ export const MODULES = [
   },
   {
     id: 'C',
-    name: 'Kesiapan Menikah',
+    name: 'Ekspedisi Pondasi Bahtera',
     subtitle: 'Ukur kesiapan perjalananmu',
     order: 3,
     levels: [
@@ -296,7 +296,7 @@ export function scoreParentingStyles(levelAnswers) {
   return { scores, ranking, top }
 }
 
-// Modul C: Kesiapan Menikah — skor per dimensi & total (Likert 5 poin: 1-5, UF di-reverse)
+// Modul C: Ekspedisi Pondasi Bahtera — skor per dimensi & total (Likert 5 poin: 1-5, UF di-reverse)
 export function scoreMarriageReadiness(levelAnswers) {
   const LIKERT = { 1: 'Sangat Tidak Setuju', 2: 'Tidak Setuju', 3: 'Netral', 4: 'Setuju', 5: 'Sangat Setuju' }
   const dims = {}
@@ -467,7 +467,7 @@ export const GAME_MECHANICS = {
     leftLabel: 'Tidak Sehat', rightLabel: 'Sehat',
     hint: 'Geser kanan = respons sehat, kiri = tidak sehat.'
   },
-  // === Modul C: Kesiapan Menikah (Likert 5 poin, 3 varian interaksi) ===
+  // === Modul C: Ekspedisi Pondasi Bahtera (Likert 5 poin, 3 varian interaksi) ===
   C1: {
     type: 'likert-slider', emoji: '🛡️', accent: '#b8a4d9',
     tagline: 'Perisai Jiwa', greeting: 'Geser slider-nya',
@@ -512,7 +512,7 @@ export const LEVEL_EMOJI = {
   A8: '🧭', A9: '⚡', A10: '📜', A11: '🌪️',
   // Modul B: Tipe Pola Asuh
   B1: '🌊', B2: '🗼', B3: '🧭', B4: '⚓', B5: '⛈️', B6: '🪸', B7: '🚨',
-  // Modul C: Kesiapan Menikah
+  // Modul C: Ekspedisi Pondasi Bahtera
   C1: '🛡️', C2: '🕸️', C3: '👑', C4: '🌾', C5: '🪨', C6: '🧿', C7: '🏛️'
 }
 
