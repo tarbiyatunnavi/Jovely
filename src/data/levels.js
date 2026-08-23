@@ -104,44 +104,44 @@ export const MODULES = [
       {
         id: 'B1', order: 12, name: 'Palung Hangat Pelindung', icon: 'warmth',
         items: [
-          { id: 'B1.1', text: 'Misteri Kabin Rusak: Kapalmu bocor di tengah badai masa lalu. Disambut hangat dan didengarkan tanpa rasa takut.' }
+          { id: 'B1.1', scenario: 'Misteri Kabin Rusak: Kapalmu bocor di tengah badai masa lalu. Apa yang dilakukan Kapten senior?', healthy: 'Disambut hangat dan didengarkan tanpa rasa takut', unhealthy: 'Diabaikan atau dimarahi karena membuat masalah' }
         ]
       },
       {
         id: 'B2', order: 13, name: 'Mercusuar Utama', icon: 'lighthouse',
         items: [
-          { id: 'B2.1', text: 'Sinyal Larangan Berlayar: Mercusuar melarangmu menerobos Area Berbahaya. Mengirim alasan logis & peta bahaya yang jelas.' }
+          { id: 'B2.1', scenario: 'Sinyal Larangan Berlayar: Mercusuar melarangmu menerobos Area Berbahaya. Bagaimanakah sinyalnya?', healthy: 'Mengirim alasan logis & peta bahaya yang jelas', unhealthy: 'Menyuruh patuh begitu saja tanpa penjelasan' }
         ]
       },
       {
         id: 'B3', order: 14, name: 'Samudra Bebas', icon: 'freedom',
         items: [
-          { id: 'B3.1', text: 'Peta Rute Baru: Kamu mengusulkan koordinat baru yang belum ada di peta lama. Diberi ruang dan ide barumu dihargai.' }
+          { id: 'B3.1', scenario: 'Peta Rute Baru: Kamu mengusulkan koordinat baru yang belum ada di peta lama. Respon Kapten?', healthy: 'Diberi ruang dan ide barumu dihargai', unhealthy: 'Ditolak tegas dan dipaksa ikut rute lama' }
         ]
       },
       {
         id: 'B4', order: 15, name: 'Kedalaman Ekstrem', icon: 'depth',
         items: [
-          { id: 'B4.1', text: 'Saat kapalmu salah arah navigasi, Kapten mendisiplinkan dengan dijelaskan tanpa kekerasan fisik.' }
+          { id: 'B4.1', scenario: 'Saat kapalmu salah arah navigasi, bagaimana cara Kapten mendisiplinkanmu?', healthy: 'Dijelaskan tanpa kekerasan fisik', unhealthy: 'Tindakan atau hukuman fisik digunakan secara langsung' }
         ]
       },
       {
         id: 'B5', order: 16, name: 'Badai Bertubi', icon: 'storm',
         items: [
-          { id: 'B5.1', text: 'Saat kamu tak sengaja melanggar aturan, gema suara di kabin: ditegur secara terarah dan tenang.' }
+          { id: 'B5.1', scenario: 'Bagaimana gema suara di dalam kabin saat kamu tak sengaja melanggar aturan?', healthy: 'Ditegur secara terarah dan tenang', unhealthy: 'Luapan gelombang suara keras & amarah' }
         ]
       },
       {
         id: 'B6', order: 17, name: 'Pemblokiran Karang Misterius', icon: 'block',
         items: [
-          { id: 'B6.1', text: 'Tiba-tiba jangkar dikunci dan izin menyelam dicabut. Dijelaskan alasannya secara rinci sejak awal.' }
+          { id: 'B6.1', scenario: 'Tiba-tiba jangkar dikunci dan izin menyelam dicabut. Apa alasannya?', healthy: 'Dijelaskan alasannya secara rinci sejak awal', unhealthy: 'Langsung dikunci tanpa penjelasan sama sekali' }
         ]
       },
       {
         id: 'B7', order: 18, name: 'Terumbu Tanpa Jangkar', icon: 'reef',
         items: [
-          { id: 'B7.1', text: 'Kapten membuat batasan area berbahaya. Saat dilanggar: hukum atau konsekuensi benar-benar diterapkan.' },
-          { id: 'B7.2', text: 'Sirine Peringatan: sinyal ancaman bahaya dibunyikan. Ancaman selalu terbukti dan dieksekusi tegas.' }
+          { id: 'B7.1', scenario: 'Kapten membuat batasan area berbahaya, namun apa yang terjadi saat dilanggar?', healthy: 'Hukum atau konsekuensi benar-benar diterapkan', unhealthy: 'Aturan ada tapi tidak pernah dieksekusi' },
+          { id: 'B7.2', scenario: 'Sirine Peringatan: Seberapa sering sinyal ancaman bahaya dibunyikan tanpa ada tindakan nyata?', healthy: 'Ancaman selalu terbukti dan dieksekusi tegas', unhealthy: 'Hanya gertakan belaka yang jarang terjadi' }
         ]
       }
     ]
@@ -424,48 +424,41 @@ export const GAME_MECHANICS = {
     leftLabel: 'Salah', rightLabel: 'Benar',
     hint: 'Tap Benar kalau setuju, Salah kalau nggak.'
   },
-  // === Modul B: Arus Bawah Laut (swipe, semua F) ===
+  // === Modul B: Arus Bawah Laut (pilihan kartu sehat/tidak sehat) ===
   B1: {
-    type: 'swipe', emoji: '🌊', accent: '#c8a8d4',
-    tagline: 'Palung Hangat Pelindung', greeting: 'Geser kartunya ya',
-    leftLabel: 'Tidak Sehat', rightLabel: 'Sehat',
-    hint: 'Geser kanan = respons sehat, kiri = tidak sehat.'
+    type: 'parenting-choice', emoji: '🌊', accent: '#c8a8d4',
+    tagline: 'Palung Hangat Pelindung', greeting: 'Pilih respons yang tepat',
+    hint: 'Pilih kartu respons yang paling sesuai dengan pengalamanmu.'
   },
   B2: {
-    type: 'swipe', emoji: '🗼', accent: '#d0b9e7',
-    tagline: 'Mercusuar Utama', greeting: 'Geser kartunya ya',
-    leftLabel: 'Tidak Sehat', rightLabel: 'Sehat',
-    hint: 'Geser kanan = respons sehat, kiri = tidak sehat.'
+    type: 'parenting-choice', emoji: '🗼', accent: '#d0b9e7',
+    tagline: 'Mercusuar Utama', greeting: 'Pilih respons yang tepat',
+    hint: 'Pilih kartu respons yang paling sesuai dengan pengalamanmu.'
   },
   B3: {
-    type: 'swipe', emoji: '🧭', accent: '#c8a8d4',
-    tagline: 'Samudra Bebas', greeting: 'Geser kartunya ya',
-    leftLabel: 'Tidak Sehat', rightLabel: 'Sehat',
-    hint: 'Geser kanan = respons sehat, kiri = tidak sehat.'
+    type: 'parenting-choice', emoji: '🧭', accent: '#c8a8d4',
+    tagline: 'Samudra Bebas', greeting: 'Pilih respons yang tepat',
+    hint: 'Pilih kartu respons yang paling sesuai dengan pengalamanmu.'
   },
   B4: {
-    type: 'swipe', emoji: '⚓', accent: '#d0b9e7',
-    tagline: 'Kedalaman Ekstrem', greeting: 'Geser kartunya ya',
-    leftLabel: 'Tidak Sehat', rightLabel: 'Sehat',
-    hint: 'Geser kanan = respons sehat, kiri = tidak sehat.'
+    type: 'parenting-choice', emoji: '⚓', accent: '#d0b9e7',
+    tagline: 'Kedalaman Ekstrem', greeting: 'Pilih respons yang tepat',
+    hint: 'Pilih kartu respons yang paling sesuai dengan pengalamanmu.'
   },
   B5: {
-    type: 'swipe', emoji: '⛈️', accent: '#c8a8d4',
-    tagline: 'Badai Bertubi', greeting: 'Geser kartunya ya',
-    leftLabel: 'Tidak Sehat', rightLabel: 'Sehat',
-    hint: 'Geser kanan = respons sehat, kiri = tidak sehat.'
+    type: 'parenting-choice', emoji: '⛈️', accent: '#c8a8d4',
+    tagline: 'Badai Bertubi', greeting: 'Pilih respons yang tepat',
+    hint: 'Pilih kartu respons yang paling sesuai dengan pengalamanmu.'
   },
   B6: {
-    type: 'swipe', emoji: '🪸', accent: '#d0b9e7',
-    tagline: 'Pemblokiran Karang Misterius', greeting: 'Geser kartunya ya',
-    leftLabel: 'Tidak Sehat', rightLabel: 'Sehat',
-    hint: 'Geser kanan = respons sehat, kiri = tidak sehat.'
+    type: 'parenting-choice', emoji: '🪸', accent: '#d0b9e7',
+    tagline: 'Pemblokiran Karang Misterius', greeting: 'Pilih respons yang tepat',
+    hint: 'Pilih kartu respons yang paling sesuai dengan pengalamanmu.'
   },
   B7: {
-    type: 'swipe', emoji: '🚨', accent: '#c8a8d4',
-    tagline: 'Terumbu Tanpa Jangkar', greeting: 'Geser kartunya ya',
-    leftLabel: 'Tidak Sehat', rightLabel: 'Sehat',
-    hint: 'Geser kanan = respons sehat, kiri = tidak sehat.'
+    type: 'parenting-choice', emoji: '🚨', accent: '#c8a8d4',
+    tagline: 'Terumbu Tanpa Jangkar', greeting: 'Pilih respons yang tepat',
+    hint: 'Pilih kartu respons yang paling sesuai dengan pengalamanmu.'
   },
   // === Modul C: Ekspedisi Pondasi Bahtera (Likert 5 poin, 3 varian interaksi) ===
   C1: {

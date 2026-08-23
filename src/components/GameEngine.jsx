@@ -8,6 +8,7 @@ import LikertSlider from './game/LikertSlider'
 import LikertEmoji from './game/LikertEmoji'
 import LikertDial from './game/LikertDial'
 import PourLoveGame from './game/PourLoveGame'
+import ParentingChoiceGame from './game/ParentingChoiceGame'
 
 export default function GameEngine({ level, flavor, initialAnswers = {}, onComplete }) {
   const total = level.items.length
@@ -15,6 +16,7 @@ export default function GameEngine({ level, flavor, initialAnswers = {}, onCompl
 
   switch (flavor?.type) {
     case 'pour-love': return <PourLoveGame {...props} />
+    case 'parenting-choice': return <ParentingChoiceGame {...props} />
     case 'swipe': return <SwipeGame {...props} />
     case 'tap2': return <Tap2Game {...props} />
     case 'quicktap': return <QuickTapGame {...props} />
