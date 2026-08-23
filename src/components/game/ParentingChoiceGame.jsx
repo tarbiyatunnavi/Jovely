@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { LevelHeader } from './LevelHeader'
 import { ParticleBurst } from '../Particles'
 import { playSwipeSFX } from '../../hooks/useAmbientMusic'
@@ -10,19 +10,21 @@ export default function ParentingChoiceGame({ level, flavor, total, initialAnswe
   const [answers, setAnswers] = useState({ ...initialAnswers })
   const [picked, setPicked] = useState(null)
   const [burst, setBurst] = useState(0)
-  // drag state per card: null or { side: 'healthy'|'unhealthy', offset: {x,y}, dragging: bool }
-  const [dragSide, setDragSide] = useState(null)
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
-  const [dragging, setDragging] = useState(false)
-  const cardRef = useRef(null)
+  const [draggingSide, setDraggingSide] = useState(null)
+
+  // refs untuk sync drag (tidak terpengaruh React state async)
+  const draggingRef = useRef(false)
+  const dragSideRef = useRef(null)
   const dragStart = useRef({ x: 0, y: 0 })
   const sfxStarted = useRef(false)
+  const movedRef = useRef(false)
 
   const item = level.items[idx]
   const isLast = idx === total - 1
   const progress = (idx / total) * 100
 
-  const choose = (which) => {
+  const choose = useCallback((which) => {
     if (picked) return
     setPicked(which)
     setBurst(b => b + 1)
@@ -30,45 +32,55 @@ export default function ParentingChoiceGame({ level, flavor, total, initialAnswe
     setAnswers(final)
     setTimeout(() => {
       if (isLast) onFinal(final)
-      else { setIdx(i => i + 1); setPicked(null); setDragSide(null); setDragOffset({ x: 0, y: 0 }) }
+      else { setIdx(i => i + 1); setPicked(null); setDraggingSide(null); setDragOffset({ x: 0, y: 0 }) }
     }, 450)
-  }
+  }, [picked, answers, item, isLast, onFinal])
 
-  // === Drag/swipe handlers ===
-  const onDown = (e, side) => {
+  // === Drag/swipe handlers (pakai ref supaya tidak kena async state) ===
+  const onDown = useCallback((e, side) => {
     if (picked) return
+    e.preventDefault()
+    e.stopPropagation()
     const p = e.touches ? e.touches[0] : e
     dragStart.current = { x: p.clientX, y: p.clientY }
-    setDragSide(side)
-    setDragging(true)
+    dragSideRef.current = side
+    draggingRef.current = true
+    movedRef.current = false
+    setDraggingSide(side)
+    setDragOffset({ x: 0, y: 0 })
     if (!sfxStarted.current) {
       try { playSwipeSFX() } catch {}
       sfxStarted.current = true
     }
-  }
+  }, [picked])
 
-  const onMove = (e) => {
-    if (!dragging || !dragSide || picked) return
+  const onMove = useCallback((e) => {
+    if (!draggingRef.current || picked) return
+    e.preventDefault()
     const p = e.touches ? e.touches[0] : e
     const dx = p.clientX - dragStart.current.x
     const dy = p.clientY - dragStart.current.y
+    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) movedRef.current = true
     setDragOffset({ x: dx, y: dy })
-  }
+  }, [picked])
 
-  const onUp = () => {
-    if (!dragging || !dragSide) return
-    setDragging(false)
+  const onUp = useCallback(() => {
+    if (!draggingRef.current) return
+    draggingRef.current = false
     if (sfxStarted.current) sfxStarted.current = false
-    const threshold = 60
-    if (Math.abs(dragOffset.x) > threshold || Math.abs(dragOffset.y) > threshold) {
-      choose(dragSide)
+    const side = dragSideRef.current
+    dragSideRef.current = null
+    setDraggingSide(null)
+    const threshold = 50
+    if (side && (Math.abs(dragOffset.x) > threshold || Math.abs(dragOffset.y) > threshold)) {
+      choose(side)
+    } else {
+      setDragOffset({ x: 0, y: 0 })
     }
-    setDragSide(null)
-    setDragOffset({ x: 0, y: 0 })
-  }
+  }, [dragOffset, choose])
 
   const getCardStyle = (side) => {
-    if (dragSide === side && dragging) {
+    if (draggingSide === side && draggingRef.current) {
       const rotate = Math.max(-12, Math.min(12, dragOffset.x / 12))
       return {
         transform: `translate(${dragOffset.x}px, ${dragOffset.y}px) rotate(${rotate}deg) scale(1.05)`,
@@ -90,30 +102,31 @@ export default function ParentingChoiceGame({ level, flavor, total, initialAnswe
   const getCardClass = (side) => {
     const base = `tap2-card parenting-card ${side === 'healthy' ? 'parenting-healthy' : 'parenting-unhealthy'}`
     const pickedClass = picked === side ? 'parenting-picked' : ''
-    const dragClass = dragSide === side && dragging ? 'dragging' : ''
+    const dragClass = draggingSide === side ? 'dragging' : ''
     return `${base} ${pickedClass} ${dragClass}`.trim()
   }
 
   return (
     <div className="fade-in" key={idx}>
       <LevelHeader level={level} idx={idx} total={total} progress={progress} flavor={flavor} />
-      <div ref={cardRef} className="card item-enter" style={{ textAlign: 'center', fontSize: 16, fontWeight: 600, lineHeight: 1.5, padding: '20px 16px', marginBottom: 16, minHeight: 100 }}>
+      <div className="card item-enter" style={{ textAlign: 'center', fontSize: 16, fontWeight: 600, lineHeight: 1.5, padding: '20px 16px', marginBottom: 16, minHeight: 100 }}>
         "{item.scenario}"
       </div>
       <div
         className="tap2-wrap tap2-wrap-hex"
+        style={{ touchAction: 'none' }}
         onTouchMove={onMove}
-        onMouseMove={dragging ? onMove : undefined}
         onTouchEnd={onUp}
+        onMouseMove={draggingRef.current ? onMove : undefined}
         onMouseUp={onUp}
-        onMouseLeave={dragging ? onUp : undefined}
+        onMouseLeave={draggingRef.current ? onUp : undefined}
       >
         <div
           className={getCardClass('unhealthy')}
           style={getCardStyle('unhealthy')}
           onTouchStart={(e) => onDown(e, 'unhealthy')}
           onMouseDown={(e) => onDown(e, 'unhealthy')}
-          onClick={() => !dragging && !picked && choose('unhealthy')}
+          onClick={() => { if (!movedRef.current && !picked) choose('unhealthy') }}
         >
           <span className="parenting-card-icon">🤍</span>
           <span className="parenting-card-text">{item.unhealthy}</span>
@@ -123,7 +136,7 @@ export default function ParentingChoiceGame({ level, flavor, total, initialAnswe
           style={getCardStyle('healthy')}
           onTouchStart={(e) => onDown(e, 'healthy')}
           onMouseDown={(e) => onDown(e, 'healthy')}
-          onClick={() => !dragging && !picked && choose('healthy')}
+          onClick={() => { if (!movedRef.current && !picked) choose('healthy') }}
         >
           <span className="parenting-card-icon">💜</span>
           <span className="parenting-card-text">{item.healthy}</span>
