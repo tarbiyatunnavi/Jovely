@@ -1,6 +1,6 @@
 // Data lengkap level & item Jovely
 // Modul A: Peta Samudra Rasa (11 level, 27 item) - jawaban Setuju/Tidak Setuju
-// Modul B: Tipe Pola Asuh (7 level, 8 item) - jawaban Setuju/Tidak Setuju (swipe)
+// Modul B: Arus Bawah Laut (7 level, 8 item) - jawaban Setuju/Tidak Setuju (swipe)
 // Modul C: Ekspedisi Pondasi Bahtera (7 level, 18 item) - skala Likert 5 poin, F/UF reverse-score
 
 export const MODULES = [
@@ -97,7 +97,7 @@ export const MODULES = [
   },
   {
     id: 'B',
-    name: 'Tipe Pola Asuh',
+    name: 'Arus Bawah Laut',
     subtitle: 'Petualangan maritim pola asuh',
     order: 2,
     levels: [
@@ -270,7 +270,7 @@ export function scoreLoveStyles(levelAnswers) {
   return { scores, ranking, top }
 }
 
-// Modul B: Tipe Pola Asuh — persentase Setuju per dimensi (sama seperti Modul A)
+// Modul B: Arus Bawah Laut — persentase Setuju per dimensi (sama seperti Modul A)
 export function scoreParentingStyles(levelAnswers) {
   const scores = {}
   MODULES[1].levels.forEach(level => {
@@ -424,7 +424,7 @@ export const GAME_MECHANICS = {
     leftLabel: 'Salah', rightLabel: 'Benar',
     hint: 'Tap Benar kalau setuju, Salah kalau nggak.'
   },
-  // === Modul B: Tipe Pola Asuh (swipe, semua F) ===
+  // === Modul B: Arus Bawah Laut (swipe, semua F) ===
   B1: {
     type: 'swipe', emoji: '🌊', accent: '#c8a8d4',
     tagline: 'Palung Hangat Pelindung', greeting: 'Geser kartunya ya',
@@ -510,7 +510,7 @@ export const LEVEL_EMOJI = {
   // Modul A: Peta Samudra Rasa
   A1: '👑', A2: '⚓', A3: '🌌', A4: '🌀', A5: '🕯️', A6: '⛵', A7: '🕊️',
   A8: '🧭', A9: '⚡', A10: '📜', A11: '🌪️',
-  // Modul B: Tipe Pola Asuh
+  // Modul B: Arus Bawah Laut
   B1: '🌊', B2: '🗼', B3: '🧭', B4: '⚓', B5: '⛈️', B6: '🪸', B7: '🚨',
   // Modul C: Ekspedisi Pondasi Bahtera
   C1: '🛡️', C2: '🕸️', C3: '👑', C4: '🌾', C5: '🪨', C6: '🧿', C7: '🏛️'

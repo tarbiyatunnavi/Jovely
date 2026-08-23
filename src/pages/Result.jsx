@@ -214,9 +214,9 @@ export default function Result() {
 
         {topLove.length > 0 && (
           <div>
-            <h3 className="h-title" style={{ fontSize: 18, marginBottom: 4 }}>🌊 Tipe Pola Asuh yang Menonjol</h3>
+            <h3 className="h-title" style={{ fontSize: 18, marginBottom: 4 }}>🌊 Arus Bawah Laut yang Menonjol</h3>
             <p className="muted" style={{ fontSize: 13, marginBottom: 12 }}>
-              Dari Modul Tipe Pola Asuh — pola asuh yang paling menonjol (3 tertinggi).
+              Dari Modul Arus Bawah Laut — pola asuh yang paling menonjol (3 tertinggi).
             </p>
             <div className="col">
               {topParenting.map((s, i) => {
