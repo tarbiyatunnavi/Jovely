@@ -71,10 +71,11 @@ export default function ParentingChoiceGame({ level, flavor, total, initialAnswe
     if (dragSide === side && dragging) {
       const rotate = Math.max(-12, Math.min(12, dragOffset.x / 12))
       return {
-        transform: `translate(${dragOffset.x}px, ${dragOffset.y}px) rotate(${rotate}deg)`,
+        transform: `translate(${dragOffset.x}px, ${dragOffset.y}px) rotate(${rotate}deg) scale(1.05)`,
         transition: 'none',
         zIndex: 10,
         opacity: 1,
+        boxShadow: '0 12px 32px rgba(149,122,196,.25), 0 4px 12px rgba(149,122,196,.15)',
       }
     }
     if (picked && picked !== side) {
@@ -83,7 +84,14 @@ export default function ParentingChoiceGame({ level, flavor, total, initialAnswe
     if (picked && picked === side) {
       return {}
     }
-    return { transition: 'transform .3s cubic-bezier(.2,.7,.3,1)' }
+    return { transition: 'transform .3s cubic-bezier(.2,.7,.3,1), box-shadow .3s ease' }
+  }
+
+  const getCardClass = (side) => {
+    const base = `tap2-card parenting-card ${side === 'healthy' ? 'parenting-healthy' : 'parenting-unhealthy'}`
+    const pickedClass = picked === side ? 'parenting-picked' : ''
+    const dragClass = dragSide === side && dragging ? 'dragging' : ''
+    return `${base} ${pickedClass} ${dragClass}`.trim()
   }
 
   return (
@@ -101,7 +109,7 @@ export default function ParentingChoiceGame({ level, flavor, total, initialAnswe
         onMouseLeave={dragging ? onUp : undefined}
       >
         <div
-          className={`tap2-card parenting-card parenting-unhealthy ${picked === 'unhealthy' ? 'parenting-picked' : ''}`}
+          className={getCardClass('unhealthy')}
           style={getCardStyle('unhealthy')}
           onTouchStart={(e) => onDown(e, 'unhealthy')}
           onMouseDown={(e) => onDown(e, 'unhealthy')}
@@ -111,7 +119,7 @@ export default function ParentingChoiceGame({ level, flavor, total, initialAnswe
           <span className="parenting-card-text">{item.unhealthy}</span>
         </div>
         <div
-          className={`tap2-card parenting-card parenting-healthy ${picked === 'healthy' ? 'parenting-picked' : ''}`}
+          className={getCardClass('healthy')}
           style={getCardStyle('healthy')}
           onTouchStart={(e) => onDown(e, 'healthy')}
           onMouseDown={(e) => onDown(e, 'healthy')}
