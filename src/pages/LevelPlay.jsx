@@ -30,7 +30,8 @@ export default function LevelPlay() {
   const next = getNextLevel(id)
   const isLastOfModulA = mod?.id === 'A' && id === 'A11'
   const isLastOfModulB = mod?.id === 'B' && id === 'B7'
-  const moduleDone = isLastOfModulA || isLastOfModulB
+  const isLastOfModulC = mod?.id === 'C' && id === 'C7'
+  const moduleDone = isLastOfModulA || isLastOfModulB || isLastOfModulC
 
   // Reset phase saat id berubah
   useEffect(() => {
@@ -102,8 +103,8 @@ export default function LevelPlay() {
   }
 
   if (phase === 'celebrate') {
-    const celebEmoji = moduleDone ? (isLastOfModulA ? '💜' : '🎉') : flavor?.emoji || '🎉'
-    const celebTitle = moduleDone ? (isLastOfModulA ? 'Modul Peta Samudra Rasa Selesai!' : 'Modul Ekspedisi Pondasi Bahtera Selesai!') : 'Level Selesai!'
+    const celebEmoji = moduleDone ? (isLastOfModulA ? '💜' : isLastOfModulB ? '🌊' : '🎉') : flavor?.emoji || '🎉'
+    const celebTitle = moduleDone ? (isLastOfModulA ? 'Modul Peta Samudra Rasa Selesai!' : isLastOfModulB ? 'Modul Tipe Pola Asuh Selesai!' : 'Modul Kesiapan Menikah Selesai!') : 'Level Selesai!'
     return (
       <div className="app-wrap">
         <Topbar title="Level Selesai" onBack={() => nav('/map')} />
@@ -117,13 +118,21 @@ export default function LevelPlay() {
           </div>
           {moduleDone && isLastOfModulA && (
             <div className="card fade-in" style={{ background: 'var(--lylac-50)', textAlign: 'center' }}>
-              <div style={{ fontWeight: 700, color: 'var(--lylac-700)' }}>Lanjut ke Modul Ekspedisi Pondasi Bahtera 💫</div>
+              <div style={{ fontWeight: 700, color: 'var(--lylac-700)' }}>Lanjut ke Modul Tipe Pola Asuh 💫</div>
               <p className="muted" style={{ marginTop: 6, fontSize: 13 }}>
-                Hasil refleksi cinta kamu akan muncul di akhir Modul B.
+                Hasil refleksi cinta kamu akan muncul di akhir.
               </p>
             </div>
           )}
           {moduleDone && isLastOfModulB && (
+            <div className="card fade-in" style={{ background: 'var(--lylac-50)', textAlign: 'center' }}>
+              <div style={{ fontWeight: 700, color: 'var(--lylac-700)' }}>Lanjut ke Modul Kesiapan Menikah 💫</div>
+              <p className="muted" style={{ marginTop: 6, fontSize: 13 }}>
+                Semua hasil akan muncul di halaman hasil akhir.
+              </p>
+            </div>
+          )}
+          {moduleDone && isLastOfModulC && (
             <div className="card fade-in" style={{ background: 'var(--lylac-50)', textAlign: 'center' }}>
               <div style={{ fontWeight: 700, color: 'var(--lylac-700)' }}>Semua modul selesai! 🎊</div>
               <p className="muted" style={{ marginTop: 6, fontSize: 13 }}>

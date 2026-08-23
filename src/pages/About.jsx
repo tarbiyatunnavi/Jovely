@@ -61,6 +61,7 @@ export default function About() {
             <div className="between"><span className="muted">Total Item Reflektif</span><strong>{TOTAL_ITEMS}</strong></div>
             <div className="between"><span className="muted">Modul A — {MODULES[0].name}</span><strong>{MODULES[0].levels.length} level</strong></div>
             <div className="between"><span className="muted">Modul B — {MODULES[1].name}</span><strong>{MODULES[1].levels.length} level</strong></div>
+            <div className="between"><span className="muted">Modul C — {MODULES[2].name}</span><strong>{MODULES[2].levels.length} level</strong></div>
           </div>
         </div>
 

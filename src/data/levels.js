@@ -1,6 +1,7 @@
-// Data lengkap level & item Jovely (makna dipertahankan persis dari Jovely.md)
-// Modul A: Peta Samudra Rasa (11 level, 28 item) - jawaban Setuju/Tidak Setuju
-// Modul B: Ekspedisi Pondasi Bahtera (7 level, 18 item) - skala Likert 5 poin, F/UF reverse-score
+// Data lengkap level & item Jovely
+// Modul A: Peta Samudra Rasa (11 level, 27 item) - jawaban Setuju/Tidak Setuju
+// Modul B: Tipe Pola Asuh (7 level, 8 item) - jawaban Setuju/Tidak Setuju (swipe)
+// Modul C: Kesiapan Menikah (7 level, 18 item) - skala Likert 5 poin, F/UF reverse-score
 
 export const MODULES = [
   {
@@ -96,61 +97,112 @@ export const MODULES = [
   },
   {
     id: 'B',
-    name: 'Ekspedisi Pondasi Bahtera',
-    subtitle: 'Ukur kesiapan perjalananmu',
+    name: 'Tipe Pola Asuh',
+    subtitle: 'Petualangan maritim pola asuh',
     order: 2,
     levels: [
       {
-        id: 'B1', order: 13, name: 'Perisai Jiwa', icon: 'emotion',
+        id: 'B1', order: 12, name: 'Palung Hangat Pelindung', icon: 'warmth',
         items: [
-          { id: 'B1.1', polarity: 'F', text: 'Siap mengutamakan kebutuhan pasangan di atas kebutuhan pribadi.' },
-          { id: 'B1.2', polarity: 'UF', text: 'Merasa keterbukaan dengan pasangan nggak membantu dalam berbagi peran rumah tangga.' },
-          { id: 'B1.3', polarity: 'UF', text: 'Pengalaman menyakitkan di masa lalu bikin ragu untuk berkomitmen menikah.' },
-          { id: 'B1.4', polarity: 'UF', text: 'Takut kalau masalah/trauma masa lalu akan mengganggu kebahagiaan pernikahan di masa depan.' }
+          { id: 'B1.1', text: 'Misteri Kabin Rusak: Kapalmu bocor di tengah badai masa lalu. Disambut hangat dan didengarkan tanpa rasa takut.' }
         ]
       },
       {
-        id: 'B2', order: 14, name: 'Jaringan Aliansi', icon: 'social',
+        id: 'B2', order: 13, name: 'Mercusuar Utama', icon: 'lighthouse',
         items: [
-          { id: 'B2.1', polarity: 'F', text: 'Nyaman menghabiskan waktu senggang bareng orang lain.' },
-          { id: 'B2.2', polarity: 'F', text: 'Senang kenalan dan bertemu orang baru.' },
-          { id: 'B2.3', polarity: 'UF', text: 'Lebih milih di rumah aja daripada ngobrol/bersosialisasi dengan tetangga.' }
+          { id: 'B2.1', text: 'Sinyal Larangan Berlayar: Mercusuar melarangmu menerobos Area Berbahaya. Mengirim alasan logis & peta bahaya yang jelas.' }
         ]
       },
       {
-        id: 'B3', order: 15, name: 'Pembagian Singgasana', icon: 'role',
+        id: 'B3', order: 14, name: 'Samudra Bebas', icon: 'freedom',
         items: [
-          { id: 'B3.1', polarity: 'F', text: 'Nggak keberatan kalau suami-istri berbagi peran dan tugas pekerjaan rumah tangga.' },
-          { id: 'B3.2', polarity: 'UF', text: 'Merasa keberatan kalau harus berbagi tugas pekerjaan rumah dengan pasangan.' }
+          { id: 'B3.1', text: 'Peta Rute Baru: Kamu mengusulkan koordinat baru yang belum ada di peta lama. Diberi ruang dan ide barumu dihargai.' }
         ]
       },
       {
-        id: 'B4', order: 16, name: 'Lumbung Perbekalan', icon: 'finance',
+        id: 'B4', order: 15, name: 'Kedalaman Ekstrem', icon: 'depth',
         items: [
-          { id: 'B4.1', polarity: 'F', text: 'Sebelum menikah, harus sudah punya pekerjaan atau penghasilan.' },
-          { id: 'B4.2', polarity: 'F', text: 'Akan tetap menghargai pekerjaan pasangan meskipun penghasilannya kecil.' },
-          { id: 'B4.3', polarity: 'UF', text: 'Menurutku pekerjaan dan penghasilan nggak berpengaruh terhadap pernikahan.' },
-          { id: 'B4.4', polarity: 'UF', text: 'Nggak punya penghasilan/pekerjaan sebelum atau sesudah menikah itu hal yang wajar.' }
+          { id: 'B4.1', text: 'Saat kapalmu salah arah navigasi, Kapten mendisiplinkan dengan dijelaskan tanpa kekerasan fisik.' }
         ]
       },
       {
-        id: 'B5', order: 17, name: 'Pondasi Karang', icon: 'mental',
+        id: 'B5', order: 16, name: 'Badai Bertubi', icon: 'storm',
         items: [
-          { id: 'B5.1', polarity: 'UF', text: 'Belum punya rencana untuk membangun kehidupan berumah tangga.' }
+          { id: 'B5.1', text: 'Saat kamu tak sengaja melanggar aturan, gema suara di kabin: ditegur secara terarah dan tenang.' }
         ]
       },
       {
-        id: 'B6', order: 18, name: 'Kompas Spiritual', icon: 'religion',
+        id: 'B6', order: 17, name: 'Pemblokiran Karang Misterius', icon: 'block',
         items: [
-          { id: 'B6.1', polarity: 'F', text: 'Harus menikah dengan pasangan yang agamanya sama.' },
-          { id: 'B6.2', polarity: 'F', text: 'Mempelajari dan menyiapkan ilmu agama itu penting sebagai bekal berumah tangga.' }
+          { id: 'B6.1', text: 'Tiba-tiba jangkar dikunci dan izin menyelam dicabut. Dijelaskan alasannya secara rinci sejak awal.' }
         ]
       },
       {
-        id: 'B7', order: 19, name: 'Pijakan Tradisi', icon: 'norms',
+        id: 'B7', order: 18, name: 'Terumbu Tanpa Jangkar', icon: 'reef',
         items: [
-          { id: 'B7.1', polarity: 'F', text: 'Sadar bahwa pacaran itu sesuatu yang nggak sesuai dengan norma masyarakat.' },
-          { id: 'B7.2', polarity: 'UF', text: 'Merasa pacaran dan kontak fisik itu hal yang wajar menurut norma masyarakat.' }
+          { id: 'B7.1', text: 'Kapten membuat batasan area berbahaya. Saat dilanggar: hukum atau konsekuensi benar-benar diterapkan.' },
+          { id: 'B7.2', text: 'Sirine Peringatan: sinyal ancaman bahaya dibunyikan. Ancaman selalu terbukti dan dieksekusi tegas.' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'C',
+    name: 'Kesiapan Menikah',
+    subtitle: 'Ukur kesiapan perjalananmu',
+    order: 3,
+    levels: [
+      {
+        id: 'C1', order: 19, name: 'Perisai Jiwa', icon: 'emotion',
+        items: [
+          { id: 'C1.1', polarity: 'F', text: 'Siap mengutamakan kebutuhan pasangan di atas kebutuhan pribadi.' },
+          { id: 'C1.2', polarity: 'UF', text: 'Merasa keterbukaan dengan pasangan nggak membantu dalam berbagi peran rumah tangga.' },
+          { id: 'C1.3', polarity: 'UF', text: 'Pengalaman menyakitkan di masa lalu bikin ragu untuk berkomitmen menikah.' },
+          { id: 'C1.4', polarity: 'UF', text: 'Takut kalau masalah/trauma masa lalu akan mengganggu kebahagiaan pernikahan di masa depan.' }
+        ]
+      },
+      {
+        id: 'C2', order: 20, name: 'Jaringan Aliansi', icon: 'social',
+        items: [
+          { id: 'C2.1', polarity: 'F', text: 'Nyaman menghabiskan waktu senggang bareng orang lain.' },
+          { id: 'C2.2', polarity: 'F', text: 'Senang kenalan dan bertemu orang baru.' },
+          { id: 'C2.3', polarity: 'UF', text: 'Lebih milih di rumah aja daripada ngobrol/bersosialisasi dengan tetangga.' }
+        ]
+      },
+      {
+        id: 'C3', order: 21, name: 'Pembagian Singgasana', icon: 'role',
+        items: [
+          { id: 'C3.1', polarity: 'F', text: 'Nggak keberatan kalau suami-istri berbagi peran dan tugas pekerjaan rumah tangga.' },
+          { id: 'C3.2', polarity: 'UF', text: 'Merasa keberatan kalau harus berbagi tugas pekerjaan rumah dengan pasangan.' }
+        ]
+      },
+      {
+        id: 'C4', order: 22, name: 'Lumbung Perbekalan', icon: 'finance',
+        items: [
+          { id: 'C4.1', polarity: 'F', text: 'Sebelum menikah, harus sudah punya pekerjaan atau penghasilan.' },
+          { id: 'C4.2', polarity: 'F', text: 'Akan tetap menghargai pekerjaan pasangan meskipun penghasilannya kecil.' },
+          { id: 'C4.3', polarity: 'UF', text: 'Menurutku pekerjaan dan penghasilan nggak berpengaruh terhadap pernikahan.' },
+          { id: 'C4.4', polarity: 'UF', text: 'Nggak punya penghasilan/pekerjaan sebelum atau sesudah menikah itu hal yang wajar.' }
+        ]
+      },
+      {
+        id: 'C5', order: 23, name: 'Pondasi Karang', icon: 'mental',
+        items: [
+          { id: 'C5.1', polarity: 'UF', text: 'Belum punya rencana untuk membangun kehidupan berumah tangga.' }
+        ]
+      },
+      {
+        id: 'C6', order: 24, name: 'Kompas Spiritual', icon: 'religion',
+        items: [
+          { id: 'C6.1', polarity: 'F', text: 'Harus menikah dengan pasangan yang agamanya sama.' },
+          { id: 'C6.2', polarity: 'F', text: 'Mempelajari dan menyiapkan ilmu agama itu penting sebagai bekal berumah tangga.' }
+        ]
+      },
+      {
+        id: 'C7', order: 25, name: 'Pijakan Tradisi', icon: 'norms',
+        items: [
+          { id: 'C7.1', polarity: 'F', text: 'Sadar bahwa pacaran itu sesuatu yang nggak sesuai dengan norma masyarakat.' },
+          { id: 'C7.2', polarity: 'UF', text: 'Merasa pacaran dan kontak fisik itu hal yang wajar menurut norma masyarakat.' }
         ]
       }
     ]
@@ -158,8 +210,8 @@ export const MODULES = [
 ]
 
 export const ALL_LEVELS = MODULES.flatMap(m => m.levels)
-export const TOTAL_LEVELS = ALL_LEVELS.length // 18
-export const TOTAL_ITEMS = ALL_LEVELS.reduce((s, l) => s + l.items.length, 0) // 46
+export const TOTAL_LEVELS = ALL_LEVELS.length // 25
+export const TOTAL_ITEMS = ALL_LEVELS.reduce((s, l) => s + l.items.length, 0) // 53
 
 // mecari level by id
 export function getLevel(levelId) {
@@ -218,13 +270,39 @@ export function scoreLoveStyles(levelAnswers) {
   return { scores, ranking, top }
 }
 
-// Modul B: skor per dimensi & total (Likert 5 poin: 1-5, UF di-reverse)
+// Modul B: Tipe Pola Asuh — persentase Setuju per dimensi (sama seperti Modul A)
+export function scoreParentingStyles(levelAnswers) {
+  const scores = {}
+  MODULES[1].levels.forEach(level => {
+    let agree = 0, total = 0
+    level.items.forEach(item => {
+      const ans = levelAnswers[level.id]?.[item.id]
+      if (ans) {
+        total++
+        if (ans === 'agree') agree++
+      }
+    })
+    scores[level.id] = {
+      levelId: level.id,
+      name: level.name,
+      agree,
+      total,
+      percent: total > 0 ? Math.round((agree / total) * 100) : 0,
+      answered: total === level.items.length
+    }
+  })
+  const ranking = Object.values(scores).sort((a, b) => b.percent - a.percent)
+  const top = ranking.filter(s => s.answered).slice(0, 3)
+  return { scores, ranking, top }
+}
+
+// Modul C: Kesiapan Menikah — skor per dimensi & total (Likert 5 poin: 1-5, UF di-reverse)
 export function scoreMarriageReadiness(levelAnswers) {
   const LIKERT = { 1: 'Sangat Tidak Setuju', 2: 'Tidak Setuju', 3: 'Netral', 4: 'Setuju', 5: 'Sangat Setuju' }
   const dims = {}
   let totalRaw = 0, totalMax = 0
 
-  MODULES[1].levels.forEach(level => {
+  MODULES[2].levels.forEach(level => {
     let dimScore = 0, dimMax = 0, answered = 0
     level.items.forEach(item => {
       const ans = levelAnswers[level.id]?.[item.id]
@@ -346,38 +424,81 @@ export const GAME_MECHANICS = {
     leftLabel: 'Salah', rightLabel: 'Benar',
     hint: 'Tap Benar kalau setuju, Salah kalau nggak.'
   },
-  // === Modul B: Kesiapan Menikah (Likert 5 poin, 3 varian interaksi) ===
+  // === Modul B: Tipe Pola Asuh (swipe, semua F) ===
   B1: {
+    type: 'swipe', emoji: '🌊', accent: '#c8a8d4',
+    tagline: 'Palung Hangat Pelindung', greeting: 'Geser kartunya ya',
+    leftLabel: 'Tidak Sehat', rightLabel: 'Sehat',
+    hint: 'Geser kanan = respons sehat, kiri = tidak sehat.'
+  },
+  B2: {
+    type: 'swipe', emoji: '🗼', accent: '#d0b9e7',
+    tagline: 'Mercusuar Utama', greeting: 'Geser kartunya ya',
+    leftLabel: 'Tidak Sehat', rightLabel: 'Sehat',
+    hint: 'Geser kanan = respons sehat, kiri = tidak sehat.'
+  },
+  B3: {
+    type: 'swipe', emoji: '🧭', accent: '#c8a8d4',
+    tagline: 'Samudra Bebas', greeting: 'Geser kartunya ya',
+    leftLabel: 'Tidak Sehat', rightLabel: 'Sehat',
+    hint: 'Geser kanan = respons sehat, kiri = tidak sehat.'
+  },
+  B4: {
+    type: 'swipe', emoji: '⚓', accent: '#d0b9e7',
+    tagline: 'Kedalaman Ekstrem', greeting: 'Geser kartunya ya',
+    leftLabel: 'Tidak Sehat', rightLabel: 'Sehat',
+    hint: 'Geser kanan = respons sehat, kiri = tidak sehat.'
+  },
+  B5: {
+    type: 'swipe', emoji: '⛈️', accent: '#c8a8d4',
+    tagline: 'Badai Bertubi', greeting: 'Geser kartunya ya',
+    leftLabel: 'Tidak Sehat', rightLabel: 'Sehat',
+    hint: 'Geser kanan = respons sehat, kiri = tidak sehat.'
+  },
+  B6: {
+    type: 'swipe', emoji: '🪸', accent: '#d0b9e7',
+    tagline: 'Pemblokiran Karang Misterius', greeting: 'Geser kartunya ya',
+    leftLabel: 'Tidak Sehat', rightLabel: 'Sehat',
+    hint: 'Geser kanan = respons sehat, kiri = tidak sehat.'
+  },
+  B7: {
+    type: 'swipe', emoji: '🚨', accent: '#c8a8d4',
+    tagline: 'Terumbu Tanpa Jangkar', greeting: 'Geser kartunya ya',
+    leftLabel: 'Tidak Sehat', rightLabel: 'Sehat',
+    hint: 'Geser kanan = respons sehat, kiri = tidak sehat.'
+  },
+  // === Modul C: Kesiapan Menikah (Likert 5 poin, 3 varian interaksi) ===
+  C1: {
     type: 'likert-slider', emoji: '🛡️', accent: '#b8a4d9',
     tagline: 'Perisai Jiwa', greeting: 'Geser slider-nya',
     hint: 'Geser dari Sangat Tidak Setuju sampai Sangat Setuju.'
   },
-  B2: {
+  C2: {
     type: 'likert-emoji', emoji: '🕸️', accent: '#c8a8d4',
     tagline: 'Jaringan Aliansi', greeting: 'Pilih emoji yang cocok',
     hint: 'Tap emoji yang ngewakiliin perasaan kamu.'
   },
-  B3: {
+  C3: {
     type: 'likert-dial', emoji: '👑', accent: '#d0b9e7',
     tagline: 'Pembagian Singgasana', greeting: 'Puter dial-nya',
     hint: 'Puter dial ke tingkat setuju yang kamu mau.'
   },
-  B4: {
+  C4: {
     type: 'likert-slider', emoji: '🌾', accent: '#b8a4d9',
     tagline: 'Lumbung Perbekalan', greeting: 'Geser slider-nya',
     hint: 'Geser dari Sangat Tidak Setuju sampai Sangat Setuju.'
   },
-  B5: {
+  C5: {
     type: 'likert-emoji', emoji: '🪨', accent: '#c8a8d4',
     tagline: 'Pondasi Karang', greeting: 'Pilih emoji yang cocok',
     hint: 'Tap emoji yang ngewakiliin perasaan kamu.'
   },
-  B6: {
+  C6: {
     type: 'likert-dial', emoji: '🧿', accent: '#d0b9e7',
     tagline: 'Kompas Spiritual', greeting: 'Puter dial-nya',
     hint: 'Puter dial ke tingkat setuju yang kamu mau.'
   },
-  B7: {
+  C7: {
     type: 'likert-slider', emoji: '🏛️', accent: '#b8a4d9',
     tagline: 'Pijakan Tradisi', greeting: 'Geser slider-nya',
     hint: 'Geser dari Sangat Tidak Setuju sampai Sangat Setuju.'
@@ -387,25 +508,12 @@ export const GAME_MECHANICS = {
 // === Data visual bersama (dipakai peta & hasil) ===
 export const LEVEL_EMOJI = {
   // Modul A: Peta Samudra Rasa
-  A1: '👑',  // Puncak Mahkota Cita — mahkota
-  A2: '⚓',  // Jangkar Pelabuhan Utama — jangkar
-  A3: '🌌',  // Lembah Ketenangan Jiwa — lembah/galaksi tenang
-  A4: '🌀',  // Badai Magnetik — badai/pusaran
-  A5: '🕯️',  // Lentera Percik Api — lentera
-  A6: '⛵',  // Bahtera Sahabat Sejati — bahtera/perahu
-  A7: '🕊️',  // Mata Air Ketulusan — merpati
-  A8: '🧭',  // Kompas Logika — kompas
-  A9: '⚡',  // Kilat Tanpa Akar — kilat
-  A10: '📜',  // Sumpah Penjaga Takdir — gulungan sumpah
-  A11: '🌪️',  // Pusaran Angin Gelisah — angin pusaran
-  // Modul B: Ekspedisi Pondasi Bahtera
-  B1: '🛡️',  // Perisai Jiwa — perisai
-  B2: '🕸️',  // Jaringan Aliansi — jaring
-  B3: '👑',  // Pembagian Singgasana — singgasana
-  B4: '🌾',  // Lumbung Perbekalan — lumbung gandum
-  B5: '🪨',  // Pondasi Karang — karang/batu
-  B6: '🧿',  // Kompas Spiritual — mata spiritual
-  B7: '🏛️',  // Pijakan Tradisi — bangunan tradisi
+  A1: '👑', A2: '⚓', A3: '🌌', A4: '🌀', A5: '🕯️', A6: '⛵', A7: '🕊️',
+  A8: '🧭', A9: '⚡', A10: '📜', A11: '🌪️',
+  // Modul B: Tipe Pola Asuh
+  B1: '🌊', B2: '🗼', B3: '🧭', B4: '⚓', B5: '⛈️', B6: '🪸', B7: '🚨',
+  // Modul C: Kesiapan Menikah
+  C1: '🛡️', C2: '🕸️', C3: '👑', C4: '🌾', C5: '🪨', C6: '🧿', C7: '🏛️'
 }
 
 export const LEVEL_GRADIENT = {
@@ -415,8 +523,12 @@ export const LEVEL_GRADIENT = {
   A6: 'linear-gradient(135deg,#c4e8c4,#9b82c4)', A7: 'linear-gradient(135deg,#f0f0f5,#b8a4d9)',
   A8: 'linear-gradient(135deg,#b8a4d9,#d0b9e7)', A9: 'linear-gradient(135deg,#e8c8d4,#b8a4d9)',
   A10: 'linear-gradient(135deg,#d8b8c0,#9b82c4)', A11: 'linear-gradient(135deg,#f0a0a0,#c45050)',
-  B1: 'linear-gradient(135deg,#a8d0e8,#9b82c4)', B2: 'linear-gradient(135deg,#c8e8d4,#9b82c4)',
-  B3: 'linear-gradient(135deg,#e8e0a8,#9b82c4)', B4: 'linear-gradient(135deg,#f0d8a0,#9b82c4)',
-  B5: 'linear-gradient(135deg,#e8c8d0,#9b82c4)', B6: 'linear-gradient(135deg,#d0d8c4,#9b82c4)',
-  B7: 'linear-gradient(135deg,#c8d0e8,#9b82c4)'
+  B1: 'linear-gradient(135deg,#a8d0e8,#9b82c4)', B2: 'linear-gradient(135deg,#f0e8c8,#9b82c4)',
+  B3: 'linear-gradient(135deg,#c8e8d4,#9b82c4)', B4: 'linear-gradient(135deg,#d0d8e8,#9b82c4)',
+  B5: 'linear-gradient(135deg,#e8d0d0,#9b82c4)', B6: 'linear-gradient(135deg,#d8e8c8,#9b82c4)',
+  B7: 'linear-gradient(135deg,#e8c8d8,#9b82c4)',
+  C1: 'linear-gradient(135deg,#a8d0e8,#9b82c4)', C2: 'linear-gradient(135deg,#c8e8d4,#9b82c4)',
+  C3: 'linear-gradient(135deg,#e8e0a8,#9b82c4)', C4: 'linear-gradient(135deg,#f0d8a0,#9b82c4)',
+  C5: 'linear-gradient(135deg,#e8c8d0,#9b82c4)', C6: 'linear-gradient(135deg,#d0d8c4,#9b82c4)',
+  C7: 'linear-gradient(135deg,#c8d0e8,#9b82c4)'
 }

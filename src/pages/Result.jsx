@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useProgress } from '../context/ProgressContext'
-import { scoreLoveStyles, scoreMarriageReadiness, interpret, ALL_LEVELS, MODULES, LEVEL_EMOJI, LEVEL_GRADIENT, TOTAL_LEVELS } from '../data/levels'
+import { scoreLoveStyles, scoreParentingStyles, scoreMarriageReadiness, interpret, ALL_LEVELS, MODULES, LEVEL_EMOJI, LEVEL_GRADIENT, TOTAL_LEVELS } from '../data/levels'
 import { Topbar, Spinner, Alert } from '../components/Layout'
 import { Icon } from '../components/Icon'
 import { useAmbientMusic, playMapMusic } from '../hooks/useAmbientMusic'
@@ -31,6 +31,7 @@ export default function Result() {
 
   const allCompleted = ALL_LEVELS.every(l => getLevelProgress(l.id)?.status === 'completed')
   const loveStyles = scoreLoveStyles(levelAnswers)
+  const parentingStyles = scoreParentingStyles(levelAnswers)
   const readiness = scoreMarriageReadiness(levelAnswers)
 
   // Simpan hasil ke server (sekali) saat semua selesai
@@ -42,6 +43,7 @@ export default function Result() {
           method: 'POST',
           body: JSON.stringify({
             loveStyles: loveStyles,
+            parentingStyles: parentingStyles,
             readiness: readiness,
             totalPercent: readiness.totalPercent
           })
@@ -105,6 +107,7 @@ export default function Result() {
   }))
 
   const topLove = loveStyles.top.slice(0, 5)
+  const topParenting = parentingStyles.top.slice(0, 3)
 
   return (
     <div className="app-wrap">
@@ -182,6 +185,42 @@ export default function Result() {
             <div className="col">
               {topLove.slice(0, 3).map((s, i) => {
                 const emoji = LEVEL_EMOJI[s.levelId] || '💜'
+                const gradient = LEVEL_GRADIENT[s.levelId] || 'var(--lylac-400)'
+                return (
+                  <div key={s.levelId} className="card" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <div style={{
+                      width: 40, height: 40, borderRadius: '50%',
+                      background: gradient,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontSize: 20, color: '#fff'
+                    }}>{emoji}</div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: 700 }}>{s.name}</div>
+                      <div className="muted" style={{ fontSize: 12 }}>{s.percent}% setuju</div>
+                    </div>
+                    <div style={{
+                      width: 28, height: 28, borderRadius: '50%',
+                      background: i === 0 ? 'var(--lylac-400)' : 'var(--lylac-100)',
+                      color: i === 0 ? '#fff' : 'var(--lylac-600)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontWeight: 800, fontSize: 13
+                    }}>{i + 1}</div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
+        {topLove.length > 0 && (
+          <div>
+            <h3 className="h-title" style={{ fontSize: 18, marginBottom: 4 }}>🌊 Tipe Pola Asuh yang Menonjol</h3>
+            <p className="muted" style={{ fontSize: 13, marginBottom: 12 }}>
+              Dari Modul Tipe Pola Asuh — pola asuh yang paling menonjol (3 tertinggi).
+            </p>
+            <div className="col">
+              {topParenting.map((s, i) => {
+                const emoji = LEVEL_EMOJI[s.levelId] || '🌊'
                 const gradient = LEVEL_GRADIENT[s.levelId] || 'var(--lylac-400)'
                 return (
                   <div key={s.levelId} className="card" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
