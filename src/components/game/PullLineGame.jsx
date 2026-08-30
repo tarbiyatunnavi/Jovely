@@ -220,7 +220,6 @@ export default function PullLineGame({ level, flavor, total, initialAnswers, onF
               ref={el => { nodeRefs.current[c.id] = el }}
               className={`pull-node pull-pos-${pos} ${isPicked ? 'picked' : ''} ${isHit ? 'hit' : ''} ${isDim ? 'dim' : ''}`}
             >
-              <span className="pull-node-badge">{c.id}</span>
               <span className="pull-node-text">{c.text}</span>
             </div>
           )
