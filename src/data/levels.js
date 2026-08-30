@@ -563,9 +563,9 @@ export const LIKERT_OPTIONS = [
 export const GAME_MECHANICS = {
   // === Modul A: Cinta Romantis ===
   A1: {
-    type: 'fan-card', emoji: '👑', accent: '#b8a4d9',
-    tagline: 'Cinta Sempurna', greeting: 'Pilih kartu yang paling kamu',
-    hint: 'Tap salah satu kartu yang paling sesuai denganmu.'
+    type: 'pull-line', emoji: '👑', accent: '#b8a4d9',
+    tagline: 'Cinta Sempurna', greeting: 'Tarik garis dari hati',
+    hint: 'Tarik jari dari ikon tengah ke salah satu pilihan di penjuru.'
   },
   A2: {
     type: 'swipe', emoji: '⚓', accent: '#c8a8d4',

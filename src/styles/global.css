@@ -566,94 +566,154 @@ a { color: inherit; text-decoration: none; }
 }
 .parenting-card.dimmed { opacity: .4; transform: scale(.95); }
 
-/* ===== Fan Card (Level A1 — Puncak Mahkota Cita) ===== */
-/* 4 kartu disusun seperti kipas/rem tumpang tindih. Tap untuk pilih.
-   Kartu terpilih membesar + glow golden-lylac, kartu lain fade/menjauh. */
-.fan-scenario {
+/* ===== Pull Line (Level A1 — Puncak Mahkota Cita) ===== */
+/* Drag dari ikon tengah ke 1 dari 4 titik di penjuru. Garis SVG real-time.
+   Sampai titik → menyala + gradient keemasan. Lepas di tengah → retract. */
+.pull-scenario {
   text-align: center;
   font-size: 16px; font-weight: 600; line-height: 1.55;
-  padding: 22px 18px; margin-bottom: 8px; min-height: 96px;
+  padding: 22px 18px; margin-bottom: 6px; min-height: 96px;
+}
+.pull-instruction {
+  text-align: center; font-size: 13px; font-weight: 600;
+  color: var(--lylac-600); margin: 0 0 4px; padding: 0 8px;
 }
 
-.fan-stage {
+.pull-arena {
   position: relative;
-  display: flex; align-items: flex-start; justify-content: center;
-  gap: 0; margin: 24px auto 8px; padding: 20px 8px 8px;
-  min-height: 230px; perspective: 900px;
-}
-.fan-picked { pointer-events: none; }
-
-.fan-card {
-  position: relative; flex: none;
-  width: 150px; min-height: 168px;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 10px; padding: 18px 14px; text-align: center;
-  cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent;
+  width: 100%; height: 380px; max-height: 62vh;
+  margin: 8px auto 4px; overflow: hidden;
   border-radius: var(--radius-lg);
-  border: 2px solid var(--lylac-100);
-  background: linear-gradient(160deg, #ffffff, #faf6ff);
-  box-shadow: 0 6px 18px rgba(149,122,196,.18), 0 2px 6px rgba(149,122,196,.10);
-  transform: rotate(var(--fan-rot, 0deg)) translateY(var(--fan-offset, 0px));
-  z-index: var(--fan-z, 1);
-  transition: transform .45s cubic-bezier(.34,1.56,.64,1),
-              box-shadow .35s ease, border-color .25s, background .25s, opacity .35s;
-  will-change: transform, opacity;
+  background: radial-gradient(circle at 50% 45%, #fbf6ff 0%, #f4ecfb 60%, #efe6f7 100%);
+  box-shadow: var(--shadow-lg);
+  touch-action: none; cursor: grab;
+  user-select: none; -webkit-tap-highlight-color: transparent;
 }
-.fan-card + .fan-card { margin-left: -52px; }
+.pull-arena.pull-picked { cursor: default; }
+.pull-arena:active { cursor: grabbing; }
 
-/* Idle goyang halus sebelum dipilih (mengambang pelan) */
-.fan-card:not(.fan-card-picked):not(.fan-card-dim) {
-  animation: fanIdle 3s ease-in-out infinite;
+.pull-svg {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; pointer-events: none; z-index: 2;
 }
-.fan-card:disabled { cursor: default; }
 
-.fan-card-letter {
-  width: 34px; height: 34px; border-radius: 50%;
+/* garis */
+.pull-line {
+  transition: stroke-width .3s ease, opacity .35s ease;
+  filter: drop-shadow(0 0 6px rgba(184,164,217,.45));
+}
+.pull-line-win {
+  filter: drop-shadow(0 0 10px rgba(255,205,90,.65)) drop-shadow(0 0 4px rgba(184,164,217,.4));
+  animation: pullLineShine .5s ease-out;
+}
+.pull-line-retract { opacity: 0; }
+@keyframes pullLineShine {
+  0% { stroke-dasharray: 0 1000; stroke-dashoffset: 0; }
+  100% { stroke-dasharray: 1000 0; }
+}
+
+/* Ikon tengah (titik mulai) */
+.pull-center {
+  position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: 56px; height: 56px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: 17px; font-weight: 800; color: #fff;
+  background: linear-gradient(135deg, #fff, var(--lylac-100));
+  border: 2px solid var(--lylac-300);
+  box-shadow: 0 4px 14px rgba(149,122,196,.3);
+  z-index: 5;
+  animation: pullPulse 2.6s ease-in-out infinite;
+}
+.pull-center.dragging {
+  animation: none;
+  transform: translate(-50%, -50%) scale(1.12);
+  box-shadow: 0 6px 20px rgba(149,122,196,.4);
+}
+.pull-center.done {
+  animation: none;
+  opacity: .5; transform: translate(-50%, -50%) scale(.9);
+}
+.pull-heart { font-size: 26px; line-height: 1; }
+
+/* Tutorial hint: jari kecil muncul sebentar di awal */
+.pull-hint-finger {
+  position: absolute; top: -22px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 22px; pointer-events: none;
+  animation: pullHintPull 1.8s ease-in-out infinite;
+}
+@keyframes pullPulse {
+  0%,100% { box-shadow: 0 4px 14px rgba(149,122,196,.3), 0 0 0 0 rgba(184,164,217,.25); }
+  50% { box-shadow: 0 4px 14px rgba(149,122,196,.3), 0 0 0 12px rgba(184,164,217,0); }
+}
+@keyframes pullHintPull {
+  0%,100% { transform: translateX(-50%) translateY(0); opacity: .9; }
+  50% { transform: translateX(-50%) translateY(8px); opacity: .5; }
+}
+
+/* 4 titik tujuan di penjuru */
+.pull-node {
+  position: absolute; width: 132px; padding: 10px 10px;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  border-radius: var(--radius); background: rgba(255,255,255,.92);
+  border: 2px solid var(--lylac-100);
+  box-shadow: var(--shadow);
+  text-align: center;
+  transition: transform .35s cubic-bezier(.34,1.56,.64,1),
+              box-shadow .35s, border-color .25s, background .25s, opacity .35s;
+  z-index: 3;
+}
+/* posisi penjuru — jarak renggang supaya teks tidak tumpang tindih */
+.pull-pos-A { left: 6px;    top: 8px; }
+.pull-pos-B { right: 6px;   top: 8px; }
+.pull-pos-C { left: 6px;    bottom: 8px; }
+.pull-pos-D { right: 6px;   bottom: 8px; }
+
+.pull-node-badge {
+  width: 26px; height: 26px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 800; color: #fff;
   background: linear-gradient(135deg, var(--lylac-400), var(--lylac-600));
-  box-shadow: 0 3px 8px rgba(149,122,196,.35);
+  box-shadow: 0 2px 6px rgba(149,122,196,.35);
   flex-shrink: 0;
 }
-.fan-card-text {
-  font-size: 13px; font-weight: 600; color: var(--ink); line-height: 1.45;
+.pull-node-text { font-size: 11.5px; font-weight: 600; color: var(--ink); line-height: 1.4; }
+
+/* saat jari mendekati titik (hover) */
+.pull-node.hit {
+  border-color: var(--lylac-400);
+  box-shadow: 0 0 0 4px rgba(184,164,217,.25), 0 8px 22px rgba(149,122,196,.25);
+  transform: scale(1.06);
 }
 
-/* Kartu terpilih: membesar + glow golden-lylac (kesan mahkota/puncak) */
-.fan-card-picked {
-  transform: rotate(0deg) translateY(-18px) scale(1.14);
-  z-index: 50;
+/* titik terpilih: menyala terang keemasan */
+.pull-node.picked {
   border-color: #f5c842;
   background: linear-gradient(160deg, #fff8d6, #ffe9a8 70%, #f5d4f0);
   box-shadow:
-    0 0 0 4px rgba(255,235,160,.35),
-    0 0 28px rgba(255,205,90,.45),
-    0 0 56px rgba(184,164,217,.30),
-    0 14px 34px rgba(149,122,196,.25);
-  animation: fanCrown .5s cubic-bezier(.34,1.56,.64,1);
+    0 0 0 4px rgba(255,235,160,.4),
+    0 0 24px rgba(255,205,90,.5),
+    0 0 48px rgba(184,164,217,.3),
+    0 10px 28px rgba(149,122,196,.25);
+  transform: scale(1.1);
+  z-index: 6;
+  animation: pullNodeShine .5s ease-out;
+}
+@keyframes pullNodeShine {
+  0% { transform: scale(1); }
+  60% { transform: scale(1.16); }
+  100% { transform: scale(1.1); }
 }
 
-/* Kartu tidak terpilih: memudar + bergeser menjauh */
-.fan-card-dim {
-  opacity: .25; filter: blur(1px) grayscale(.4);
-  transform: rotate(calc(var(--fan-rot, 0deg) * 1.6))
-             translateY(calc(var(--fan-offset, 0px) + 30px))
-             scale(.86);
-}
-
-@keyframes fanIdle {
-  0%,100% { transform: rotate(var(--fan-rot, 0deg)) translateY(var(--fan-offset, 0px)); }
-  50%     { transform: rotate(var(--fan-rot, 0deg)) translateY(calc(var(--fan-offset, 0px) - 6px)); }
-}
-@keyframes fanCrown {
-  0%   { transform: rotate(var(--fan-rot, 0deg)) translateY(var(--fan-offset, 0px)) scale(1); }
-  60%  { transform: rotate(0deg) translateY(-22px) scale(1.2); }
-  100% { transform: rotate(0deg) translateY(-18px) scale(1.14); }
+/* titik tidak terpilih: memudar */
+.pull-node.dim {
+  opacity: .22; filter: blur(.6px) grayscale(.4);
+  transform: scale(.9);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fan-card:not(.fan-card-picked):not(.fan-card-dim) { animation: none; }
-  .fan-card-picked { animation: none; }
+  .pull-center, .pull-hint-finger, .pull-node.picked, .pull-line-win { animation: none; }
 }
+
 
 
