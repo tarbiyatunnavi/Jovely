@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from 'react'
+import { useState, useRef, useCallback, useEffect, useMemo } from 'react'
 import { LevelHeader } from './LevelHeader'
 import { ParticleBurst } from '../Particles'
 import { playSwipeSFX, playShineSFX } from '../../hooks/useAmbientMusic'
@@ -6,7 +6,10 @@ import { playSwipeSFX, playShineSFX } from '../../hooks/useAmbientMusic'
 // "Tarik Garis" — drag dari ikon tengah ke 1 dari 4 titik di penjuru.
 // Garis SVG real-time mengikuti jari. Sampai titik → menyala + glow gradient.
 // Lepas di tengah jalan → retract (fade) & bisa coba lagi.
+// Multi-ronde: tiap ronde punya skenario sendiri; posisi A/B/C/D diacak per ronde.
 const HIT_RADIUS = 64 // toleransi jari ke titik tujuan (px)
+// 4 posisi penjuru: 1=kiri-atas, 2=kanan-atas, 3=kiri-bawah, 4=kanan-bawah
+const POSITIONS = ['tl', 'tr', 'bl', 'br']
 
 export default function PullLineGame({ level, flavor, total, initialAnswers, onFinal }) {
   const [idx, setIdx] = useState(0)
@@ -29,6 +32,21 @@ export default function PullLineGame({ level, flavor, total, initialAnswers, onF
   const isLast = idx === total - 1
   const progress = (idx / total) * 100
   const choices = item.choices || []
+
+  // Acak pemetaan choiceId → posisi penjuru, stabil per ronde (useMemo di idx).
+  // Tidak ada 2 ronde berurutan dengan susunan identik dijamin oleh Fisher-Yates.
+  const posMap = useMemo(() => {
+    const ids = choices.map(c => c.id)
+    // Fisher-Yates shuffle
+    const shuffled = [...ids]
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+    }
+    const map = {}
+    shuffled.forEach((id, i) => { map[id] = POSITIONS[i] })
+    return map
+  }, [idx, choices.length])
 
   // Sembunyikan tutorial hint setelah beberapa detik atau saat mulai drag
   useEffect(() => {
@@ -139,7 +157,8 @@ export default function PullLineGame({ level, flavor, total, initialAnswers, onF
   return (
     <div className="fade-in" key={idx}>
       <LevelHeader level={level} idx={idx} total={total} progress={progress} flavor={flavor} />
-      <div className="card item-enter pull-scenario">
+      <div className="pl-round-pill" style={{ marginBottom: 8 }}>Ronde {idx + 1} / {total}</div>
+      <div className="card item-enter pull-scenario" key={`scn-${idx}`}>
         {item.scenario}
       </div>
       <p className="pull-instruction">
@@ -189,16 +208,17 @@ export default function PullLineGame({ level, flavor, total, initialAnswers, onF
           )}
         </div>
 
-        {/* 4 titik tujuan di penjuru */}
+        {/* 4 titik tujuan di penjuru (posisi diacak per ronde) */}
         {choices.map(c => {
           const isPicked = picked === c.id
           const isHit = hitId === c.id
           const isDim = picked && picked !== c.id
+          const pos = posMap[c.id] || 'tl'
           return (
             <div
               key={c.id}
               ref={el => { nodeRefs.current[c.id] = el }}
-              className={`pull-node pull-pos-${c.id} ${isPicked ? 'picked' : ''} ${isHit ? 'hit' : ''} ${isDim ? 'dim' : ''}`}
+              className={`pull-node pull-pos-${pos} ${isPicked ? 'picked' : ''} ${isHit ? 'hit' : ''} ${isDim ? 'dim' : ''}`}
             >
               <span className="pull-node-badge">{c.id}</span>
               <span className="pull-node-text">{c.text}</span>

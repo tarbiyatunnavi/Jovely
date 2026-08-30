@@ -664,10 +664,10 @@ a { color: inherit; text-decoration: none; }
   z-index: 3;
 }
 /* posisi penjuru — jarak renggang supaya teks tidak tumpang tindih */
-.pull-pos-A { left: 6px;    top: 8px; }
-.pull-pos-B { right: 6px;   top: 8px; }
-.pull-pos-C { left: 6px;    bottom: 8px; }
-.pull-pos-D { right: 6px;   bottom: 8px; }
+.pull-pos-tl { left: 6px;    top: 8px; }
+.pull-pos-tr { right: 6px;   top: 8px; }
+.pull-pos-bl { left: 6px;    bottom: 8px; }
+.pull-pos-br { right: 6px;   bottom: 8px; }
 
 .pull-node-badge {
   width: 26px; height: 26px; border-radius: 50%;

@@ -22,6 +22,56 @@ export const MODULES = [
               { id: 'C', text: 'Membiarkannya karena setiap orang memiliki urusannya masing-masing.', score: 2 },
               { id: 'D', text: 'Mengabaikannya dan melanjutkan aktivitas seperti biasa.', score: 1 }
             ]
+          },
+          {
+            id: 'A1.2',
+            scenario: 'Perjalanan kalian mulai menghadapi rintangan. Ada pilihan untuk meninggalkan perjalanan atau tetap menyelesaikannya bersama. Apa keputusanmu?',
+            choices: [
+              { id: 'A', text: 'Tetap bersama dan mencari jalan keluar.', score: 4 },
+              { id: 'B', text: 'Mencoba bertahan selama keadaan masih memungkinkan.', score: 3 },
+              { id: 'C', text: 'Menyerahkan keputusan sepenuhnya kepadanya.', score: 2 },
+              { id: 'D', text: 'Memilih pergi ketika perjalanan mulai terasa sulit.', score: 1 }
+            ]
+          },
+          {
+            id: 'A1.3',
+            scenario: 'Seseorang yang berarti bagimu mengambil keputusan yang tidak langsung kamu mengerti. Apa yang kamu lakukan?',
+            choices: [
+              { id: 'A', text: 'Mencoba memahami alasan dan sudut pandangnya sebelum menilai.', score: 4 },
+              { id: 'B', text: 'Memintanya menjelaskan alasan keputusannya.', score: 3 },
+              { id: 'C', text: 'Menganggap keputusan tersebut sebagai sesuatu yang tidak perlu kamu pahami.', score: 2 },
+              { id: 'D', text: 'Langsung menganggap keputusan tersebut salah.', score: 1 }
+            ]
+          },
+          {
+            id: 'A1.4',
+            scenario: 'Sebuah masalah muncul karena keputusan yang kamu ambil. Apa yang akan kamu lakukan?',
+            choices: [
+              { id: 'A', text: 'Mengakui bagianmu dan berusaha memperbaiki keadaan.', score: 4 },
+              { id: 'B', text: 'Mengakui kesalahan jika memang terbukti berasal darimu.', score: 3 },
+              { id: 'C', text: 'Menunggu orang lain menyelesaikan masalah tersebut.', score: 2 },
+              { id: 'D', text: 'Mencari alasan agar kesalahan tidak sepenuhnya menjadi tanggung jawabmu.', score: 1 }
+            ]
+          },
+          {
+            id: 'A1.5',
+            scenario: 'Setelah melewati perjalanan yang panjang, orang tersebut melakukan sesuatu yang mungkin terlihat sederhana, tetapi sebenarnya membutuhkan usaha. Apa yang kamu lakukan?',
+            choices: [
+              { id: 'A', text: 'Menghargai usaha yang telah diberikan dan menunjukkannya secara tulus.', score: 4 },
+              { id: 'B', text: 'Mengakui usahanya ketika ada kesempatan.', score: 3 },
+              { id: 'C', text: 'Menganggap hal tersebut sebagai sesuatu yang memang sudah seharusnya dilakukan.', score: 2 },
+              { id: 'D', text: 'Tidak memberikan perhatian karena menurutmu itu bukan sesuatu yang penting.', score: 1 }
+            ]
+          },
+          {
+            id: 'A1.6',
+            scenario: 'Di tengah perjalanan, kamu tidak selalu bisa mengetahui apa yang dilakukan orang tersebut ketika tidak bersamamu. Apa yang kamu pilih?',
+            choices: [
+              { id: 'A', text: 'Memberikan kepercayaan tanpa harus terus-menerus mengawasi.', score: 4 },
+              { id: 'B', text: 'Mempercayainya, tetapi tetap membutuhkan kepastian sesekali.', score: 3 },
+              { id: 'C', text: 'Merasa perlu mengetahui sebagian besar aktivitasnya.', score: 2 },
+              { id: 'D', text: 'Sulit mempercayainya tanpa melakukan pengecekan.', score: 1 }
+            ]
           }
         ]
       },
