@@ -24,7 +24,7 @@
 html, body { height: 100%; }
 body {
   font-family: var(--font);
-  background: linear-gradient(180deg, #ffffff 0%, var(--lylac-50) 100%);
+  background: var(--lylac-50);
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
   line-height: 1.5;
@@ -75,7 +75,7 @@ a { color: inherit; text-decoration: none; }
 .col { display: flex; flex-direction: column; gap: 12px; }
 .between { display: flex; justify-content: space-between; align-items: center; }
 
-.topbar { position: sticky; top: 0; z-index: 10; background: rgba(255,255,255,.85); backdrop-filter: blur(12px); padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+.topbar { position: sticky; top: 0; z-index: 10; background: var(--lylac-50); padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--lylac-200); }
 .topbar .back { display: flex; align-items: center; gap: 6px; font-weight: 600; color: var(--lylac-600); }
 
 .bottomnav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid var(--line); display: flex; padding: 8px 12px calc(8px + env(safe-area-inset-bottom)); z-index: 20; max-width: 480px; margin: 0 auto; }
@@ -552,10 +552,9 @@ a { color: inherit; text-decoration: none; }
 
 .parenting-healthy, .parenting-unhealthy { border-color: var(--lylac-100); }
 
-/* Kartu sedang di-drag: terangkat + scale up */
+/* Kartu sedang di-drag: shadow + z-index (transform di-handle oleh JS inline) */
 .parenting-card.dragging {
   box-shadow: 0 12px 32px rgba(149,122,196,.25), 0 4px 12px rgba(149,122,196,.15);
-  transform: scale(1.05) !important;
   z-index: 10;
 }
 
@@ -566,4 +565,95 @@ a { color: inherit; text-decoration: none; }
   animation: popPicked .3s cubic-bezier(.34,1.56,.64,1);
 }
 .parenting-card.dimmed { opacity: .4; transform: scale(.95); }
+
+/* ===== Fan Card (Level A1 — Puncak Mahkota Cita) ===== */
+/* 4 kartu disusun seperti kipas/rem tumpang tindih. Tap untuk pilih.
+   Kartu terpilih membesar + glow golden-lylac, kartu lain fade/menjauh. */
+.fan-scenario {
+  text-align: center;
+  font-size: 16px; font-weight: 600; line-height: 1.55;
+  padding: 22px 18px; margin-bottom: 8px; min-height: 96px;
+}
+
+.fan-stage {
+  position: relative;
+  display: flex; align-items: flex-start; justify-content: center;
+  gap: 0; margin: 24px auto 8px; padding: 20px 8px 8px;
+  min-height: 230px; perspective: 900px;
+}
+.fan-picked { pointer-events: none; }
+
+.fan-card {
+  position: relative; flex: none;
+  width: 150px; min-height: 168px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; padding: 18px 14px; text-align: center;
+  cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent;
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--lylac-100);
+  background: linear-gradient(160deg, #ffffff, #faf6ff);
+  box-shadow: 0 6px 18px rgba(149,122,196,.18), 0 2px 6px rgba(149,122,196,.10);
+  transform: rotate(var(--fan-rot, 0deg)) translateY(var(--fan-offset, 0px));
+  z-index: var(--fan-z, 1);
+  transition: transform .45s cubic-bezier(.34,1.56,.64,1),
+              box-shadow .35s ease, border-color .25s, background .25s, opacity .35s;
+  will-change: transform, opacity;
+}
+.fan-card + .fan-card { margin-left: -52px; }
+
+/* Idle goyang halus sebelum dipilih (mengambang pelan) */
+.fan-card:not(.fan-card-picked):not(.fan-card-dim) {
+  animation: fanIdle 3s ease-in-out infinite;
+}
+.fan-card:disabled { cursor: default; }
+
+.fan-card-letter {
+  width: 34px; height: 34px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; font-weight: 800; color: #fff;
+  background: linear-gradient(135deg, var(--lylac-400), var(--lylac-600));
+  box-shadow: 0 3px 8px rgba(149,122,196,.35);
+  flex-shrink: 0;
+}
+.fan-card-text {
+  font-size: 13px; font-weight: 600; color: var(--ink); line-height: 1.45;
+}
+
+/* Kartu terpilih: membesar + glow golden-lylac (kesan mahkota/puncak) */
+.fan-card-picked {
+  transform: rotate(0deg) translateY(-18px) scale(1.14);
+  z-index: 50;
+  border-color: #f5c842;
+  background: linear-gradient(160deg, #fff8d6, #ffe9a8 70%, #f5d4f0);
+  box-shadow:
+    0 0 0 4px rgba(255,235,160,.35),
+    0 0 28px rgba(255,205,90,.45),
+    0 0 56px rgba(184,164,217,.30),
+    0 14px 34px rgba(149,122,196,.25);
+  animation: fanCrown .5s cubic-bezier(.34,1.56,.64,1);
+}
+
+/* Kartu tidak terpilih: memudar + bergeser menjauh */
+.fan-card-dim {
+  opacity: .25; filter: blur(1px) grayscale(.4);
+  transform: rotate(calc(var(--fan-rot, 0deg) * 1.6))
+             translateY(calc(var(--fan-offset, 0px) + 30px))
+             scale(.86);
+}
+
+@keyframes fanIdle {
+  0%,100% { transform: rotate(var(--fan-rot, 0deg)) translateY(var(--fan-offset, 0px)); }
+  50%     { transform: rotate(var(--fan-rot, 0deg)) translateY(calc(var(--fan-offset, 0px) - 6px)); }
+}
+@keyframes fanCrown {
+  0%   { transform: rotate(var(--fan-rot, 0deg)) translateY(var(--fan-offset, 0px)) scale(1); }
+  60%  { transform: rotate(0deg) translateY(-22px) scale(1.2); }
+  100% { transform: rotate(0deg) translateY(-18px) scale(1.14); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fan-card:not(.fan-card-picked):not(.fan-card-dim) { animation: none; }
+  .fan-card-picked { animation: none; }
+}
+
 

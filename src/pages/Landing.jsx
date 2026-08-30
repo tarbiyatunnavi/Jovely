@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { Icon } from '../components/Icon'
-import { TOTAL_LEVELS, TOTAL_ITEMS } from '../data/levels'
+import { TOTAL_LEVELS, TOTAL_ITEMS, MODULES } from '../data/levels'
 
 export default function Landing() {
   const { isAuthed, loading } = useAuth()
@@ -44,7 +44,7 @@ export default function Landing() {
           </div>
           <div style={{ width: 1, height: 40, background: 'var(--line)' }} />
           <div style={{ flex: 1, textAlign: 'center' }}>
-            <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--lylac-600)' }}>2</div>
+            <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--lylac-600)' }}>{MODULES.length}</div>
             <div className="muted">Modul</div>
           </div>
         </div>

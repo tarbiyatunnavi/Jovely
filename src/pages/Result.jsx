@@ -9,17 +9,15 @@ import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Responsi
 
 export default function Result() {
   const nav = useNavigate()
-  const { progress, loaded, getLevelProgress, authedFetch } = useProgress()
+  const { progress, loaded, getLevelProgress, authedFetch, loadFromServer } = useProgress()
   const [saved, setSaved] = useState(false)
   const [serverResult, setServerResult] = useState(null)
   const { muted, toggleMute } = useAmbientMusic()
 
-  // Mulai musik peta di halaman Hasil (preferensi mute sudah global via localStorage)
+  // Mulai musik peta + reload progress dari server saat masuk halaman Hasil
   useEffect(() => {
     try { playMapMusic() } catch {}
-    return () => {
-      // tidak pause saat unmount — biarkan musik tetap jalan saat navigasi
-    }
+    loadFromServer()
   }, [])
 
   // Kumpulkan jawaban dari semua level
@@ -134,6 +132,17 @@ export default function Result() {
           </div>
         </div>
 
+        {/* Judul profil (di bawah skor) */}
+        {(() => {
+          const p = readiness.totalPercent
+          const title = p >= 80 ? '✨ Profil Kesiapan Matang & Berdaya'
+            : p >= 60 ? '💪 Profil Kesiapan Berkembang & Cukup Stabil'
+            : p >= 40 ? '🌱 Profil Proses Transisi & Penyembuhan Diri'
+            : '🤍 Profil Masa Pemulihan & Penemuan Diri'
+          return <div className="card fade-in" style={{ background: 'var(--lylac-50)', textAlign: 'center' }}><h3 style={{ fontSize: 16, fontWeight: 800 }}>{title}</h3></div>
+        })()}
+
+        {/* Breakdown per Dimensi + Kesiapan Menikah — di bawah profil */}
         <div>
           <h3 className="h-title" style={{ fontSize: 18, marginBottom: 4 }}>📊 Breakdown per Dimensi</h3>
           <p className="muted" style={{ fontSize: 13, marginBottom: 12 }}>Skor kesiapan kamu di tiap aspek.</p>
@@ -151,7 +160,7 @@ export default function Result() {
 
         <div className="col">
           {Object.values(readiness.dims).map(d => {
-            const interp = interpret(d.percent)
+            const interp = interpret(d.percent, d.levelId)
             const emoji = LEVEL_EMOJI[d.levelId] || '💜'
             const gradient = LEVEL_GRADIENT[d.levelId] || 'var(--lylac-400)'
             return (
@@ -176,6 +185,20 @@ export default function Result() {
           })}
         </div>
 
+        {(() => {
+          const p = readiness.totalPercent
+          const text = p >= 80 ? 'Berada pada tahap matang untuk memasuki pendewasaan usia pernikahan dengan stabilitas emosional dan pemahaman peran yang jernih.'
+            : p >= 60 ? 'Memiliki fondasi kesiapan yang baik, namun ada beberapa dimensi spesifik (seperti komunikasi konflik atau finansial) yang masih butuh penyelarasan lebih lanjut.'
+            : p >= 40 ? 'Sedang berada pada fase pemrosesan trauma. Komitmen pernikahan dipandang sebagai langkah besar yang membutuhkan kehati-hatian ekstra agar tidak mengulang pola intergenerasi orang tua.'
+            : 'Memerlukan fokus penuh pada proses self-recovery, penyembuhan inner child, dan penataan kesehatan emosional diri sebelum melangkah ke komitmen pernikahan.'
+          return (
+            <div className="card fade-in" style={{ background: 'var(--lylac-50)' }}>
+              <h4 style={{ fontSize: 14, fontWeight: 800, marginBottom: 8 }}>💍 Kesiapan Menikah</h4>
+              <p style={{ fontSize: 13, lineHeight: 1.7, color: 'var(--ink-soft)' }}>{text}</p>
+            </div>
+          )
+        })()}
+
         {topLove.length > 0 && (
           <div>
             <h3 className="h-title" style={{ fontSize: 18, marginBottom: 4 }}>💜 Gaya Cinta yang Menonjol</h3>
@@ -186,6 +209,7 @@ export default function Result() {
               {topLove.slice(0, 3).map((s, i) => {
                 const emoji = LEVEL_EMOJI[s.levelId] || '💜'
                 const gradient = LEVEL_GRADIENT[s.levelId] || 'var(--lylac-400)'
+                const interp = interpret(s.percent, s.levelId)
                 return (
                   <div key={s.levelId} className="card" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     <div style={{
@@ -196,7 +220,8 @@ export default function Result() {
                     }}>{emoji}</div>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontWeight: 700 }}>{s.name}</div>
-                      <div className="muted" style={{ fontSize: 12 }}>{s.percent}% setuju</div>
+                      <div className="progress-bar" style={{ margin: '4px 0 6px' }}><div style={{ width: `${s.percent}%` }} /></div>
+                      <div className="muted" style={{ fontSize: 12 }}><strong style={{ color: 'var(--lylac-700)' }}>{interp.label}.</strong> {interp.note}</div>
                     </div>
                     <div style={{
                       width: 28, height: 28, borderRadius: '50%',
@@ -212,9 +237,24 @@ export default function Result() {
           </div>
         )}
 
+        {/* Pandangan Cinta Romantis — di bawah gaya cinta yang menonjol */}
+        {(() => {
+          const p = readiness.totalPercent
+          const text = p >= 80 ? 'Memandang cinta sebagai bentuk komitmen yang aman (secure attachment), realistis, serta saling menghargai batas diri (boundaries). Cinta tidak dilihat sebagai tuntutan, melainkan kerja sama dua arah.'
+            : p >= 60 ? 'Menginginkan hubungan yang stabil dan sehat, tetapi terkadang masih muncul sedikit rasa cemas, takut akan konflik berkepanjangan, atau keraguan spontan mengenai masa depan.'
+            : p >= 40 ? 'Menatap cinta dengan sikap waspada (anxious/avoidant). Ada kerinduan besar untuk dicintai dan diterima, tetapi dibayangi ketakutan bahwa apa yang dilakukan "tidak akan pernah cukup".'
+            : 'Memandang hubungan romantis atau pernikahan sebagai hal yang menakutkan, membebankan, atau berisiko mengulang rasa sakit yang pernah disaksikan/dialami di rumah masa kecil.'
+          return (
+            <div className="card fade-in" style={{ background: 'var(--lylac-50)' }}>
+              <h4 style={{ fontSize: 14, fontWeight: 800, marginBottom: 8 }}>💜 Pandangan Cinta Romantis</h4>
+              <p style={{ fontSize: 13, lineHeight: 1.7, color: 'var(--ink-soft)' }}>{text}</p>
+            </div>
+          )
+        })()}
+
         {topLove.length > 0 && (
           <div>
-            <h3 className="h-title" style={{ fontSize: 18, marginBottom: 4 }}>🌊 Arus Bawah Laut yang Menonjol</h3>
+            <h3 className="h-title" style={{ fontSize: 18, marginBottom: 4 }}>👨‍👩‍👧 Pola Asuh yang Menonjol</h3>
             <p className="muted" style={{ fontSize: 13, marginBottom: 12 }}>
               Dari Modul Arus Bawah Laut — pola asuh yang paling menonjol (3 tertinggi).
             </p>
@@ -222,6 +262,7 @@ export default function Result() {
               {topParenting.map((s, i) => {
                 const emoji = LEVEL_EMOJI[s.levelId] || '🌊'
                 const gradient = LEVEL_GRADIENT[s.levelId] || 'var(--lylac-400)'
+                const interp = interpret(s.percent, s.levelId)
                 return (
                   <div key={s.levelId} className="card" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     <div style={{
@@ -232,7 +273,8 @@ export default function Result() {
                     }}>{emoji}</div>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontWeight: 700 }}>{s.name}</div>
-                      <div className="muted" style={{ fontSize: 12 }}>{s.percent}% setuju</div>
+                      <div className="progress-bar" style={{ margin: '4px 0 6px' }}><div style={{ width: `${s.percent}%` }} /></div>
+                      <div className="muted" style={{ fontSize: 12 }}><strong style={{ color: 'var(--lylac-700)' }}>{interp.label}.</strong> {interp.note}</div>
                     </div>
                     <div style={{
                       width: 28, height: 28, borderRadius: '50%',
@@ -247,6 +289,36 @@ export default function Result() {
             </div>
           </div>
         )}
+
+        {/* Implikasi Pola Asuh — di bawah pola asuh yang menonjol */}
+        {(() => {
+          const p = readiness.totalPercent
+          const text = p >= 80 ? 'Pengalaman masa kecil didominasi oleh tipe Otoritatif yang penuh kehangatan, komunikasi dua arah, dan dukungan kebebasan. Jika pernah mengalami pola otoriter, kamu telah berhasil melalui proses reparenting dan penyembuhan luka masa lalu secara mandiri.'
+            : p >= 60 ? 'Pernah menerima pola asuh Campuran (Otoritatif dengan sedikit pengaruh Otoriter/Permisif). Kehangatan keluarga dirasakan, namun sesekali masih ada ingatan akan komunikasi yang kurang konsisten atau tuntutan berlebih.'
+            : p >= 40 ? 'Cenderung dibesarkan dengan pola asuh Otoriter atau Permisif. Pernah mengalami kekerasan verbal/fisik, dibatasi, atau kurang diapresiasi, sehingga memicu kebiasaan overthinking dan meragukan nilai diri.'
+            : 'Sangat dominan menerima pola asuh Otoriter di masa kecil. Lingkungan tumbuh yang minim afeksi dan sarat tekanan membuat respons bertahan diri (fight/flight/freeze) atau rasa bersalah berlebih masih mendominasi keseharian.'
+          return (
+            <div className="card fade-in" style={{ background: 'var(--lylac-50)' }}>
+              <h4 style={{ fontSize: 14, fontWeight: 800, marginBottom: 8 }}>👨‍👩‍👧 Implikasi Pola Asuh</h4>
+              <p style={{ fontSize: 13, lineHeight: 1.7, color: 'var(--ink-soft)' }}>{text}</p>
+            </div>
+          )
+        })()}
+
+        {/* Rekomendasi Reflektif — di atas disclaimer */}
+        {(() => {
+          const p = readiness.totalPercent
+          const text = p >= 80 ? 'Tetap rawat komunikasi terbuka. Gunakan pemahaman diri yang kamu miliki untuk menjadi pilar pendukung dan ruang aman bagi pasangan kelak.'
+            : p >= 60 ? 'Fokus pada aspek yang belum mantap. Latih ekspresi emosi secara jujur tanpa takut dihakimi, serta perjelas ekspektasi hubungan bersama pasangan.'
+            : p >= 40 ? 'Beri jeda pada dirimu. Mengakui luka masa lalu adalah awal pemulihan. Ingatlah bahwa kamu layak dicintai tanpa harus menjadi sempurna terlebih dahulu.'
+            : 'Jangan terburu-buru. Fokus utamamu saat ini adalah membangun hubungan yang aman dengan diri sendiri. Pendewasaan pernikahan dimulai dari diri yang pulih.'
+          return (
+            <div className="card fade-in" style={{ background: 'var(--lylac-50)' }}>
+              <h4 style={{ fontSize: 14, fontWeight: 800, marginBottom: 8 }}>✨ Rekomendasi Reflektif</h4>
+              <p style={{ fontSize: 13, lineHeight: 1.7, color: 'var(--ink-soft)' }}>{text}</p>
+            </div>
+          )
+        })()}
 
         <div className="card" style={{ background: 'var(--lylac-50)', textAlign: 'center' }}>
           <div style={{ fontSize: 28 }}>🤍</div>

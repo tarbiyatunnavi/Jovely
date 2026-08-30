@@ -13,7 +13,16 @@ export const MODULES = [
       {
         id: 'A1', order: 1, name: 'Puncak Mahkota Cita', icon: 'complete',
         items: [
-          { id: 'A1.1', text: 'Cinta itu gabungan dari perhatian, komitmen, saling paham, tanggung jawab, penghargaan, dan kepercayaan ke pasangan.' }
+          {
+            id: 'A1.1',
+            scenario: 'Kamu sedang menjalani perjalanan bersama seseorang yang berarti bagimu. Hari ini dia terlihat berbeda dari biasanya dan menjadi lebih pendiam. Apa yang akan kamu lakukan?',
+            choices: [
+              { id: 'A', text: 'Mengajaknya berbicara dan mencari tahu apa yang sedang terjadi.', score: 4 },
+              { id: 'B', text: 'Menunggu sampai dia sendiri menceritakan apa yang terjadi.', score: 3 },
+              { id: 'C', text: 'Membiarkannya karena setiap orang memiliki urusannya masing-masing.', score: 2 },
+              { id: 'D', text: 'Mengabaikannya dan melanjutkan aktivitas seperti biasa.', score: 1 }
+            ]
+          }
         ]
       },
       {
@@ -244,24 +253,44 @@ export function getLevelXP(levelId) {
 // === Logika Skoring ===
 
 // Modul A: persentase Setuju per dimensi
+// Mendukung 2 format item:
+//  - text: jawaban 'agree'|'disagree' → agree/total * 100
+//  - choices: jawaban choice id (mis. 'A') → cari score, normalisasi score/maxScore * 100
 export function scoreLoveStyles(levelAnswers) {
-  // levelAnswers: { [levelId]: { [itemId]: 'agree'|'disagree' } }
+  // levelAnswers: { [levelId]: { [itemId]: 'agree'|'disagree'|choiceId } }
   const scores = {}
   MODULES[0].levels.forEach(level => {
     let agree = 0, total = 0
+    let weightedPctSum = 0, weightedCount = 0
     level.items.forEach(item => {
       const ans = levelAnswers[level.id]?.[item.id]
       if (ans) {
         total++
-        if (ans === 'agree') agree++
+        if (item.choices) {
+          const choice = item.choices.find(c => c.id === ans)
+          if (choice) {
+            const maxScore = Math.max(...item.choices.map(c => c.score))
+            weightedPctSum += (choice.score / maxScore) * 100
+            weightedCount++
+          }
+        } else {
+          if (ans === 'agree') agree++
+        }
       }
     })
+    // jika level punya item choices, hitung dari weighted; jika pure text, pakai agree/total
+    let percent
+    if (weightedCount > 0) {
+      percent = Math.round(weightedPctSum / weightedCount)
+    } else {
+      percent = total > 0 ? Math.round((agree / total) * 100) : 0
+    }
     scores[level.id] = {
       levelId: level.id,
       name: level.name,
       agree,
       total,
-      percent: total > 0 ? Math.round((agree / total) * 100) : 0,
+      percent,
       answered: total === level.items.length
     }
   })
@@ -338,11 +367,185 @@ export function scoreMarriageReadiness(levelAnswers) {
 }
 
 // interpretasi reflektif-edukatif (bukan vonis klinis)
-export function interpret(percent) {
-  if (percent >= 80) return { label: 'Area Bintang ✨', note: 'Aspek ini udah jadi kekuatan kamu. Pertahankan dan jadiin pondasi!' }
-  if (percent >= 60) return { label: 'Area Cukup Mantap 💪', note: 'Udah lumayan siap, tinggal diasah lagi biar makin stabil.' }
-  if (percent >= 40) return { label: 'Area Pertumbuhan 🌱', note: 'Masih ada ruang buat belajar dan ngebangun kebiasaan di aspek ini.' }
-  return { label: 'Area Belum Terbiasa 🤍', note: 'Belum terlalu kelihatan siap — nggak apa-apa, ini bisa dipersiapkan pelan-pelan.' }
+// Teks spesifik per level per kategori (bukan generik)
+export const LEVEL_INTERPRETATIONS = {
+  // === Modul A: Peta Samudra Rasa ===
+  A1: {
+    80: 'Cinta kamu komplit banget! Kamu sukses menyatukan gairah, rasa nyaman, dan komitmen jadi satu paket utuh yang siap bertahan lama.',
+    60: 'Udah lumayan seimbang antara gairah dan komitmen, tinggal poles dikit lagi biar chemistry dan keintimannya makin konsisten.',
+    40: 'Hubungan kamu mulai punya pondasi, tapi masih sering naik turun antara cuma sekadar suka atau beneran mau komitmen.',
+    0: 'Masih bingung menentukan arah hubungan, gairah dan komitmen belum ketemu titik temu yang pas.',
+  },
+  A2: {
+    80: 'Super aman dan nyaman! Kamu dan pasangan udah kayak home base yang bikin tenang tanpa ada rasa cemas berlebih.',
+    60: 'Udah merasa lumayan dekat dan nyaman, tapi kadang masih ada momen canggung atau ragu buat bersandar sepenuhnya.',
+    40: 'Rasa nyaman mulai terbangun, tapi kamu masih sering ragu apakah dia bener-bener tempat yang aman buat berbagi.',
+    0: 'Masih merasa jarak emosional yang lumayan jauh dan susah buat merasa aman saat di dekat pasangan.',
+  },
+  A3: {
+    80: 'Ikatan kalian dalam banget! Gak cuma fisik, tapi udah berasa sampai ke jiwa dan punya tujuan hidup yang sejalan.',
+    60: 'Udah mulai merasakan ikatan batin yang dalam, tinggal diperkuat lagi lewat nilai-nilai hidup yang sevisi.',
+    40: 'Hubungan masih dominan di permukaan, baru mulai belajar buat memahami makna ikatan spiritual yang lebih dalam.',
+    0: 'Hubungan masih sebatas hal-hal kasat mata atau fisik, belum tersentuh ikatan makna yang lebih mendalam.',
+  },
+  A4: {
+    80: 'Kamu jago mengelola rasa "bucin" dan gairah meletup-letup jadi rasa sayang yang lebih dewasa dan terkendali.',
+    60: 'Perasaan deg-degan masih kuat, tapi kamu udah mulai bisa mikir jernih dan gak gampang terbawa emosi obsesif.',
+    40: 'Masih sering terombang-ambing sama perasaan obsesif atau "bucin" berlebihan yang bikin emosi naik turun.',
+    0: 'Sulit membedakan antara rasa suka yang sehat dengan obsesi sesaat yang bikin capek sendiri.',
+  },
+  A5: {
+    80: 'Cerdas memilah! Kamu gak gampang silau sama pesona awal dan sukses mengenal karakter aslinya secara rasional.',
+    60: 'Rasa kagumnya ada, tapi kamu udah mulai membuka mata buat melihat sisi asli dan kekurangan pasangan.',
+    40: 'Masih sering "kebutaan" sama ekspektasi manis, jadi kadang kaget pas ngelihat realita karakter pasangan.',
+    0: 'Gampang terbuai sama impresi luar atau keindahan awal tanpa mau tahu karakter aslinya seperti apa.',
+  },
+  A6: {
+    80: 'Spark-nya terjaga banget! Daya tarik fisik dan rasa tertarik satu sama lain selalu menyala setiap hari.',
+    60: 'Daya tariknya masih lumayan berasa, tinggal ditambah variasi kegiatan bareng biar gak gampang bosen.',
+    40: 'Percikan ketertarikan mulai agak redup, butuh effort lebih buat menghidupkan lagi kehangatannya.',
+    0: 'Lagi kehilangan spark atau rasa tertarik, berasa datar dan kayak temen biasa aja.',
+  },
+  A7: {
+    80: 'Tulus tanpa batas! Kamu rela berkorban dan mengutamakan kebahagiaan pasangan tanpa nuntut balasan.',
+    60: 'Udah mau peduli dan mengalah, tapi sesekali masih ada rasa pengen diperhitungkan kebaikannya.',
+    40: 'Masih berjuang menyeimbangkan antara ego pribadi dengan kepedulian tulus ke pasangan.',
+    0: 'Masih fokus ke diri sendiri dan hitung-hitungan dalam memberi kasih sayang ke pasangan.',
+  },
+  A8: {
+    80: 'Realistis dan realistis! Kamu pinter mempertimbangkan kecocokan latar belakang dan logika demi masa depan.',
+    60: 'Udah mulai mikirin hal-hal realistis kayak latar belakang dan tujuan, walau kadang masih kemakan perasaan.',
+    40: 'Pertimbangan logika mulai kepikir, tapi masih sering kalah sama perasaan impulsif sesaat.',
+    0: 'Cenderung cuek sama hal-hal realistis, asal cocok di awal langsung jalan tanpa mikir kesesuaian ke depan.',
+  },
+  A9: {
+    80: 'Paham tempo! Kamu gak buru-buru ambil keputusan besar sebelum bener-bener kenal dalam pasanganmu.',
+    60: 'Udah lumayan paham pentingnya proses, walau kadang suka kebelet buat langsung bikin komitmen cepat.',
+    40: 'Masih sering kepancing buat bikin janji atau komitmen besar padahal belum terlalu kenal luar-dalam.',
+    0: 'Sangat terburu-buru! Gampang ngomong komitmen panjang cuma berdasar gairah sesaat tanpa pondasi kuat.',
+  },
+  A10: {
+    80: 'Setia dan kokoh! Niat kamu buat bertahan di saat suka maupun duka udah gak perlu diragukan lagi.',
+    60: 'Komitmen kamu udah lumayan oke, tinggal diuji pas nanti nemu ombak konflik yang agak gede.',
+    40: 'Masih ada rasa ragu buat janji setia jangka panjang, gampang ragu kalau ada masalah datang.',
+    0: 'Takut atau menghindar dari komitmen, gampang kabur pas hubungan mulai dapet masalah.',
+  },
+  A11: {
+    80: 'Emosi kamu super stabil! Gak ada drama cemburu buta atau rasa takut kehilangan yang berlebihan.',
+    60: 'Udah cukup tenang, walau sesekali rasa cemburu atau insecure masih suka mampir dikit-dikit.',
+    40: 'Masih sering posesif dan cemas berlebih, gampang kepikiran kalau pasangan lagi gak ada kabar.',
+    0: 'Sering terjebak drama emosi, cemburu berlebihan, dan rasa takut ditinggal yang bikin hubungan toxic.',
+  },
+  // === Modul B: Arus Bawah Laut ===
+  B1: {
+    80: 'Tangki emosimu penuh! Didikan orang tua yang hangat bikin kamu tumbuh jadi pribadi yang peka dan percaya diri.',
+    60: 'Lumayan sering dapet kehangatan, walau kadang ada momen orang tua agak dingin atau kurang ekspresif.',
+    40: 'Kurang terbiasa dengan ekspresi kasih sayang terbuka, bikin kamu agak canggung kalau harus bersikap hangat.',
+    0: 'Terbiasa dengan suasana rumah yang dingin atau cuek, jadi harus belajar ekstra buat ngerasain rasa aman emosional.',
+  },
+  B2: {
+    80: 'Logika kamu jalan banget! Kebiasaan diajak diskusi sama orang tua bikin kamu paham alasan di balik tiap aturan.',
+    60: 'Sering diajak ngobrol sebab-akibat, walau kadang ada aturan orang tua yang main tetapkan gitu aja.',
+    40: 'Jarang dapet penjelasan dari aturan orang tua, jadi kamu masih belajar memahami alasan di balik suatu keputusan.',
+    0: 'Terbiasa disuruh nurut tanpa alasan jelas, bikin kamu kurang terlatih buat mikir kritis tentang sebab-akibat.',
+  },
+  B3: {
+    80: 'Mandiri maksimal! Orang tua ngasih kepercayaan penuh buat kamu ambil keputusan dan paham tanggung jawabnya.',
+    60: 'Udah diberi kebebasan memilih, tapi orang tua masih sering ikut campur di beberapa keputusan penting.',
+    40: 'Kebebasanmu masih terbatas, bikin kamu kadang ragu dan butuh validasi orang lain pas mau ambil keputusan.',
+    0: 'Sangat diatur atau dikontrol, bikin kamu takut ambil keputusan sendiri dan gampang ragu-ragu.',
+  },
+  B4: {
+    80: 'Bebas dari kekerasan! Rumahmu aman dan amanah, gak ada jejak hukuman fisik yang membekas.',
+    60: 'Pernah kena hukuman fisik sesekali saat kecil, tapi gak sampai bikin kamu merasa terancam banget.',
+    40: 'Hukuman fisik lumayan sering terjadi sewaktu kecil, bikin ada rasa takut tersisa pas situasi memanas.',
+    0: 'Sering menerima kekerasan fisik pas kecil, bikin kamu punya respons trauma atau jadi ekstra defensif.',
+  },
+  B5: {
+    80: 'Komunikasi sehat! Orang tua bicaranya adem, gak ada kebiasaan membentak atau main kata-kata kasar.',
+    60: 'Pernah denger nada tinggi atau omelan pedas, tapi secara umum kata-kata di rumah masih terjaga.',
+    40: 'Sering terpapar kata-kata pedas atau kritikan tajam, bikin kamu agak sensitif kalau dikritik orang lain.',
+    0: 'Terbiasa denger bentakan dan kata kasar di rumah, bikin kamu gampang merasa terserang atau ikut-ikutan bicaranya pedas.',
+  },
+  B6: {
+    80: 'Minim hukuman sepihak! Kalau ada salah, selesainya lewat komunikasi, bukan asal hukum tanpa sebab.',
+    60: 'Kadang masih dapet hukuman tanpa alasan jelas, tapi gak bikin kamu takut secara berlebihan.',
+    40: 'Sering diancam atau dihukum tanpa dijelaskan salahnya di mana, bikin kamu sering merasa cemas buat melangkah.',
+    0: 'Dominan hukuman buta, bikin kamu tumbuh jadi pribadi yang selalu takut bikin salah atau gampang panik.',
+  },
+  B7: {
+    80: 'Seimbang! Orang tua tahu batas kapan menuruti dan kapan harus bilang "tidak", bikin kamu tahan banting.',
+    60: 'Lumayan dituruti mau-nya, tapi masih ada batasan-batasan tertentu yang bikin kamu gak terlalu manja.',
+    40: 'Sering dimanja dan dituruti kemauannya, bikin kamu agak kaget kalau ketemu realita yang gak sesuai harapan.',
+    0: 'Terlalu dituruti dari kecil tanpa batas, bikin kamu sulit terima penolakan dan gampang frustrasi pas gagal.',
+  },
+  // === Modul C: Ekspedisi Pondasi Bahtera ===
+  C1: {
+    80: 'Emosi super dewasa! Kamu siap mengontrol ego, paham cara ngadepin konflik, dan tulus nerima kekurangannya.',
+    60: 'Udah lumayan siap dan dewasa, tinggal diasah lagi biar makin stabil pas ngadepin ujian yang lebih rumit.',
+    40: 'Masih sering kalah sama ego atau ngambek berlarut-larut pas ada beda pendapat sama pasangan.',
+    0: 'Masih kekanak-kanakan, gampang meledak-ledak, dan belum siap nerima pasangan apa adanya.',
+  },
+  C2: {
+    80: 'Asik dan fleksibel! Kamu pinter menempatkan diri, gampang ngelebur ke keluarga besar dan lingkungan baru.',
+    60: 'Komunikasi ke keluarga besar udah lumayan aman, tinggal melatih keluwesan pas nemu beda kultur keluarga.',
+    40: 'Masih agak canggung atau segan pas harus berbaur dan beradaptasi sama keluarga/lingkungan pasangan.',
+    0: 'Menutup diri dan susah banget buat beradaptasi sama pola interaksi keluarga besar pasangan.',
+  },
+  C3: {
+    80: 'Paham tugas! Kamu udah kebayang dan siap banget ngejalani peran sebagai suami/istri di kehidupan nyata.',
+    60: 'Paham konsep peran dan tanggung jawab harian, tinggal eksekusi prakteknya aja nanti pas nikah.',
+    40: 'Masih belum kebayang riil-nya pembagian peran rumah tangga, kadang merasa berat membayangkan tugasnya.',
+    0: 'Belum ada gambaran sama sekali dan belum siap memikul tanggung jawab domestik atau peran pernikahan.',
+  },
+  C4: {
+    80: 'Keuangan aman! Mandiri secara ekonomi, pinter atur cashflow, dan punya plan finansial rumah tangga yang matang.',
+    60: 'Penghasilan dan tabungan udah ada, tinggal diperbaiki strategi budgeting dan investasi masa depannya.',
+    40: 'Udah ada pemasukan, tapi gaya hidup dan pola atur uang masih sering bocor halus di sana-sini.',
+    0: 'Belum mandiri secara finansial atau masih bingung banget cara mengelola uang buat kebutuhan jangka panjang.',
+  },
+  C5: {
+    80: 'Visi jelas! Mental kamu udah kuat buat setia selamanya dan bareng-bareng melangkah nyapai goal masa depan.',
+    60: 'Tujuan masa depan udah ada gambaran kasar, tinggal dimatangkan lagi biar makin sevisi sama pasangan.',
+    40: 'Masih sering cemas mikirin masa depan dan ragu apakah sanggup bertahan pas badai rumah tangga datang.',
+    0: 'Belum punya gambaran visi masa depan dan gampang goyah kalau membayangkan komitmen jangka panjang.',
+  },
+  C6: {
+    80: 'On track banget! Pemahaman agama dan niat ibadahmu dalam pernikahan udah jadi pondasi yang kokoh.',
+    60: 'Dasar agama udah paham, tinggal konsistensi dalam menerapkan nilai-nilainya di kehidupan sehari-hari.',
+    40: 'Tahu aturan agama dalam nikah, tapi masih belajar buat bener-bener mempraktikkannya secara bertahap.',
+    0: 'Pemahaman norma agama masih minim banget, belum siap menjadikan nilai agama sebagai pedoman utama.',
+  },
+  C7: {
+    80: 'Siap bermasyarakat! Paham etika lokal, aturan sosial, dan siap ambil peran positif di lingkungan tempat tinggal.',
+    60: 'Udah paham etika umum bermasyarakat, tinggal membiasakan diri aktif dalam kegiatan lingkungan warga.',
+    40: 'Masih agak cuek sama norma atau aturan masyarakat sekitar, lebih fokus ke urusan internal sendiri.',
+    0: 'Belum siap atau enggan mematuhi etika dan tanggung jawab sosial sebagai bagian dari warga masyarakat.',
+  },
+}
+
+export function interpret(percent, levelId) {
+  let label, defaultNote
+  if (percent >= 80) { label = 'Area Bintang ✨' }
+  else if (percent >= 60) { label = 'Area Cukup Mantap 💪' }
+  else if (percent >= 40) { label = 'Area Pertumbuhan 🌱' }
+  else { label = 'Area Belum Terbiasa 🤍' }
+
+  // Teks spesifik per level
+  if (levelId && LEVEL_INTERPRETATIONS[levelId]) {
+    const notes = LEVEL_INTERPRETATIONS[levelId]
+    const note = percent >= 80 ? notes[80]
+      : percent >= 60 ? notes[60]
+      : percent >= 40 ? notes[40]
+      : notes[0]
+    return { label, note }
+  }
+
+  // Fallback generik
+  if (percent >= 80) return { label, note: 'Aspek ini udah jadi kekuatan kamu. Pertahankan dan jadiin pondasi!' }
+  if (percent >= 60) return { label, note: 'Udah lumayan siap, tinggal diasah lagi biar makin stabil.' }
+  if (percent >= 40) return { label, note: 'Masih ada ruang buat belajar dan ngebangun kebiasaan di aspek ini.' }
+  return { label, note: 'Belum terlalu kelihatan siap — nggak apa-apa, ini bisa dipersiapkan pelan-pelan.' }
 }
 
 export const LIKERT_OPTIONS = [
@@ -360,9 +563,9 @@ export const LIKERT_OPTIONS = [
 export const GAME_MECHANICS = {
   // === Modul A: Cinta Romantis ===
   A1: {
-    type: 'pour-love', emoji: '👑', accent: '#b8a4d9',
-    tagline: 'Cinta Sempurna', greeting: 'Tuang Cat Cinta',
-    hint: 'Tuang cat ke gelas yang rasanya pas. Murni ekspresi diri, bukan menang/kalah.'
+    type: 'fan-card', emoji: '👑', accent: '#b8a4d9',
+    tagline: 'Cinta Sempurna', greeting: 'Pilih kartu yang paling kamu',
+    hint: 'Tap salah satu kartu yang paling sesuai denganmu.'
   },
   A2: {
     type: 'swipe', emoji: '⚓', accent: '#c8a8d4',

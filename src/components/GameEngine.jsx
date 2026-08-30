@@ -9,12 +9,14 @@ import LikertEmoji from './game/LikertEmoji'
 import LikertDial from './game/LikertDial'
 import PourLoveGame from './game/PourLoveGame'
 import ParentingChoiceGame from './game/ParentingChoiceGame'
+import FanCardGame from './game/FanCardGame'
 
 export default function GameEngine({ level, flavor, initialAnswers = {}, onComplete }) {
   const total = level.items.length
   const props = { level, flavor, total, onFinal: onComplete, initialAnswers }
 
   switch (flavor?.type) {
+    case 'fan-card': return <FanCardGame {...props} />
     case 'pour-love': return <PourLoveGame {...props} />
     case 'parenting-choice': return <ParentingChoiceGame {...props} />
     case 'swipe': return <SwipeGame {...props} />
