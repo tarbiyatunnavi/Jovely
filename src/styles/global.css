@@ -581,8 +581,8 @@ a { color: inherit; text-decoration: none; }
 
 .pull-arena {
   position: relative;
-  width: 100%; max-width: 300px;
-  height: 290px; max-height: 58vh;
+  width: 100%; max-width: 340px;
+  height: 330px; max-height: 60vh;
   margin: 8px auto 4px; overflow: hidden;
   border-radius: var(--radius-lg);
   background: radial-gradient(circle at 50% 50%, #fbf6ff 0%, #f4ecfb 60%, #efe6f7 100%);
@@ -652,9 +652,9 @@ a { color: inherit; text-decoration: none; }
   50% { transform: translateX(-50%) translateY(8px); opacity: .5; }
 }
 
-/* 4 titik tujuan di penjuru — rapat ke tengah */
+/* 4 titik tujuan di penjuru — spacing cukup antar kartu & ke ikon tengah */
 .pull-node {
-  position: absolute; width: 116px; padding: 8px 8px;
+  position: absolute; width: 112px; padding: 8px 8px;
   display: flex; flex-direction: column; align-items: center; gap: 3px;
   border-radius: var(--radius); background: rgba(255,255,255,.92);
   border: 2px solid var(--lylac-100);
@@ -664,11 +664,11 @@ a { color: inherit; text-decoration: none; }
               box-shadow .35s, border-color .25s, background .25s, opacity .35s;
   z-index: 3;
 }
-/* posisi penjuru — rapat ke ikon tengah, tidak tumpang tindih */
-.pull-pos-tl { left: 14%;  top: 14%; }
-.pull-pos-tr { right: 14%; top: 14%; }
-.pull-pos-bl { left: 14%;  bottom: 14%; }
-.pull-pos-br { right: 14%; bottom: 14%; }
+/* posisi penjuru — gap antar kartu + ruang ke ikon tengah */
+.pull-pos-tl { left: 10px;  top: 12px; }
+.pull-pos-tr { right: 10px; top: 12px; }
+.pull-pos-bl { left: 10px;  bottom: 12px; }
+.pull-pos-br { right: 10px; bottom: 12px; }
 
 .pull-node-badge {
   width: 26px; height: 26px; border-radius: 50%;
