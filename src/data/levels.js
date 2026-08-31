@@ -661,7 +661,7 @@ export const GAME_MECHANICS = {
     type: 'story', emoji: '🕊️', accent: '#d0b9e7',
     tagline: 'Membangun Bersama', greeting: 'Bayangin skenarionya…',
     options: ['Setuju', 'Nggak Setuju'],
-    hint: 'Pilih respons yang paling mirip sama kamu.'
+    hint: 'Pilih jawaban yang representatif dengan kondisi'
   },
   A9: {
     type: 'tap2', emoji: '⚡', accent: '#b8a4d9',
