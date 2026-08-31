@@ -157,7 +157,6 @@ export default function PullLineGame({ level, flavor, total, initialAnswers, onF
   return (
     <div className="fade-in" key={idx}>
       <LevelHeader level={level} idx={idx} total={total} progress={progress} flavor={flavor} />
-      <div className="pl-round-pill" style={{ marginBottom: 8 }}>Ronde {idx + 1} / {total}</div>
       <div className="card item-enter pull-scenario" key={`scn-${idx}`}>
         {item.scenario}
       </div>
