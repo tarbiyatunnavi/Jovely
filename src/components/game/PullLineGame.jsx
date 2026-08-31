@@ -202,7 +202,7 @@ export default function PullLineGame({ level, flavor, total, initialAnswers, onF
           ref={centerRef}
           className={`pull-center ${dragging ? 'dragging' : ''} ${picked ? 'done' : ''}`}
         >
-          <span className="pull-heart">💜</span>
+          <span className="pull-heart">{flavor?.centerIcon || '💜'}</span>
           {showHint && !dragging && !picked && (
             <span className="pull-hint-finger">👆</span>
           )}
@@ -225,7 +225,7 @@ export default function PullLineGame({ level, flavor, total, initialAnswers, onF
           )
         })}
       </div>
-      <ParticleBurst trigger={burst} origin={origin} emojis={['👑', '✨', '💜', '🤍', '💫']} />
+      <ParticleBurst trigger={burst} origin={origin} emojis={[flavor?.centerIcon || '💜', '✨', '💜', '🤍', '💫']} />
     </div>
   )
 }

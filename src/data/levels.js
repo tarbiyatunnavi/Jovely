@@ -166,7 +166,16 @@ export const MODULES = [
       {
         id: 'B1', order: 12, name: 'Palung Hangat Pelindung', icon: 'warmth',
         items: [
-          { id: 'B1.1', scenario: 'Misteri Kabin Rusak: Kapalmu bocor di tengah badai masa lalu. Apa yang dilakukan Kapten senior?', healthy: 'Disambut hangat dan didengarkan tanpa rasa takut', unhealthy: 'Diabaikan atau dimarahi karena membuat masalah' }
+          {
+            id: 'B1.1',
+            scenario: 'Kapalmu sedang menghadapi badai. Kamu menemukan sesuatu yang membuatmu takut dan bingung. Di dekatmu ada Kapten Senior, orang yang selalu menjadi tempatmu meminta bantuan. Apa yang terjadi ketika kamu ingin menceritakan masalahmu?',
+            choices: [
+              { id: 'A', text: 'Kapten Senior biasanya menyadari keadaanku dan mengajakku untuk bercerita.', score: 4 },
+              { id: 'B', text: 'Kapten Senior biasanya menanyakan keadaanku, lalu membiarkanku menentukan apakah ingin bercerita atau tidak.', score: 3 },
+              { id: 'C', text: 'Kapten Senior biasanya menunggu sampai aku sendiri yang mulai menceritakan masalahku.', score: 2 },
+              { id: 'D', text: 'Kapten Senior biasanya tetap berada di dekatku, tetapi tidak banyak membicarakan masalah yang sedang kuhadapi.', score: 1 }
+            ]
+          }
         ]
       },
       {
@@ -352,24 +361,43 @@ export function scoreLoveStyles(levelAnswers) {
   return { scores, ranking, top }
 }
 
-// Modul B: Arus Bawah Laut — persentase Setuju per dimensi (sama seperti Modul A)
+// Modul B: Arus Bawah Laut — persentase Setuju per dimensi
+// Mendukung 2 format item:
+//  - healthy/unhealthy: jawaban 'agree'|'disagree' → agree/total * 100
+//  - choices: jawaban choice id (mis. 'A') → cari score, normalisasi score/maxScore * 100
 export function scoreParentingStyles(levelAnswers) {
   const scores = {}
   MODULES[1].levels.forEach(level => {
     let agree = 0, total = 0
+    let weightedPctSum = 0, weightedCount = 0
     level.items.forEach(item => {
       const ans = levelAnswers[level.id]?.[item.id]
       if (ans) {
         total++
-        if (ans === 'agree') agree++
+        if (item.choices) {
+          const choice = item.choices.find(c => c.id === ans)
+          if (choice) {
+            const maxScore = Math.max(...item.choices.map(c => c.score))
+            weightedPctSum += (choice.score / maxScore) * 100
+            weightedCount++
+          }
+        } else {
+          if (ans === 'agree') agree++
+        }
       }
     })
+    let percent
+    if (weightedCount > 0) {
+      percent = Math.round(weightedPctSum / weightedCount)
+    } else {
+      percent = total > 0 ? Math.round((agree / total) * 100) : 0
+    }
     scores[level.id] = {
       levelId: level.id,
       name: level.name,
       agree,
       total,
-      percent: total > 0 ? Math.round((agree / total) * 100) : 0,
+      percent,
       answered: total === level.items.length
     }
   })
@@ -683,9 +711,10 @@ export const GAME_MECHANICS = {
   },
   // === Modul B: Arus Bawah Laut (pilihan kartu sehat/tidak sehat) ===
   B1: {
-    type: 'parenting-choice', emoji: '🌊', accent: '#c8a8d4',
-    tagline: 'Palung Hangat Pelindung', greeting: 'Pilih respons yang tepat',
-    hint: 'Pilih kartu respons yang paling sesuai dengan pengalamanmu.'
+    type: 'pull-line', emoji: '🌊', accent: '#c8a8d4',
+    tagline: 'Palung Hangat Pelindung', greeting: 'Setiap kapten memiliki cara berbeda dalam menghadapi awak kapalnya. Pilih kejadian yang paling mengingatkanmu pada pengalamanmu.',
+    hint: 'Tarik garis dari kemudi di tengah ke pilihan yang paling nggambarkin kamu',
+    centerIcon: '⚓'
   },
   B2: {
     type: 'parenting-choice', emoji: '🗼', accent: '#d0b9e7',
