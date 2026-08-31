@@ -77,7 +77,7 @@ export default function SwipeGame({ level, flavor, total, initialAnswers, onFina
           <span className={`swipe-badges no ${noBadge ? 'show' : ''}`}>{leftLabel} ✗</span>
           <div style={{ fontSize: 28, marginBottom: 10 }}>{flavor?.emoji}</div>
           “{item.text}”
-          <div className="muted" style={{ fontSize: 12, marginTop: 18 }}>{flavor?.hint || `geser kiri: ${leftLabel.toLowerCase()} · kanan: ${rightLabel.toLowerCase()}`}</div>
+          <div className="muted" style={{ fontSize: 12, marginTop: 18 }}>{flavor?.cardHint || flavor?.hint || `← geser kiri: ${leftLabel.toLowerCase()} · kanan: ${rightLabel.toLowerCase()} →`}</div>
         </div>
       </div>
       <div className="row" style={{ marginTop: 16, gap: 10 }}>

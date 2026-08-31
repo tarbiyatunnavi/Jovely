@@ -648,7 +648,8 @@ export const GAME_MECHANICS = {
     type: 'swipe', emoji: '⛵', accent: '#d0b9e7',
     tagline: 'Cinta yang Tumbuh', greeting: 'Geser ya',
     leftLabel: 'Bukan aku', rightLabel: 'Aku banget',
-    hint: '← swipe kiri: bukan aku · swipe kanan: aku banget →'
+    hint: 'Pilih jawaban yang representatif dengan perasaanmu',
+    cardHint: '← swipe kiri: bukan aku · swipe kanan: aku banget →'
   },
   A7: {
     type: 'dragdrop', emoji: '🕊️', accent: '#c8a8d4',
