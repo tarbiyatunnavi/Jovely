@@ -108,7 +108,10 @@ export const MODULES = [
       {
         id: 'A5', order: 5, name: 'Lentera Percik Api', icon: 'spark',
         items: [
-          { id: 'A5.1', text: 'Orang bisa jatuh cinta tanpa alasan jelas, bahkan tanpa direncanakan – cinta memang nggak bisa diatur.' }
+          { id: 'A5.1', text: 'Orang bisa jatuh cinta tanpa alasan jelas, bahkan tanpa direncanain – cinta memang nggak bisa diatur.' },
+          { id: 'A5.2', text: 'Cinta yang tulus itu tidak pernah berakhir.' },
+          { id: 'A5.3', text: 'Cinta itu terbentuk dari semua hal yang udah dilalui berdua dengan seseorang.' },
+          { id: 'A5.4', text: 'Cinta tidak lekang oleh waktu seperti perasaan yang tetap ada meskipun waktu terus berlalu.' }
         ]
       },
       {
@@ -639,7 +642,7 @@ export const GAME_MECHANICS = {
     type: 'story', emoji: '🕯️', accent: '#c8a8d4',
     tagline: 'Jatuh Cinta Tiba-tiba', greeting: 'Bayangin skenarionya…',
     options: ['Setuju', 'Nggak Setuju'],
-    hint: 'Pilih respons yang paling mirip sama kamu.'
+    hint: 'Pilih jawaban yang representatif dengan kondisi'
   },
   A6: {
     type: 'swipe', emoji: '⛵', accent: '#d0b9e7',
