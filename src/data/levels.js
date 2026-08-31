@@ -667,7 +667,7 @@ export const GAME_MECHANICS = {
     type: 'tap2', emoji: '⚡', accent: '#b8a4d9',
     tagline: 'Cinta yang Buta', greeting: 'Apa cinta versi kamu?',
     leftLabel: 'Setuju', rightLabel: 'Nggak',
-    hint: 'Tap kartu yang sesuai perasaan kamu.'
+    hint: 'Pilih jawaban yang representatif dengan perasaanmu'
   },
   A10: {
     type: 'story', emoji: '📜', accent: '#c8a8d4',
