@@ -117,9 +117,9 @@ export const MODULES = [
       {
         id: 'A6', order: 6, name: 'Bahtera Sahabat Sejati', icon: 'companion',
         items: [
-          { id: 'A6.1', text: 'Cinta itu kayak satu jiwa yang menyatu di dua orang.' },
-          { id: 'A6.2', text: 'Cinta sering muncul justru dari ketemunya dua sisi rapuh/lemah dua orang.' },
-          { id: 'A6.3', text: 'Sebelum jatuh cinta sama seseorang, rasanya banyak hal belum terasa bermakna.' }
+          { id: 'A6.1', text: 'Cinta adalah satu jiwa yang hidup dalam diri dua orang.' },
+          { id: 'A6.2', text: 'Cinta sering muncul justru dari ketemunya sisi rapuh dua orang.' },
+          { id: 'A6.3', text: 'Sebelum jatuh cinta sama seseorang, segalanya terasa belum bermakna.' }
         ]
       },
       {
@@ -646,9 +646,9 @@ export const GAME_MECHANICS = {
   },
   A6: {
     type: 'swipe', emoji: '⛵', accent: '#d0b9e7',
-    tagline: 'Cinta yang Tumbuh', greeting: 'Geser ya',
-    leftLabel: 'Nggak Setuju', rightLabel: 'Setuju',
-    hint: 'Swipe kiri = nggak, kanan = setuju.'
+    tagline: 'Cinta yang Tumbuh', greeting: 'Pilih jawaban yang representatif dengan perasaanmu',
+    leftLabel: 'Bukan gaya aku', rightLabel: 'Ini ngebantu aku',
+    hint: 'geser kiri: Bukan gaya aku · kanan: Ini ngebantu aku'
   },
   A7: {
     type: 'dragdrop', emoji: '🕊️', accent: '#c8a8d4',

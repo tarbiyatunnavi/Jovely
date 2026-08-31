@@ -55,6 +55,8 @@ export default function SwipeGame({ level, flavor, total, initialAnswers, onFina
   const rotate = Math.max(-14, Math.min(14, offset / 14))
   const yesBadge = offset > 40
   const noBadge = offset < -40
+  const leftLabel = flavor?.leftLabel || 'Nggak Setuju'
+  const rightLabel = flavor?.rightLabel || 'Setuju'
 
   return (
     <div className="fade-in" key={idx}>
@@ -71,16 +73,16 @@ export default function SwipeGame({ level, flavor, total, initialAnswers, onFina
             borderColor: yesBadge ? 'var(--lylac-400)' : noBadge ? '#f0c0c8' : 'transparent'
           }}
         >
-          <span className={`swipe-badges yes ${yesBadge ? 'show' : ''}`}>SETUJU ✓</span>
-          <span className={`swipe-badges no ${noBadge ? 'show' : ''}`}>NGGAK ✗</span>
+          <span className={`swipe-badges yes ${yesBadge ? 'show' : ''}`}>{rightLabel} ✓</span>
+          <span className={`swipe-badges no ${noBadge ? 'show' : ''}`}>{leftLabel} ✗</span>
           <div style={{ fontSize: 28, marginBottom: 10 }}>{flavor?.emoji}</div>
           “{item.text}”
-          <div className="muted" style={{ fontSize: 12, marginTop: 18 }}>← geser kiri: nggak · kanan: setuju →</div>
+          <div className="muted" style={{ fontSize: 12, marginTop: 18 }}>← {flavor?.hint || `geser kiri: ${leftLabel.toLowerCase()} · kanan: ${rightLabel.toLowerCase()}`} →</div>
         </div>
       </div>
       <div className="row" style={{ marginTop: 16, gap: 10 }}>
-        <button className="btn btn-secondary" style={{ flex: 1 }} onClick={() => finish('left')}>✗ Nggak</button>
-        <button className="btn" style={{ flex: 1 }} onClick={() => finish('right')}>✓ Setuju</button>
+        <button className="btn btn-secondary" style={{ flex: 1 }} onClick={() => finish('left')}>✗ {leftLabel}</button>
+        <button className="btn" style={{ flex: 1 }} onClick={() => finish('right')}>✓ {rightLabel}</button>
       </div>
       <ParticleBurst trigger={burst} origin={origin} emojis={['💜', '✨', '🤍', flavor?.emoji]} />
     </div>
