@@ -196,7 +196,16 @@ export const MODULES = [
       {
         id: 'B3', order: 14, name: 'Samudra Bebas', icon: 'freedom',
         items: [
-          { id: 'B3.1', scenario: 'Peta Rute Baru: Kamu mengusulkan koordinat baru yang belum ada di peta lama. Respon Kapten?', healthy: 'Diberi ruang dan ide barumu dihargai', unhealthy: 'Ditolak tegas dan dipaksa ikut rute lama' }
+          {
+            id: 'B3.1',
+            scenario: 'Kamu menemukan rute baru yang belum tercatat di peta lama. Kamu memiliki pendapat sendiri tentang rute tersebut dan ingin menyampaikannya kepada Kapten Senior. Jika mengingat pengalamanmu bersama Kapten Senior ketika masih kecil, respons mana yang paling mirip dengan apa yang biasanya terjadi?',
+            choices: [
+              { id: 'A', text: 'Kapten Senior mendengarkan pendapatku dan memintaku menjelaskan alasan di balik pendapat tersebut.', score: 4 },
+              { id: 'B', text: 'Kapten Senior mendengarkan ketika aku menyampaikan pendapat, tetapi keputusan akhirnya tetap ditentukan olehnya.', score: 3 },
+              { id: 'C', text: 'Kapten Senior biasanya baru mendengarkan pendapatku ketika aku menyampaikannya terlebih dahulu.', score: 2 },
+              { id: 'D', text: 'Kapten Senior biasanya menentukan rute yang harus dipilih tanpa meminta pendapatku.', score: 1 }
+            ]
+          }
         ]
       },
       {
@@ -734,9 +743,11 @@ export const GAME_MECHANICS = {
     instruction: 'Tarik garis dari mercusuar di tengah ke pilihan yang paling mirip dengan pengalamanmu 👆'
   },
   B3: {
-    type: 'parenting-choice', emoji: '🧭', accent: '#c8a8d4',
-    tagline: 'Samudra Bebas', greeting: 'Pilih respons yang tepat',
-    hint: 'Pilih kartu respons yang paling sesuai dengan pengalamanmu.'
+    type: 'pull-line', emoji: '🧭', accent: '#c8a8d4',
+    tagline: 'Samudra Bebas', greeting: 'Tidak ada pilihan benar atau salah.',
+    hint: 'Pilih kejadian yang paling sering atau paling mirip dengan pengalamanmu.',
+    centerIcon: '🧭',
+    instruction: 'Tarik garis dari kompas di tengah ke pilihan yang paling mirip dengan pengalamanmu 👆'
   },
   B4: {
     type: 'parenting-choice', emoji: '⚓', accent: '#d0b9e7',
