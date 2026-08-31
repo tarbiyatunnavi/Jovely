@@ -226,7 +226,16 @@ export const MODULES = [
       {
         id: 'B5', order: 16, name: 'Badai Bertubi', icon: 'storm',
         items: [
-          { id: 'B5.1', scenario: 'Bagaimana gema suara di dalam kabin saat kamu tak sengaja melanggar aturan?', healthy: 'Ditegur secara terarah dan tenang', unhealthy: 'Luapan gelombang suara keras & amarah' }
+          {
+            id: 'B5.1',
+            scenario: 'Bagaimana gema suara di dalam kabin saat kamu tak sengaja melanggar aturan? Jika mengingat pengalamanmu bersama Kapten Senior ketika masih kecil, kejadian mana yang paling mirip dengan apa yang biasanya kamu alami?',
+            choices: [
+              { id: 'A', text: 'Kapten Senior menjelaskan kesalahanku dan membicarakan apa yang perlu diperbaiki.', score: 4 },
+              { id: 'B', text: 'Kapten Senior menunjukkan bahwa ia marah karena kesalahanku, lalu memberiku waktu untuk memperbaikinya.', score: 3 },
+              { id: 'C', text: 'Kapten Senior meluapkan kemarahannya kepadaku ketika sedang marah karena kesalahanku.', score: 2 },
+              { id: 'D', text: 'Kapten Senior menjadi lebih diam atau menjauh setelah mengetahui kesalahanku.', score: 1 }
+            ]
+          }
         ]
       },
       {
@@ -766,9 +775,11 @@ export const GAME_MECHANICS = {
     instruction: 'Tarik garis dari kapal di tengah ke pilihan yang paling mirip dengan pengalamanmu 👆'
   },
   B5: {
-    type: 'parenting-choice', emoji: '⛈️', accent: '#c8a8d4',
-    tagline: 'Badai Bertubi', greeting: 'Pilih respons yang tepat',
-    hint: 'Pilih kartu respons yang paling sesuai dengan pengalamanmu.'
+    type: 'pull-line', emoji: '⛈️', accent: '#c8a8d4',
+    tagline: 'Badai Bertubi', greeting: 'Tidak ada pilihan benar atau salah.',
+    hint: 'Pilih kejadian yang paling sering atau paling mirip dengan pengalamanmu.',
+    centerIcon: '☁️',
+    instruction: 'Tarik garis dari awan di tengah ke pilihan yang paling mirip dengan pengalamanmu 👆'
   },
   B6: {
     type: 'parenting-choice', emoji: '🪸', accent: '#d0b9e7',
