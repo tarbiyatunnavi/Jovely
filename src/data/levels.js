@@ -79,8 +79,8 @@ export const MODULES = [
         id: 'A2', order: 2, name: 'Jangkar Pelabuhan Utama', icon: 'attach',
         items: [
           { id: 'A2.1', text: 'Mencintai seseorang apa adanya — baik dulu, sekarang, maupun nanti.' },
-          { id: 'A2.2', text: '"Rumah" itu di mana pun berada bareng orang yang dicintai, meski sering pindah-pindah.' },
-          { id: 'A2.3', text: 'Cinta bukan soal nemuin orang buat hidup bareng, tapi nemuin orang yang bikin kamu ngerasa nggak bisa hidup tanpanya.' }
+          { id: 'A2.2', text: 'Rumah adalah ketika kita bersama orang yang kita cintai, di mana pun kita berada.' },
+          { id: 'A2.3', text: 'Cinta bukan tentang orang buat hidup bersama, tapi nemuin orang yang bikin kamu merasa tidak bisa hidup tanpanya.' }
         ]
       },
       {
