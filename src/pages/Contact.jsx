@@ -15,7 +15,7 @@ export default function Contact() {
           </p>
         </div>
 
-        <a href="mailto:hello@jovely.app" className="btn lk-submit">
+        <a href="mailto:jovelycenter@gmail.com" className="btn lk-submit">
           ✉️ Email
         </a>
 
