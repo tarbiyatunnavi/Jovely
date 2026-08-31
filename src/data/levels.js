@@ -211,7 +211,16 @@ export const MODULES = [
       {
         id: 'B4', order: 15, name: 'Kedalaman Ekstrem', icon: 'depth',
         items: [
-          { id: 'B4.1', scenario: 'Saat kapalmu salah arah navigasi, bagaimana cara Kapten mendisiplinkanmu?', healthy: 'Dijelaskan tanpa kekerasan fisik', unhealthy: 'Tindakan atau hukuman fisik digunakan secara langsung' }
+          {
+            id: 'B4.1',
+            scenario: 'Saat kapalmu salah arah, Kapten Senior harus mengingatkanmu agar kesalahan yang sama tidak terulang. Jika mengingat pengalamanmu bersama Kapten Senior ketika masih kecil, bagaimana biasanya ia merespons ketika kamu melakukan kesalahan?',
+            choices: [
+              { id: 'A', text: 'Kapten Senior menjelaskan kesalahanku dan meminta aku memperbaikinya.', score: 4 },
+              { id: 'B', text: 'Kapten Senior memberikan teguran atau konsekuensi agar aku lebih berhati-hati.', score: 3 },
+              { id: 'C', text: 'Kapten Senior memberikan hukuman yang melibatkan tindakan fisik untuk membuatku jera.', score: 2 },
+              { id: 'D', text: 'Kapten Senior menunjukkan ketidaksetujuannya dengan cara yang membuatku merasa takut atau tertekan.', score: 1 }
+            ]
+          }
         ]
       },
       {
@@ -750,9 +759,11 @@ export const GAME_MECHANICS = {
     instruction: 'Tarik garis dari kompas di tengah ke pilihan yang paling mirip dengan pengalamanmu 👆'
   },
   B4: {
-    type: 'parenting-choice', emoji: '⚓', accent: '#d0b9e7',
-    tagline: 'Kedalaman Ekstrem', greeting: 'Pilih respons yang tepat',
-    hint: 'Pilih kartu respons yang paling sesuai dengan pengalamanmu.'
+    type: 'pull-line', emoji: '⚓', accent: '#d0b9e7',
+    tagline: 'Kedalaman Ekstrem', greeting: 'Tidak ada pilihan benar atau salah.',
+    hint: 'Pilih kejadian yang paling sering atau paling mirip dengan pengalamanmu.',
+    centerIcon: '⛵',
+    instruction: 'Tarik garis dari kapal di tengah ke pilihan yang paling mirip dengan pengalamanmu 👆'
   },
   B5: {
     type: 'parenting-choice', emoji: '⛈️', accent: '#c8a8d4',
