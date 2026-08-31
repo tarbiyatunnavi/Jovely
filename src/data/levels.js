@@ -298,9 +298,9 @@ export const MODULES = [
       {
         id: 'C2', order: 20, name: 'Jaringan Aliansi', icon: 'social',
         items: [
-          { id: 'C2.1', polarity: 'F', text: 'Nyaman menghabiskan waktu senggang bareng orang lain.' },
-          { id: 'C2.2', polarity: 'F', text: 'Senang kenalan dan bertemu orang baru.' },
-          { id: 'C2.3', polarity: 'UF', text: 'Lebih milih di rumah aja daripada ngobrol/bersosialisasi dengan tetangga.' }
+          { id: 'C2.1', polarity: 'F', text: 'Nyaman menghabiskan waktu luang senggang bersama orang lain.' },
+          { id: 'C2.2', polarity: 'F', text: 'Saya senang berkenalan dan bertemu orang baru.' },
+          { id: 'C2.3', polarity: 'UF', text: 'Lebih pilih di rumah daripada ngobrol dengan tetangga.' }
         ]
       },
       {
