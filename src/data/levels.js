@@ -290,9 +290,9 @@ export const MODULES = [
         id: 'C1', order: 19, name: 'Perisai Jiwa', icon: 'emotion',
         items: [
           { id: 'C1.1', polarity: 'F', text: 'Siap mengutamakan kebutuhan pasangan di atas kebutuhan pribadi.' },
-          { id: 'C1.2', polarity: 'UF', text: 'Merasa keterbukaan dengan pasangan nggak membantu dalam berbagi peran rumah tangga.' },
-          { id: 'C1.3', polarity: 'UF', text: 'Pengalaman menyakitkan di masa lalu bikin ragu untuk berkomitmen menikah.' },
-          { id: 'C1.4', polarity: 'UF', text: 'Takut kalau masalah/trauma masa lalu akan mengganggu kebahagiaan pernikahan di masa depan.' }
+          { id: 'C1.2', polarity: 'UF', text: 'Merasa keterbukaan dengan pasangan membantu dalam berbagi peran rumah tangga.' },
+          { id: 'C1.3', polarity: 'UF', text: 'Pengalaman menyakitkan di masa lalu membuat ragu untuk berkomitmen menikah.' },
+          { id: 'C1.4', polarity: 'UF', text: 'Saya cemas masa lalu akan mengganggu kebahagiaan pernikahan saya di masa depan.' }
         ]
       },
       {
