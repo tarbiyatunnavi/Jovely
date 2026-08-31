@@ -336,7 +336,7 @@ export const MODULES = [
         id: 'C7', order: 25, name: 'Pijakan Tradisi', icon: 'norms',
         items: [
           { id: 'C7.1', polarity: 'F', text: 'Sadar bahwa pacaran itu sesuatu yang nggak sesuai dengan norma masyarakat.' },
-          { id: 'C7.2', polarity: 'UF', text: 'Merasa pacaran dan kontak fisik itu hal yang wajar menurut norma masyarakat.' }
+          { id: 'C7.2', polarity: 'UF', text: 'Menurut saya, pacaran dan kontak fisik adalah hal yang wajar di masyarakat.' }
         ]
       }
     ]
