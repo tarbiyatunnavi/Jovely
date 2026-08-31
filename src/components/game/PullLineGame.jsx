@@ -162,7 +162,7 @@ export default function PullLineGame({ level, flavor, total, initialAnswers, onF
         {item.scenario}
       </div>
       <p className="pull-instruction">
-        Tarik garis dari hati di tengah ke pilihan yang paling nggambarkin kamu 👆
+        {flavor?.instruction || 'Tarik garis dari hati di tengah ke pilihan yang paling nggambarkin kamu 👆'}
       </p>
       <div
         ref={arenaRef}

@@ -712,9 +712,10 @@ export const GAME_MECHANICS = {
   // === Modul B: Arus Bawah Laut (pilihan kartu sehat/tidak sehat) ===
   B1: {
     type: 'pull-line', emoji: '🌊', accent: '#c8a8d4',
-    tagline: 'Palung Hangat Pelindung', greeting: 'Setiap kapten memiliki cara berbeda dalam menghadapi awak kapalnya. Pilih kejadian yang paling mengingatkanmu pada pengalamanmu.',
-    hint: 'Tarik garis dari kemudi di tengah ke pilihan yang paling nggambarkin kamu',
-    centerIcon: '⚓'
+    tagline: 'Palung Hangat Pelindung', greeting: 'Setiap kapten memiliki cara berbeda dalam menghadapi awak kapalnya.',
+    hint: 'Pilih kejadian yang paling mengingatkanmu pada pengalamanmu.',
+    centerIcon: '⚓',
+    instruction: 'Tarik garis dari kemudi di tengah ke pilihan yang paling mengingatkanmu pada pengalaman 👆'
   },
   B2: {
     type: 'parenting-choice', emoji: '🗼', accent: '#d0b9e7',
