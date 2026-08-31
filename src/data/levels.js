@@ -134,19 +134,19 @@ export const MODULES = [
       {
         id: 'A8', order: 8, name: 'Kompas Logika', icon: 'handshake',
         items: [
-          { id: 'A8.1', text: 'Daripada capek nyari pasangan yang sempurna, mending fokus bangun hubungan yang sempurna bareng-bareng.' }
+          { id: 'A8.1', text: 'Daripada capek cari pasangan yang sempurna, lebih baik fokus bangun hubungan yang sempurna bareng pasangan.' }
         ]
       },
       {
         id: 'A9', order: 9, name: 'Kilat Tanpa Akar', icon: 'blindfold',
         items: [
-          { id: 'A9.1', text: 'Cinta itu buta — kadang bikin nggak lihat kekurangan orang yang dicintai.' }
+          { id: 'A9.1', text: 'Cinta itu buta – kadang bisa membuat tidak melihat kekurangan orang yang dicintai.' }
         ]
       },
       {
         id: 'A10', order: 10, name: 'Sumpah Penjaga Takdir', icon: 'flag',
         items: [
-          { id: 'A10.1', text: 'Rela ngelakuin apa aja demi orang yang dicintai.' }
+          { id: 'A10.1', text: 'Rela melakukan apa aja demi orang yang dicintai.' }
         ]
       },
       {
