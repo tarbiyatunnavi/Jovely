@@ -646,9 +646,9 @@ export const GAME_MECHANICS = {
   },
   A6: {
     type: 'swipe', emoji: '⛵', accent: '#d0b9e7',
-    tagline: 'Cinta yang Tumbuh', greeting: 'Pilih jawaban yang representatif dengan perasaanmu',
+    tagline: 'Cinta yang Tumbuh', greeting: 'Geser ya',
     leftLabel: 'Bukan gaya aku', rightLabel: 'Ini ngebantu aku',
-    hint: 'geser kiri: Bukan gaya aku · kanan: Ini ngebantu aku'
+    hint: 'Pilih jawaban yang representatif dengan perasaanmu'
   },
   A7: {
     type: 'dragdrop', emoji: '🕊️', accent: '#c8a8d4',
