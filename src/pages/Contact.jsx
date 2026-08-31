@@ -15,10 +15,7 @@ export default function Contact() {
           </p>
         </div>
 
-        <a href="https://wa.me/6281234567890?text=Halo%20Jovely%2C%20saya%20butuh%20bantuan" target="_blank" rel="noopener" className="btn">
-          💬 WhatsApp Admin
-        </a>
-        <a href="mailto:hello@jovely.app" className="btn btn-secondary">
+        <a href="mailto:hello@jovely.app" className="btn lk-submit">
           ✉️ Email
         </a>
 
