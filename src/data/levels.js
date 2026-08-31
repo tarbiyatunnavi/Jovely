@@ -241,7 +241,16 @@ export const MODULES = [
       {
         id: 'B6', order: 17, name: 'Pemblokiran Karang Misterius', icon: 'block',
         items: [
-          { id: 'B6.1', scenario: 'Tiba-tiba jangkar dikunci dan izin menyelam dicabut. Apa alasannya?', healthy: 'Dijelaskan alasannya secara rinci sejak awal', unhealthy: 'Langsung dikunci tanpa penjelasan sama sekali' }
+          {
+            id: 'B6.1',
+            scenario: 'Kamu baru saja melakukan kesalahan dalam perjalanan. Saat hendak melanjutkan ekspedisi, kamu mendapati izin menyelammu dicabut dan akses ke ruang penyimpanan dikunci. Kamu bertanya kepada Kapten Senior mengapa hakmu untuk menggunakan fasilitas tersebut dicabut. Jika mengingat pengalamanmu bersama Kapten Senior ketika masih kecil, kejadian mana yang paling mirip dengan apa yang biasanya kamu alami?',
+            choices: [
+              { id: 'A', text: 'Kapten Senior menjelaskan kesalahanku dan alasan mengapa aku tidak boleh menggunakan fasilitas tersebut untuk sementara.', score: 4 },
+              { id: 'B', text: 'Kapten Senior mengatakan bahwa aku tidak boleh menggunakan fasilitas tersebut untuk sementara, lalu menjelaskan alasannya secara singkat ketika aku bertanya.', score: 3 },
+              { id: 'C', text: 'Kapten Senior mencabut hakku menggunakan fasilitas tersebut dan hanya memberikan sedikit penjelasan mengenai alasannya.', score: 2 },
+              { id: 'D', text: 'Kapten Senior mencabut hakku menggunakan fasilitas tersebut dan menganggap aku sudah mengetahui alasan mengapa hak itu dicabut.', score: 1 }
+            ]
+          }
         ]
       },
       {
@@ -782,9 +791,11 @@ export const GAME_MECHANICS = {
     instruction: 'Tarik garis dari awan di tengah ke pilihan yang paling mirip dengan pengalamanmu 👆'
   },
   B6: {
-    type: 'parenting-choice', emoji: '🪸', accent: '#d0b9e7',
-    tagline: 'Pemblokiran Karang Misterius', greeting: 'Pilih respons yang tepat',
-    hint: 'Pilih kartu respons yang paling sesuai dengan pengalamanmu.'
+    type: 'pull-line', emoji: '🪸', accent: '#d0b9e7',
+    tagline: 'Pemblokiran Karang Misterius', greeting: 'Tidak ada pilihan benar atau salah.',
+    hint: 'Pilih kejadian yang paling sering atau paling mirip dengan pengalamanmu.',
+    centerIcon: '🪸',
+    instruction: 'Tarik garis dari karang di tengah ke pilihan yang paling mirip dengan pengalamanmu 👆'
   },
   B7: {
     type: 'parenting-choice', emoji: '🚨', accent: '#c8a8d4',
