@@ -256,8 +256,26 @@ export const MODULES = [
       {
         id: 'B7', order: 18, name: 'Terumbu Tanpa Jangkar', icon: 'reef',
         items: [
-          { id: 'B7.1', scenario: 'Kapten membuat batasan area berbahaya, namun apa yang terjadi saat dilanggar?', healthy: 'Hukum atau konsekuensi benar-benar diterapkan', unhealthy: 'Aturan ada tapi tidak pernah dieksekusi' },
-          { id: 'B7.2', scenario: 'Sirine Peringatan: Seberapa sering sinyal ancaman bahaya dibunyikan tanpa ada tindakan nyata?', healthy: 'Ancaman selalu terbukti dan dieksekusi tegas', unhealthy: 'Hanya gertakan belaka yang jarang terjadi' }
+          {
+            id: 'B7.1',
+            scenario: 'Saat kamu masih menjadi awak kapal, Kapten Senior menetapkan sebuah aturan: "Jangan memasuki Area Terlarang. Jika aturan ini dilanggar, akan ada konsekuensinya." Suatu hari, kamu tanpa sengaja memasuki area tersebut. Kamu kemudian mengingat kembali pengalamanmu bersama Kapten Senior. Apa yang biasanya terjadi ketika aturan yang disertai konsekuensi itu kamu langgar?',
+            choices: [
+              { id: 'A', text: 'Kapten Senior menjalankan konsekuensi yang sebelumnya sudah disampaikan kepadaku.', score: 4 },
+              { id: 'B', text: 'Kapten Senior terkadang menjalankan konsekuensi tersebut, tetapi pada kesempatan lain tidak.', score: 3 },
+              { id: 'C', text: 'Kapten Senior mengingatkan kembali tentang konsekuensinya, tetapi biasanya tidak benar-benar menjalankannya.', score: 2 },
+              { id: 'D', text: 'Kapten Senior menetapkan konsekuensi, tetapi ketika aturan dilanggar, konsekuensi tersebut sering kali tidak diterapkan.', score: 1 }
+            ]
+          },
+          {
+            id: 'B7.2',
+            scenario: 'Kamu melanggar aturan, ia terkadang membunyikan sirene peringatan dan mengatakan bahwa akan ada konsekuensi jika kamu mengulanginya. Namun, tidak setiap peringatan berakhir dengan konsekuensi yang benar-benar diberikan. Jika mengingat pengalamanmu bersama Kapten Senior ketika masih kecil, situasi mana yang paling mirip dengan apa yang biasanya terjadi?',
+            choices: [
+              { id: 'A', text: 'Ketika Kapten Senior memberikan peringatan tentang konsekuensi, biasanya konsekuensi tersebut benar-benar diberikan.', score: 4 },
+              { id: 'B', text: 'Terkadang Kapten Senior hanya memberikan peringatan, tetapi pada kesempatan lain konsekuensinya benar-benar diberikan.', score: 3 },
+              { id: 'C', text: 'Kapten Senior cukup sering memberikan peringatan tentang hukuman, tetapi biasanya tidak sampai benar-benar memberikannya.', score: 2 },
+              { id: 'D', text: 'Kapten Senior lebih sering memperingatkanku tentang hukuman daripada benar-benar memberikan hukuman tersebut.', score: 1 }
+            ]
+          }
         ]
       }
     ]
@@ -798,9 +816,11 @@ export const GAME_MECHANICS = {
     instruction: 'Tarik garis dari karang di tengah ke pilihan yang paling mirip dengan pengalamanmu 👆'
   },
   B7: {
-    type: 'parenting-choice', emoji: '🚨', accent: '#c8a8d4',
-    tagline: 'Terumbu Tanpa Jangkar', greeting: 'Pilih respons yang tepat',
-    hint: 'Pilih kartu respons yang paling sesuai dengan pengalamanmu.'
+    type: 'pull-line', emoji: '🚨', accent: '#c8a8d4',
+    tagline: 'Terumbu Tanpa Jangkar', greeting: 'Tidak ada pilihan benar atau salah.',
+    hint: 'Pilih kejadian yang paling sering atau paling mirip dengan pengalamanmu.',
+    centerIcon: '🚨',
+    instruction: 'Tarik garis dari sirine di tengah ke pilihan yang paling mirip dengan pengalamanmu 👆'
   },
   // === Modul C: Ekspedisi Pondasi Bahtera (Likert 5 poin, 3 varian interaksi) ===
   C1: {
