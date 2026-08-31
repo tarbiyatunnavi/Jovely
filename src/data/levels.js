@@ -99,10 +99,10 @@ export const MODULES = [
       {
         id: 'A4', order: 4, name: 'Badai Magnetik', icon: 'obsessed',
         items: [
-          { id: 'A4.1', text: 'Pas lagi jatuh cinta, pikiran terus-terusan ke orang itu.' },
-          { id: 'A4.2', text: 'Kamu nggak akan tahu seberapa dalam seseorang bisa mencintai.' },
-          { id: 'A4.3', text: 'Jatuh cinta kadang bikin orang jadi nggak masuk akal/bodoh.' },
-          { id: 'A4.4', text: 'Cinta itu kondisi di mana kebahagiaan pasangan ikut nentuin kebahagiaan diri sendiri.' }
+          { id: 'A4.1', text: 'Pas lagi jatuh cinta, pikiran terus-terusan kepikiran tentang orang itu.' },
+          { id: 'A4.2', text: 'Kamu nggak akan tahu seberapa dalam aku bisa mencintai seseorang.' },
+          { id: 'A4.3', text: 'Jatuh cinta kadang bikin orang jadi nggak punya masuk akal sehat.' },
+          { id: 'A4.4', text: 'Cinta itu kondisi di mana kebahagiaan pasangan berpengaruh ke kebahagiaanku.' }
         ]
       },
       {
