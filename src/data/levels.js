@@ -329,7 +329,7 @@ export const MODULES = [
         id: 'C6', order: 24, name: 'Kompas Spiritual', icon: 'religion',
         items: [
           { id: 'C6.1', polarity: 'F', text: 'Harus menikah dengan pasangan yang agamanya sama.' },
-          { id: 'C6.2', polarity: 'F', text: 'Mempelajari dan menyiapkan ilmu agama itu penting sebagai bekal berumah tangga.' }
+          { id: 'C6.2', polarity: 'F', text: 'Ilmu agama penting dipelajari sebagai bekal dalam berumah tangga.' }
         ]
       },
       {
