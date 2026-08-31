@@ -32,10 +32,16 @@ export default function Result() {
   const parentingStyles = scoreParentingStyles(levelAnswers)
   const readiness = scoreMarriageReadiness(levelAnswers)
 
-  // Simpan hasil ke server (sekali) saat semua selesai
+  // Serialisasi jawaban untuk deteksi perubahan (supaya hasil re-save saat jawaban berubah)
+  const answersHash = JSON.stringify(levelAnswers)
+
+  // Simpan hasil ke server saat semua selesai atau saat jawaban berubah
   useEffect(() => {
-    if (!allCompleted || saved) return
-    (async () => {
+    if (!allCompleted) return
+    const snapshot = { loveStyles, parentingStyles, readiness, totalPercent: readiness.totalPercent, answersHash }
+    if (saved === answersHash) return // sudah tersimpan untuk jawaban ini
+    let cancelled = false
+    ;(async () => {
       try {
         await authedFetch('/result', {
           method: 'POST',
@@ -46,12 +52,13 @@ export default function Result() {
             totalPercent: readiness.totalPercent
           })
         })
-        setSaved(true)
+        if (!cancelled) setSaved(answersHash)
       } catch (e) {
         console.warn('Gagal simpan hasil:', e)
       }
     })()
-  }, [allCompleted, saved])
+    return () => { cancelled = true }
+  }, [allCompleted, answersHash])
 
   if (!loaded) return <div className="app-wrap"><Topbar title="Hasil" showBack={false} /><Spinner label="Memuat..." /></div>
 
