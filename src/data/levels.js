@@ -709,7 +709,8 @@ export const GAME_MECHANICS = {
   A1: {
     type: 'pull-line', emoji: '👑', accent: '#b8a4d9',
     tagline: 'Cinta Sempurna', greeting: 'Tarik garis dari hati',
-    hint: 'Tarik jari dari ikon tengah ke salah satu pilihan di penjuru.'
+    hint: 'Tarik jari dari ikon tengah ke salah satu pilihan di penjuru.',
+    instruction: 'Setiap keputusanmu akan menjadi bagian dari perjalanan yang kamu bangun bersama orang tersebut.'
   },
   A2: {
     type: 'swipe', emoji: '⚓', accent: '#c8a8d4',
