@@ -314,9 +314,9 @@ export const MODULES = [
         id: 'C4', order: 22, name: 'Lumbung Perbekalan', icon: 'finance',
         items: [
           { id: 'C4.1', polarity: 'F', text: 'Sebelum menikah, harus sudah punya pekerjaan atau penghasilan.' },
-          { id: 'C4.2', polarity: 'F', text: 'Akan tetap menghargai pekerjaan pasangan meskipun penghasilannya kecil.' },
-          { id: 'C4.3', polarity: 'UF', text: 'Menurutku pekerjaan dan penghasilan nggak berpengaruh terhadap pernikahan.' },
-          { id: 'C4.4', polarity: 'UF', text: 'Nggak punya penghasilan/pekerjaan sebelum atau sesudah menikah itu hal yang wajar.' }
+          { id: 'C4.2', polarity: 'F', text: 'Tetap menghargai pekerjaan pasangan meskipun penghasilannya kecil.' },
+          { id: 'C4.3', polarity: 'UF', text: 'Menurutku pekerjaan dan penghasilan tidak berpengaruh terhadap pernikahan.' },
+          { id: 'C4.4', polarity: 'UF', text: 'Tidak apa-apa belum punya penghasilan atau pekerjaan sebelum dan setelah menikah.' }
         ]
       },
       {
