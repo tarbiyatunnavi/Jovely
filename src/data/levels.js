@@ -557,7 +557,7 @@ export const LEVEL_INTERPRETATIONS = {
     0: 'Masih fokus ke diri sendiri dan hitung-hitungan dalam memberi kasih sayang ke pasangan.',
   },
   A8: {
-    80: 'Realistis dan realistis! Kamu pinter mempertimbangkan kecocokan latar belakang dan logika demi masa depan.',
+    80: 'Realistis! Kamu pinter mempertimbangkan kecocokan latar belakang dan logika demi masa depan.',
     60: 'Udah mulai mikirin hal-hal realistis kayak latar belakang dan tujuan, walau kadang masih kemakan perasaan.',
     40: 'Pertimbangan logika mulai kepikir, tapi masih sering kalah sama perasaan impulsif sesaat.',
     0: 'Cenderung cuek sama hal-hal realistis, asal cocok di awal langsung jalan tanpa mikir kesesuaian ke depan.',
