@@ -657,8 +657,8 @@ a { color: inherit; text-decoration: none; }
 
 /* 4 titik tujuan di penjuru — spacing cukup antar kartu & ke ikon tengah */
 .pull-node {
-  position: absolute; width: 130px; max-width: 44%; padding: 8px 8px;
-  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  position: absolute; width: 130px; max-width: 44%; min-height: 110px; padding: 10px 10px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
   border-radius: var(--radius); background: rgba(255,255,255,.92);
   border: 2px solid var(--lylac-100);
   box-shadow: var(--shadow);
