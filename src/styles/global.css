@@ -584,13 +584,14 @@ a { color: inherit; text-decoration: none; }
 .pull-arena {
   position: relative;
   width: 100%; max-width: 360px;
-  height: 380px; max-height: 64vh;
+  min-height: 280px; max-height: 64vh;
   margin: 8px auto 4px; overflow: hidden;
   border-radius: var(--radius-lg);
   background: radial-gradient(circle at 50% 50%, #fbf6ff 0%, #f4ecfb 60%, #efe6f7 100%);
   box-shadow: var(--shadow-lg);
   touch-action: none; cursor: grab;
   user-select: none; -webkit-tap-highlight-color: transparent;
+  aspect-ratio: 1 / 1;
 }
 .pull-arena.pull-picked { cursor: default; }
 .pull-arena:active { cursor: grabbing; }
