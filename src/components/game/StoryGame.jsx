@@ -8,7 +8,6 @@ import { playShineSFX } from '../../hooks/useAmbientMusic'
 // Pilihan "Setuju" → agree, "Nggak Setuju" → disagree.
 function buildScene(item, level) {
   const scenes = {
-    A5: { scene: 'Lagi jalan-jalan', q: 'Tiba-tiba kamu ngerasa deket banget sama seseorang yang baru kenal. Ada yang bilang cinta datang tanpa alasan, tanpa direncanain.' },
     A9: { scene: 'Sama temen', q: 'Temenmu ngeluh soal pasangan yang "nggak sempurna". Kamu mikir gimana?' },
     A11: { scene: 'Bayangin aja', q: 'Orang yang kamu sayang butuh banget bantuanmu, meski kamu harus ngelakuin hal susah. Apa kamu rela?' }
   }
