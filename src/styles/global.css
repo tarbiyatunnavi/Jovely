@@ -367,6 +367,18 @@ a { color: inherit; text-decoration: none; }
 .lk-submit { margin-top: 14px; background: var(--lylac-600); }
 .lk-submit:hover { background: var(--lylac-700); }
 
+/* Rating stars */
+.rating-stars { display: flex; justify-content: center; gap: 6px; }
+.rating-star {
+  background: none; border: none; cursor: pointer;
+  font-size: 32px; color: var(--lylac-200);
+  transition: transform .15s cubic-bezier(.34,1.56,.64,1), color .2s;
+  padding: 2px; line-height: 1;
+}
+.rating-star:active { transform: scale(.85); }
+.rating-star.active { color: #f5c842; text-shadow: 0 0 8px rgba(255,205,90,.4); }
+.rating-feedback { padding: 10px 12px; border-radius: var(--radius); border: 1px solid var(--lylac-100); background: #fff; color: var(--ink); }
+
 /* ===== Likert emoji arc ===== */
 .lk-emoji-grid { display: flex; justify-content: space-between; gap: 6px; margin-top: 8px; }
 .lk-emoji-btn {

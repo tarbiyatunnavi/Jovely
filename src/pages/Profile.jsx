@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import { useProgress } from '../context/ProgressContext'
 import { Topbar, Alert } from '../components/Layout'
 import { Icon } from '../components/Icon'
+import { playTapSFX } from '../hooks/useAmbientMusic'
 import { TOTAL_LEVELS } from '../data/levels'
 
 export default function Profile() {
@@ -12,6 +13,25 @@ export default function Profile() {
   const nav = useNavigate()
   const [history, setHistory] = useState([])
   const [err, setErr] = useState('')
+  const [rating, setRating] = useState(() => {
+    try { return Number(localStorage.getItem('jovely_rating')) || 0 } catch { return 0 }
+  })
+  const [ratingMsg, setRatingMsg] = useState(() => {
+    try { return localStorage.getItem('jovely_rating_msg') || '' } catch { return '' }
+  })
+  const [ratingSaved, setRatingSaved] = useState(() => {
+    try { return localStorage.getItem('jovely_rating_saved') === '1' } catch { return false }
+  })
+
+  const submitRating = () => {
+    try {
+      localStorage.setItem('jovely_rating', String(rating))
+      localStorage.setItem('jovely_rating_msg', ratingMsg)
+      localStorage.setItem('jovely_rating_saved', '1')
+    } catch {}
+    setRatingSaved(true)
+    try { playTapSFX() } catch {}
+  }
 
   useEffect(() => {
     (async () => {
@@ -78,6 +98,39 @@ export default function Profile() {
             </div>
           </div>
         )}
+
+        <div className="card" style={{ textAlign: 'center' }}>
+          <h3 className="h-title" style={{ fontSize: 16, marginBottom: 4 }}>⭐ Penilaian Kamu</h3>
+          <p className="muted" style={{ fontSize: 13, marginBottom: 12 }}>Seberapa puas kamu sama Jovely?</p>
+          <div className="rating-stars" style={{ marginBottom: 12 }}>
+            {[1,2,3,4,5].map(n => (
+              <button
+                key={n}
+                onClick={() => setRating(n)}
+                className={`rating-star ${n <= rating ? 'active' : ''}`}
+                aria-label={`${n} bintang`}
+              >
+                ★
+              </button>
+            ))}
+          </div>
+          {rating > 0 && !ratingSaved && (
+            <>
+              <textarea
+                className="input rating-feedback"
+                placeholder="Ceritakan pengalamanmu (opsional)..."
+                value={ratingMsg}
+                onChange={e => setRatingMsg(e.target.value)}
+                rows={2}
+                style={{ width: '100%', resize: 'none', marginBottom: 10, fontSize: 13 }}
+              />
+              <button className="btn lk-submit" onClick={submitRating}>Kirim Penilaian</button>
+            </>
+          )}
+          {ratingSaved && (
+            <p style={{ fontSize: 14, color: 'var(--lylac-600)', fontWeight: 600 }}>Terima kasih atas penilaianmu! 💜</p>
+          )}
+        </div>
 
         <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
           <Link to="/terms" className="row" style={{ padding: '14px 16px', alignItems: 'center', justifyContent: 'space-between' }}>
