@@ -86,13 +86,13 @@ export const MODULES = [
       {
         id: 'A3', order: 3, name: 'Lembah Ketenangan Jiwa', icon: 'sparkle',
         items: [
-          { id: 'A3.1', text: 'Dicintai dengan tulus sama seseorang bikin ngerasa lebih kuat.' },
+          { id: 'A3.1', text: 'Dicintai dengan tulus dengan seseorang buat kamu lebih kuat.' },
           { id: 'A3.2', text: 'Cinta bisa bikin pasangan jadi versi yang lebih kuat dan lebih baik.' },
-          { id: 'A3.3', text: 'Kalau lagi cinta, rasanya bisa ngelakuin apa aja.' },
-          { id: 'A3.4', text: 'Hidup itu kayak permainan buat semua orang, dan cinta adalah hadiahnya.' },
-          { id: 'A3.5', text: 'Pelajaran paling berharga dalam hidup adalah belajar mencintai dan dicintai balik.' },
-          { id: 'A3.6', text: 'Jatuh cinta rasanya kayak lagi di surga.' },
-          { id: 'A3.7', text: 'Cinta itu yang bikin segala sesuatu jadi punya makna.' },
+          { id: 'A3.3', text: 'Kalau lagi cinta, rasanya bisa melakukan apa saja.' },
+          { id: 'A3.4', text: 'Hidup itu seperti permainan buat semua orang, dan cinta adalah hadiahnya.' },
+          { id: 'A3.5', text: 'Hal terhebat yang akan kupelajari sepanjang hidup ini adalah mencintai dan dicintai sebagai balasannya.' },
+          { id: 'A3.6', text: 'Jatuh cinta rasanya seperti lagi di surga.' },
+          { id: 'A3.7', text: 'Cinta itu bikin segala sesuatu jadi punya makna.' },
           { id: 'A3.8', text: 'Cinta romantis adalah bentuk kebahagiaan tertinggi dalam hidup.' }
         ]
       },
