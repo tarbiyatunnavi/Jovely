@@ -673,7 +673,7 @@ export const GAME_MECHANICS = {
     type: 'story', emoji: '📜', accent: '#c8a8d4',
     tagline: 'Rela Berkorban', greeting: 'Bayangin skenarionya…',
     options: ['Setuju', 'Nggak Setuju'],
-    hint: 'Pilih respons yang paling mirip sama kamu.'
+    hint: 'Pilih jawaban yang representatif dengan kondisi'
   },
   A11: {
     type: 'quicktap', emoji: '🌪️', accent: '#d0b9e7',
