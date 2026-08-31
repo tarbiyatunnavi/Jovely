@@ -303,6 +303,7 @@ export function useAmbientMusic() {
     loadShineSFX()
     loadBreakingSFX()
     loadMouseSFX()
+    loadWheelsSFX()
   }, [])
 
   // mulai musik Peta setelah interaksi pertama
@@ -591,4 +592,62 @@ export function stopMouseSFX() {
   } catch {}
   _mouseSource = null
   _mouseGain = null
+}
+
+// Wheels SFX: loop saat slider di-drag, stop saat lepas (fail-safe)
+let _wheelsBuffer = null
+let _wheelsLoading = false
+let _wheelsReady = false
+let _wheelsSource = null
+let _wheelsGain = null
+
+async function loadWheelsSFX() {
+  if (_wheelsReady || _wheelsLoading) return
+  _wheelsLoading = true
+  try {
+    const ctx = getAudioCtx()
+    if (!ctx) return
+    const res = await fetch('/wheels-sfx.mp3')
+    const arrayBuf = await res.arrayBuffer()
+    _wheelsBuffer = await ctx.decodeAudioData(arrayBuf)
+    _wheelsReady = true
+  } catch {
+    // fail-safe
+  } finally {
+    _wheelsLoading = false
+  }
+}
+
+export function startWheelsSFX() {
+  try {
+    const ctx = getAudioCtx()
+    if (!ctx || !_wheelsReady || !_wheelsBuffer) return
+    if (ctx.state === 'suspended') { try { ctx.resume() } catch {} }
+    if (ctx.state === 'closed') return
+    stopWheelsSFX()
+    const source = ctx.createBufferSource()
+    source.buffer = _wheelsBuffer
+    source.loop = true
+    const gain = ctx.createGain()
+    gain.gain.value = 0.15
+    source.connect(gain)
+    gain.connect(ctx.destination)
+    source.start(0)
+    _wheelsSource = source
+    _wheelsGain = gain
+  } catch {}
+}
+
+export function stopWheelsSFX() {
+  try {
+    if (_wheelsSource && _wheelsGain) {
+      const ctx = getAudioCtx()
+      if (ctx && ctx.state !== 'closed') {
+        _wheelsGain.gain.setTargetAtTime(0, ctx.currentTime, 0.03)
+        _wheelsSource.stop(ctx.currentTime + 0.1)
+      }
+    }
+  } catch {}
+  _wheelsSource = null
+  _wheelsGain = null
 }

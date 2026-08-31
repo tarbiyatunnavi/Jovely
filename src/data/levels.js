@@ -834,9 +834,9 @@ export const GAME_MECHANICS = {
     hint: 'Tap emoji yang ngewakiliin perasaan kamu.'
   },
   C3: {
-    type: 'likert-dial', emoji: '👑', accent: '#d0b9e7',
-    tagline: 'Pembagian Singgasana', greeting: 'Puter dial-nya',
-    hint: 'Puter dial ke tingkat setuju yang kamu mau.'
+    type: 'likert-slider', emoji: '👑', accent: '#d0b9e7',
+    tagline: 'Pembagian Singgasana', greeting: 'Geser slider-nya',
+    hint: 'Geser dari Sangat Tidak Setuju sampai Sangat Setuju.'
   },
   C4: {
     type: 'likert-slider', emoji: '🌾', accent: '#b8a4d9',
@@ -849,9 +849,9 @@ export const GAME_MECHANICS = {
     hint: 'Tap emoji yang ngewakiliin perasaan kamu.'
   },
   C6: {
-    type: 'likert-dial', emoji: '🧿', accent: '#d0b9e7',
-    tagline: 'Kompas Spiritual', greeting: 'Puter dial-nya',
-    hint: 'Puter dial ke tingkat setuju yang kamu mau.'
+    type: 'likert-slider', emoji: '🧿', accent: '#d0b9e7',
+    tagline: 'Kompas Spiritual', greeting: 'Geser slider-nya',
+    hint: 'Geser dari Sangat Tidak Setuju sampai Sangat Setuju.'
   },
   C7: {
     type: 'likert-slider', emoji: '🏛️', accent: '#b8a4d9',
