@@ -125,10 +125,10 @@ export const MODULES = [
       {
         id: 'A7', order: 7, name: 'Mata Air Ketulusan', icon: 'halo',
         items: [
-          { id: 'A7.1', text: 'Cinta yang paling kuat itu justru yang berani nunjukin sisi rapuhnya.' },
+          { id: 'A7.1', text: 'Cinta paling kuat yang berani menunjukkan sisi rapuhnya.' },
           { id: 'A7.2', text: 'Mencintai seseorang apa adanya, tanpa syarat.' },
-          { id: 'A7.3', text: 'Cinta yang dikasih dengan tulus/ikhlas justru yang bakal bertahan lama.' },
-          { id: 'A7.4', text: 'Cinta itu bisa ngalahin apa pun.' }
+          { id: 'A7.3', text: 'Cinta yang seadanya, akan berakhir sia-sia.' },
+          { id: 'A7.4', text: 'Cinta itu bisa mengalahkan apa pun.' }
         ]
       },
       {
