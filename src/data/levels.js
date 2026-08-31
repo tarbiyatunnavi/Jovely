@@ -181,7 +181,16 @@ export const MODULES = [
       {
         id: 'B2', order: 13, name: 'Mercusuar Utama', icon: 'lighthouse',
         items: [
-          { id: 'B2.1', scenario: 'Sinyal Larangan Berlayar: Mercusuar melarangmu menerobos Area Berbahaya. Bagaimanakah sinyalnya?', healthy: 'Mengirim alasan logis & peta bahaya yang jelas', unhealthy: 'Menyuruh patuh begitu saja tanpa penjelasan' }
+          {
+            id: 'B2.1',
+            scenario: 'Mercusuar memberi tanda bahwa kamu tidak boleh melewati Area Berbahaya. Saat kecil, kamu juga pernah menerima aturan dari Kapten Senior yang harus kamu taati. Ketika kamu bertanya mengapa aturan itu harus dilakukan, kejadian mana yang paling mirip dengan pengalamanmu bersama Kapten Senior?',
+            choices: [
+              { id: 'A', text: 'Kapten Senior menjelaskan alasan aturan tersebut agar aku memahami mengapa harus mematuhinya.', score: 4 },
+              { id: 'B', text: 'Kapten Senior memberikan penjelasan singkat, kemudian memintaku mengikuti aturan tersebut.', score: 3 },
+              { id: 'C', text: 'Kapten Senior biasanya mengatakan bahwa aturan itu harus dipatuhi, tanpa banyak menjelaskan alasannya.', score: 2 },
+              { id: 'D', text: 'Kapten Senior biasanya meminta aku mengikuti aturan terlebih dahulu dan baru menjelaskan alasannya jika aku bertanya.', score: 1 }
+            ]
+          }
         ]
       },
       {
@@ -718,9 +727,11 @@ export const GAME_MECHANICS = {
     instruction: 'Tarik garis dari kemudi di tengah ke pilihan yang paling mengingatkanmu pada pengalaman 👆'
   },
   B2: {
-    type: 'parenting-choice', emoji: '🗼', accent: '#d0b9e7',
-    tagline: 'Mercusuar Utama', greeting: 'Pilih respons yang tepat',
-    hint: 'Pilih kartu respons yang paling sesuai dengan pengalamanmu.'
+    type: 'pull-line', emoji: '🗼', accent: '#d0b9e7',
+    tagline: 'Mercusuar Utama', greeting: 'Tidak ada jawaban benar atau salah.',
+    hint: 'Pilih kejadian yang paling sering atau paling mirip dengan apa yang kamu alami.',
+    centerIcon: '🗼',
+    instruction: 'Tarik garis dari mercusuar di tengah ke pilihan yang paling mirip dengan pengalamanmu 👆'
   },
   B3: {
     type: 'parenting-choice', emoji: '🧭', accent: '#c8a8d4',
