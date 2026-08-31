@@ -306,7 +306,7 @@ export const MODULES = [
       {
         id: 'C3', order: 21, name: 'Pembagian Singgasana', icon: 'role',
         items: [
-          { id: 'C3.1', polarity: 'F', text: 'Nggak keberatan kalau suami-istri berbagi peran dan tugas pekerjaan rumah tangga.' },
+          { id: 'C3.1', polarity: 'F', text: 'Tidak keberatan kalau suami-istri berbagi peran dan tugas pekerjaan rumah tangga.' },
           { id: 'C3.2', polarity: 'UF', text: 'Merasa keberatan kalau harus berbagi tugas pekerjaan rumah dengan pasangan.' }
         ]
       },
